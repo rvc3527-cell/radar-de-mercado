@@ -197,3 +197,11 @@ test('interface moderna prioriza oportunidade e mostra momento e duracao sem pro
  assert.ok(html.includes('<details class="scanner-details">'));
  assert.ok(html.includes('#6d53f5'));
 });
+
+test('resumo principal exige dados recentes e evita sinais de entrada nao validados',()=>{
+ assert.ok(html.includes('id="scanDecision"'));
+ assert.ok(html.includes('Cotação desatualizada'));
+ assert.ok(html.includes('Date.now()-lastClose>120000'));
+ assert.ok(html.includes('Ainda sem entrada ou duração validada'));
+ assert.ok(html.includes('Observar; sem entrada confirmada'));
+});

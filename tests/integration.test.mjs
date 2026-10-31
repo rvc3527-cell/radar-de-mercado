@@ -62,3 +62,11 @@ test('referência Spot sem indicadores usa mesmas janelas e custos',()=>{
  assert.ok(html.includes('strategyMean-baseMean'));
  assert.ok(html.includes('Não é uma comparação pareada'));
 });
+
+test('faixas descritivas mostram incerteza sem alegar validade temporal',()=>{
+ assert.ok(html.includes('Faixa descritiva da média (estratégia)'));
+ assert.ok(html.includes('Faixa descritiva da média (referência)'));
+ assert.ok(html.includes('const descriptiveRange=trades=>'));
+ assert.ok(html.includes('trades.length<2'));
+ assert.ok(html.includes('NÃO são intervalos de confiança válidos'));
+});

@@ -237,3 +237,10 @@ test('painel remoto mostra estado sem observacoes e atualizacao manual',()=>{
  assert.ok(html.includes('Nenhum registro até agora'));
  assert.ok(html.includes('Não foi possível confirmar os dados remotos'));
 });
+
+test('coletor em nuvem expõe diagnóstico sem declarar execução inexistente',()=>{
+ assert.ok(html.includes('id="cloudCollectorDiagnostics"'));
+ assert.ok(html.includes('function refreshCloudDiagnostics()'));
+ assert.ok(html.includes('Nenhuma execução registrada na versão de diagnóstico'));
+ assert.ok(html.includes('Diagnóstico indisponível'));
+});

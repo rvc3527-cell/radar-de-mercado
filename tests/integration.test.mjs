@@ -54,3 +54,11 @@ test('tabela de resultados tem rolagem horizontal no celular',()=>{
  assert.ok(html.includes('overflow-x:auto'));
  assert.ok(html.includes('position:sticky;left:0'));
 });
+
+test('referência Spot sem indicadores usa mesmas janelas e custos',()=>{
+ assert.ok(html.includes('id="baselineRows"'));
+ assert.ok(html.includes('baselineSignals=new Array(closed.length).fill(1)'));
+ assert.ok(html.includes('mode:\'spot\',fee,slippage:slip,start:g.from,end:g.to'));
+ assert.ok(html.includes('strategyMean-baseMean'));
+ assert.ok(html.includes('Não é uma comparação pareada'));
+});

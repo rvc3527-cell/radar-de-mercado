@@ -41,3 +41,16 @@ test('rotas e dependencias essenciais do dashboard',()=>{
  assert.ok(html.includes('id="runHistory"'));
  assert.ok(html.includes('id="historyDays"'));
 });
+
+test('laboratório mostra movimento bruto médio e custo de equilíbrio',()=>{
+ assert.ok(html.includes('Movimento médio bruto'));
+ assert.ok(html.includes('Alta mínima p/ lucro'));
+ assert.ok(html.includes('grossSum+=t.grossPercent'));
+ assert.ok(html.includes('avgGross'));
+ assert.ok(html.includes('2*(fee+slip)'));
+});
+test('tabela de resultados tem rolagem horizontal no celular',()=>{
+ assert.ok(html.includes('class="table-scroll"'));
+ assert.ok(html.includes('overflow-x:auto'));
+ assert.ok(html.includes('position:sticky;left:0'));
+});

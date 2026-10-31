@@ -36,3 +36,17 @@ test('Payout e custos inválidos não são aceitos',()=>{
 
 test('Spot: alta bruta pode ser perda após custos',()=>{const t=simulate(candles([[100,100.1]]),[1],{fee:0.1,slippage:0.02});assert.equal(t[0].win,false);assert.ok(t[0].result<0)});
 test('Operação não atravessa o limite entre metades',()=>{const t=simulate(candles([[100,101],[101,102],[102,103],[103,104],[104,105],[105,106]]),[1,1,1,1,1,1],{horizon:3,start:0,end:4,fee:0,slippage:0});assert.deepEqual(Array.from(t,x=>[x.index,x.exitIndex]),[[0,2]])});
+
+test('Direção bruta positiva mas resultado líquido negativo por custos',()=>{
+ const t=simulate(candles([[100,100.1]]),[1],{fee:0.1,slippage:0.02});
+ assert.equal(t[0].grossWin,true);
+ assert.equal(t[0].win,false);
+ approx(t[0].grossPercent,0.1);
+ approx(t[0].result,-0.14);
+});
+test('Movimento desfavorável: bruto e líquido negativos',()=>{
+ const t=simulate(candles([[100,99]]),[1],{fee:0.1,slippage:0.02});
+ assert.equal(t[0].grossWin,false);
+ assert.equal(t[0].win,false);
+ approx(t[0].grossPercent,-1);
+});

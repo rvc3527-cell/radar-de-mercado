@@ -153,3 +153,11 @@ test('estatisticas de observacoes mostram custos e tamanho de amostra',()=>{
  assert.ok(html.includes('sem observações concluídas'));
  assert.ok(html.includes('Nenhum horizonte foi validado'));
 });
+
+test('estatisticas separadas por ativo e horizonte exigem amostra preliminar',()=>{
+ assert.ok(html.includes('id="scanAssetStats"'));
+ assert.ok(html.includes('function renderScanAssetStats()'));
+ assert.ok(html.includes('x.symbol===symbol&&Number.isFinite(x.results[horizon])'));
+ assert.ok(html.includes('n<30'));
+ assert.ok(html.includes('sem validação estatística'));
+});

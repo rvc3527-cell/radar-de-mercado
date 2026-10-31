@@ -137,3 +137,11 @@ test('scanner compara tres ativos sem sinal de entrada',()=>{
  assert.ok(html.includes('compareAssets()'));
  assert.ok(html.includes('não por lucro previsto'));
 });
+
+test('diario prospectivo aguarda candles futuros',()=>{
+ for(const id of ['scanEvaluate','scanJournalStatus','scanJournal'])assert.ok(html.includes('id="'+id+'"'));
+ assert.ok(html.includes('radar-observations-v1'));
+ assert.ok(html.includes('Date.now()-item.time<30000'));
+ assert.ok(html.includes('Date.now()<item.entry.time+h*60000'));
+ assert.ok(html.includes('evaluateScanJournal()'));
+});

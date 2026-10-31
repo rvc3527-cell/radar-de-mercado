@@ -4,10 +4,14 @@ on:
     branches:
       - feature/quality-v12
       - feature/engine-tests-v13
+      - feature/shared-engine-v14
+      - feature/integration-v15
   pull_request:
     paths:
       - 'tests/**'
       - 'index.html'
+      - 'engine.js'
+      - '.github/workflows/indicators.yml'
 jobs:
   indicators:
     runs-on: ubuntu-latest

@@ -16,7 +16,7 @@ test('Spot long-only: ignora venda e desconta dois lados de custo',()=>{
 });
 test('Opções: alta, baixa, empate; empate conta como perda',()=>{
   const t=simulate(candles([[100,102],[100,98],[100,100]]),[1,-1,1],{mode:'binary',payout:80});
-  assert.deepEqual(t.map(x=>x.result),[0.8,0.8,-1]);
+  assert.deepEqual(Array.from(t,x=>x.result),[0.8,0.8,-1]);
 });
 test('Entrada na abertura da vela seguinte, não no fechamento da vela do sinal',()=>{
   const t=simulate(candles([[100,500],[200,210],[210,211]]),[0,1,0],{fee:0,slippage:0});
@@ -24,7 +24,7 @@ test('Entrada na abertura da vela seguinte, não no fechamento da vela do sinal'
 });
 test('Prazo de três velas: saída no fechamento da terceira e sem sobreposição',()=>{
   const t=simulate(candles([[100,101],[101,102],[102,103],[103,104],[104,105],[105,106]]),[1,1,1,1,1,1],{horizon:3,fee:0,slippage:0});
-  assert.deepEqual(t.map(x=>[x.index,x.exitIndex]),[[0,2],[3,5]]);
+  assert.deepEqual(Array.from(t,x=>[x.index,x.exitIndex]),[[0,2],[3,5]]);
 });
 test('Não opera se faltam velas para completar o prazo',()=>{
   assert.equal(simulate(candles([[100,101],[101,102]]),[1,1],{horizon:3}).length,0);
@@ -33,3 +33,6 @@ test('Payout e custos inválidos não são aceitos',()=>{
   assert.throws(()=>simulate(candles([[100,101]]),[1],{mode:'binary',payout:0}));
   assert.throws(()=>simulate(candles([[100,101]]),[1],{fee:-1}));
 });
+
+test('Spot: alta bruta pode ser perda após custos',()=>{const t=simulate(candles([[100,100.1]]),[1],{fee:0.1,slippage:0.02});assert.equal(t[0].win,false);assert.ok(t[0].result<0)});
+test('Operação não atravessa o limite entre metades',()=>{const t=simulate(candles([[100,101],[101,102],[102,103],[103,104],[104,105],[105,106]]),[1,1,1,1,1,1],{horizon:3,start:0,end:4,fee:0,slippage:0});assert.deepEqual(Array.from(t,x=>[x.index,x.exitIndex]),[[0,2]])});

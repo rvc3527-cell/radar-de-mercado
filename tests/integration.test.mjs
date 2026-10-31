@@ -205,3 +205,12 @@ test('resumo principal exige dados recentes e evita sinais de entrada nao valida
  assert.ok(html.includes('Ainda sem entrada ou duração validada'));
  assert.ok(html.includes('Observar; sem entrada confirmada'));
 });
+
+test('avaliacao de entrada demo considera apenas compras spot e evita sobreposicao temporal',()=>{
+ assert.ok(html.includes('id="scanDemoStudy"'));
+ assert.ok(html.includes('function renderScanDemoStudy()'));
+ assert.ok(html.includes('x.direction===1'));
+ assert.ok(html.includes('row.time>=lastEnd'));
+ assert.ok(html.includes('lastEnd=row.time+horizon*60000'));
+ assert.ok(html.includes('nenhum momento de entrada ou prazo foi validado'));
+});

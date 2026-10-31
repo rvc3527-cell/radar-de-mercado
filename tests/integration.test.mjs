@@ -169,3 +169,12 @@ test('comparacao pareada usa mesmo instante e horizonte para compra simples',()=
  assert.ok(html.includes('strategy-baseline'));
  assert.ok(html.includes('não é comparação com comprar continuamente'));
 });
+
+test('separacao cronologica de observacoes futuras',()=>{
+ assert.ok(html.includes('id="scanForwardSplit"'));
+ assert.ok(html.includes('function renderScanForwardSplit()'));
+ assert.ok(html.includes('.sort((a,b)=>a.time-b.time)'));
+ assert.ok(html.includes('rows.slice(0,20)'));
+ assert.ok(html.includes('rows.slice(20,30)'));
+ assert.ok(html.includes('area.append(caution);renderScanForwardSplit()'));
+});

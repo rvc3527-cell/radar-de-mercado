@@ -1,0 +1,17 @@
+# Radar de Mercado v0.1
+
+Painel estático de preços de criptomoedas com velas de 1 minuto, EMA 9, EMA 21 e RSI 14.
+
+## Publicar
+1. Crie um repositório público ou privado no GitHub chamado `radar-de-mercado`.
+2. Envie o arquivo `index.html` para a raiz do repositório.
+3. No Cloudflare, acesse Workers & Pages > Create > Pages > Connect to Git.
+4. Escolha o repositório, framework `None`, comando de build vazio e diretório de saída `/` (raiz).
+5. Publique e abra a URL `.pages.dev` gerada.
+
+## Limitações
+- Requer acesso a `data-api.binance.vision`, `data-stream.binance.vision` e `unpkg.com`.
+- WebSocket funciona enquanto a aba estiver ativa; em segundo plano no iOS pode ser suspenso.
+- Não possui previsão nem registro persistente nesta versão.
+- Indicadores usam somente velas fechadas. O preço atual usa a vela em formação.
+- Reconexão busca novamente o histórico para preencher lacunas.

@@ -88,3 +88,12 @@ test('resumo histórico é reiniciado ao trocar ativo e não promete previsão',
  assert.ok(html.includes('Ativo alterado. O histórico deste ativo'));
  assert.ok(html.includes('não uma previsão nem uma indicação de compra'));
 });
+
+test('resumo iniciante so mostra resultado apos estudo solicitado',()=>{
+ assert.ok(html.includes('if(h===1&&studyHistory.length)'));
+ assert.ok(html.includes('Análise de '));
+ assert.ok(html.includes('Esse resultado não prevê o futuro'));
+});
+test('troca de ativo reabilita botoes de estudo',()=>{
+ assert.ok(html.includes("studyToken++;studyHistory=[];$('quickStudy').disabled=false;$('runHistory').disabled=false"));
+});

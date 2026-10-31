@@ -121,3 +121,12 @@ test('simulador didatico de variacao e custos',()=>{
  assert.ok(html.includes("$('riskMove').addEventListener('input',updateRiskDemo)"));
  assert.ok(html.includes("$('riskCost').addEventListener('input',updateRiskDemo)"));
 });
+
+test('conta demo usa saldo virtual e nao envia ordens',()=>{
+ for(const id of ['conta-demo','demoCash','demoEquity','demoPosition','demoPnl','demoAmount','demoBuy','demoSell','demoReset'])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(html.includes("const DEMO_KEY='radar-demo-v1',DEMO_FEE=.001"));
+ assert.ok(html.includes('setDemoQuote(symbol,Number(k.c))'));
+ assert.ok(html.includes('Date.now()-q.at<15000'));
+ assert.ok(html.includes('localStorage.setItem(DEMO_KEY'));
+ assert.ok(html.includes('if(!confirm('));
+});

@@ -113,3 +113,11 @@ test('explicação acessível distingue movimento favorável e lucro após custo
  assert.ok(html.includes('explanation.hidden=false'));
  assert.ok(html.includes("$('resultExplanation').hidden=true"));
 });
+
+test('simulador didatico de variacao e custos',()=>{
+ for(const id of ['simulador-risco','riskMove','riskCost','riskMoveLabel','riskCostLabel','riskFinal','riskNet','riskExplanation'])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(html.includes('function updateRiskDemo()'));
+ assert.ok(html.includes('100*(move-cost)/100'));
+ assert.ok(html.includes("$('riskMove').addEventListener('input',updateRiskDemo)"));
+ assert.ok(html.includes("$('riskCost').addEventListener('input',updateRiskDemo)"));
+});

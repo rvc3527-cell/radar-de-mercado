@@ -104,3 +104,12 @@ test('guia iniciante tem quatro licoes e controles',()=>{
  assert.ok(html.includes("showLesson((lessonIndex+1)%lessons.length)"));
  assert.ok(html.includes('Os exemplos são fictícios'));
 });
+
+test('explicação acessível distingue movimento favorável e lucro após custos',()=>{
+ assert.ok(html.includes('id="resultExplanation"'));
+ assert.ok(html.includes('grossPct'));
+ assert.ok(html.includes('netPct'));
+ assert.ok(html.includes('cost.toFixed(3)'));
+ assert.ok(html.includes('explanation.hidden=false'));
+ assert.ok(html.includes("$('resultExplanation').hidden=true"));
+});

@@ -97,3 +97,10 @@ test('resumo iniciante so mostra resultado apos estudo solicitado',()=>{
 test('troca de ativo reabilita botoes de estudo',()=>{
  assert.ok(html.includes("studyToken++;studyHistory=[];$('quickStudy').disabled=false;$('runHistory').disabled=false"));
 });
+
+test('guia iniciante tem quatro licoes e controles',()=>{
+ for(const id of ['aprender','lessonProgress','lessonTitle','lessonText','lessonExample','lessonTakeaway','lessonNext'])assert.ok(html.includes('id="'+id+'"'),id);
+ for(const name of ['O que é preço?','O que é tendência?','Por que existem custos?','O que é risco?'])assert.ok(html.includes(name),name);
+ assert.ok(html.includes("showLesson((lessonIndex+1)%lessons.length)"));
+ assert.ok(html.includes('Os exemplos são fictícios'));
+});

@@ -222,3 +222,10 @@ test('acompanhamento prospectivo com marco temporal persistente',()=>{
  assert.ok(html.includes('x.direction===1'));
  assert.ok(html.includes('renderScanHoldout()'));
 });
+
+test('status da coleta na nuvem isolada da amostra local',()=>{
+ assert.ok(html.includes('id="cloudCollectorStatus"'));
+ assert.ok(html.includes('function refreshCloudCollector()'));
+ assert.ok(html.includes('radar-cloud-collector-preview.rvc3426.workers.dev/observations'));
+ assert.ok(html.includes('dados remotos não confirmados'));
+});

@@ -16,7 +16,7 @@
       const gain=(exit-entry)/entry*dir;
       const result=mode==='binary'?(gain>0?payout/100:-1):(exit-entry)/entry*100-2*(fee+slippage);
       const win=result>0;
-      trades.push({index:i,dir,entry,exit,win,result,exitIndex:i+horizon-1});
+      trades.push({index:i,dir,entry,exit,win,grossWin:gain>0,grossPercent:gain*100,result,exitIndex:i+horizon-1});
       i+=horizon;
     }
     return trades;

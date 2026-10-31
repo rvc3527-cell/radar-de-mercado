@@ -70,3 +70,10 @@ test('faixas descritivas mostram incerteza sem alegar validade temporal',()=>{
  assert.ok(html.includes('trades.length<2'));
  assert.ok(html.includes('NÃO são intervalos de confiança válidos'));
 });
+
+test('modo iniciante apresenta explicação simples e controles acessíveis',()=>{
+ for(const id of ['simpleStatus','simpleExplanation','simpleHistory','whyButton','simpleWhy','advancedToggle'])assert.ok(html.includes('id="'+id+'"'),id);
+ assert.ok(html.includes('Mostrar análises avançadas'));
+ assert.ok(html.includes('Nenhuma operação é recomendada'));
+ assert.ok(html.includes("$('simpleHistory').textContent=n?"));
+});

@@ -130,3 +130,10 @@ test('conta demo usa saldo virtual e nao envia ordens',()=>{
  assert.ok(html.includes('localStorage.setItem(DEMO_KEY'));
  assert.ok(html.includes('if(!confirm('));
 });
+
+test('scanner compara tres ativos sem sinal de entrada',()=>{
+ for(const id of ['scanner','scanRefresh','scanStatus','scanResults'])assert.ok(html.includes('id="'+id+'"'));
+ assert.ok(html.includes("['BTCUSDT','ETHUSDT','SOLUSDT']"));
+ assert.ok(html.includes('compareAssets()'));
+ assert.ok(html.includes('não por lucro previsto'));
+});

@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/quality-v12
+      - feature/engine-tests-v13
   pull_request:
     paths:
       - 'tests/**'
@@ -16,4 +17,4 @@ jobs:
         with:
           node-version: '22'
       - name: Testar equivalência EMA e RSI
-        run: node --test tests/indicators.test.mjs
+        run: node --test tests/*.test.mjs

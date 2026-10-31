@@ -214,3 +214,11 @@ test('avaliacao de entrada demo considera apenas compras spot e evita sobreposic
  assert.ok(html.includes('lastEnd=row.time+horizon*60000'));
  assert.ok(html.includes('nenhum momento de entrada ou prazo foi validado'));
 });
+
+test('acompanhamento prospectivo com marco temporal persistente',()=>{
+ assert.ok(html.includes('id="scanHoldout"'));
+ assert.ok(html.includes('radar-forward-holdout-v44'));
+ assert.ok(html.includes('x.time>=scanHoldoutStart'));
+ assert.ok(html.includes('x.direction===1'));
+ assert.ok(html.includes('renderScanHoldout()'));
+});

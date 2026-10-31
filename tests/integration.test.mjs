@@ -187,3 +187,13 @@ test('coleta automatica opt-in apenas com aba visivel',()=>{
  assert.ok(html.includes('65000'));
  assert.ok(html.includes('clearInterval(scanAutoTimer)'));
 });
+
+test('interface moderna prioriza oportunidade e mostra momento e duracao sem prometer sinais',()=>{
+ for(const id of ['scanner','scanResults','scanAuto','scanJournal'])assert.ok(html.includes('id="'+id+'"'));
+ assert.ok(html.includes('Oportunidades em observação'));
+ assert.ok(html.includes('opportunity-card'));
+ assert.ok(html.includes('Aguardar confirmação'));
+ assert.ok(html.includes('Não validada'));
+ assert.ok(html.includes('<details class="scanner-details">'));
+ assert.ok(html.includes('#6d53f5'));
+});

@@ -77,3 +77,14 @@ test('modo iniciante apresenta explicação simples e controles acessíveis',()=
  assert.ok(html.includes('Nenhuma operação é recomendada'));
  assert.ok(html.includes("$('simpleHistory').textContent=n?"));
 });
+
+test('iniciante pode analisar um dia sem abrir laboratório',()=>{
+ assert.ok(html.includes('id="quickStudy"'));
+ assert.ok(html.includes("$('quickStudy').addEventListener('click',()=>{$('historyDays').value='1';loadStudy()})"));
+ assert.ok(html.includes("$('quickStudy').disabled=true"));
+ assert.ok(html.includes("$('quickStudy').disabled=false"));
+});
+test('resumo histórico é reiniciado ao trocar ativo e não promete previsão',()=>{
+ assert.ok(html.includes('Ativo alterado. O histórico deste ativo'));
+ assert.ok(html.includes('não uma previsão nem uma indicação de compra'));
+});

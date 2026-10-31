@@ -244,3 +244,10 @@ test('coletor em nuvem expõe diagnóstico sem declarar execução inexistente',
  assert.ok(html.includes('Nenhuma execução registrada. O acesso público foi habilitado'));
  assert.ok(html.includes('Falha ao consultar o diagnóstico'));
 });
+
+test('painel diferencia teste da Binance e execucao do coletor',()=>{
+ assert.ok(html.includes('id="cloudUpstreamStatus"'));
+ assert.ok(html.includes('function refreshUpstreamStatus()'));
+ assert.ok(html.includes('/probe'));
+ assert.ok(html.includes('coleta agendada não confirmada'));
+});

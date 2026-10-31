@@ -145,3 +145,11 @@ test('diario prospectivo aguarda candles futuros',()=>{
  assert.ok(html.includes('Date.now()<item.entry.time+h*60000'));
  assert.ok(html.includes('evaluateScanJournal()'));
 });
+
+test('estatisticas de observacoes mostram custos e tamanho de amostra',()=>{
+ assert.ok(html.includes('id="scanStats"'));
+ assert.ok(html.includes('function renderScanStats()'));
+ assert.ok(html.includes('v-0.2'));
+ assert.ok(html.includes('sem observações concluídas'));
+ assert.ok(html.includes('Nenhum horizonte foi validado'));
+});

@@ -229,3 +229,11 @@ test('status da coleta na nuvem isolada da amostra local',()=>{
  assert.ok(html.includes('radar-cloud-collector-preview.rvc3426.workers.dev/observations'));
  assert.ok(html.includes('dados remotos não confirmados'));
 });
+
+test('painel remoto mostra estado sem observacoes e atualizacao manual',()=>{
+ assert.ok(html.includes('id="cloudCollectorBoard"'));
+ assert.ok(html.includes('id="cloudCollectorRefresh"'));
+ assert.ok(html.includes('sem observações registradas'));
+ assert.ok(html.includes('Nenhum registro até agora'));
+ assert.ok(html.includes('Não foi possível confirmar os dados remotos'));
+});

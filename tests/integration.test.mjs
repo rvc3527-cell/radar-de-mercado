@@ -161,3 +161,11 @@ test('estatisticas separadas por ativo e horizonte exigem amostra preliminar',()
  assert.ok(html.includes('n<30'));
  assert.ok(html.includes('sem validação estatística'));
 });
+
+test('comparacao pareada usa mesmo instante e horizonte para compra simples',()=>{
+ assert.ok(html.includes('id="scanBaseline"'));
+ assert.ok(html.includes('function renderScanBaseline()'));
+ assert.ok(html.includes('x.results[horizon]*x.direction-0.2'));
+ assert.ok(html.includes('strategy-baseline'));
+ assert.ok(html.includes('não é comparação com comprar continuamente'));
+});

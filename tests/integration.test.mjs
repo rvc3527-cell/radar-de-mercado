@@ -20,9 +20,9 @@ test('sinais calculados com vela anterior',()=>{
 
 test('estrutura de layout e CSS sem escapes literais',()=>{
  for(const id of ['grafico','visao-geral','indicadores','laboratorio','dataFreshness'])assert.ok(html.includes('id="'+id+'"'),id);
- const css=html.match(/<style>([\\s\\S]*?)<\\/style>/)?.[1];
+ const css=html.split('<style>')[1]?.split('</style>')[0];
  assert.ok(css,'stylesheet ausente');
- assert.ok(!css.includes('\\\\n'),'CSS contem barra-n literal');
+ assert.ok(!css.includes(String.fromCharCode(92)+'n'),'CSS contem barra-n literal');
 });
 test('idade dos dados atualizada após carregamento e eventos',()=>{
  assert.ok(html.includes('function updateFreshness()'));

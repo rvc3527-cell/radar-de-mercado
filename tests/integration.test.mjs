@@ -34,3 +34,10 @@ test('janelas temporais nao se sobrepoem',()=>{
  assert.ok(html.includes('from:start,to:middle'));
  assert.ok(html.includes('from:middle,to:closed.length'));
 });
+
+test('rotas e dependencias essenciais do dashboard',()=>{
+ assert.ok(html.includes('https://data-api.binance.vision/api/v3/klines'));
+ assert.ok(html.includes('wss://data-stream.binance.vision:443/ws/'));
+ assert.ok(html.includes('id="runHistory"'));
+ assert.ok(html.includes('id="historyDays"'));
+});

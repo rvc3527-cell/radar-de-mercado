@@ -1,0 +1,19 @@
+name: Testes dos indicadores
+on:
+  push:
+    branches:
+      - feature/quality-v12
+  pull_request:
+    paths:
+      - 'tests/**'
+      - 'index.html'
+jobs:
+  indicators:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Testar equivalência EMA e RSI
+        run: node --test tests/indicators.test.mjs

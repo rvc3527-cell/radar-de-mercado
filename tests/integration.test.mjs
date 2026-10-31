@@ -178,3 +178,12 @@ test('separacao cronologica de observacoes futuras',()=>{
  assert.ok(html.includes('rows.slice(20,30)'));
  assert.ok(html.includes('area.append(caution);renderScanForwardSplit()'));
 });
+
+test('coleta automatica opt-in apenas com aba visivel',()=>{
+ assert.ok(html.includes('id="scanAuto"'));
+ assert.ok(html.includes('id="scanAutoStatus"'));
+ assert.ok(html.includes("document.visibilityState==='visible'"));
+ assert.ok(html.includes('setInterval('));
+ assert.ok(html.includes('65000'));
+ assert.ok(html.includes('clearInterval(scanAutoTimer)'));
+});

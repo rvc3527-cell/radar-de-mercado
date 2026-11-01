@@ -10,6 +10,8 @@ Todas as branches remotas são ancestrais de feature/collector-freshness-v55
 como base atual. Sequência: v5.1 Coinbase USD → v5.2 painel → v5.3 horizontes →
 v5.4 exclusão de sobreposição → v5.5 diagnóstico. v5.5 difere de v5.4 somente
 pelo diagnóstico de candles. Nova branch: fix/collector-integrity-v56.
+PR #1 permanece aberto como rascunho da v0.2 para main; seu código já é
+ancestral da v5.5. Nenhuma integração ou fechamento desse PR foi realizado.
 
 ## Infraestrutura confirmada por API (somente leitura na auditoria)
 
@@ -99,3 +101,37 @@ terceiros: aplicar limitação se surgir abuso. Nenhum token no código.
 Volume normal permanece três consultas de mercado por ciclo, 288 ciclos/dia;
 D1 cresce com histórico e diagnósticos, sem retenção automática destrutiva.
 Não foi possível certificar a fatura total da conta ou conversão para R$ 50.
+
+
+## Evidências complementares da infraestrutura
+
+Antes da primeira execução v5.6, a consulta ampliada encontrou 16 execuções,
+com intervalos entre 297.442 e 303.253 ms. Havia 9 observações (BTC 4, ETH 1,
+SOL 4) e 24 resultados; nenhum preço de referência não positivo, direção inválida,
+símbolo inesperado, horizonte inválido ou timestamp desalinhado nas verificações SQL.
+A observação ETH estava sem resultados nesse instante; o coletor antigo interrompia
+sua avaliação quando a consulta do ativo retornava cache antigo.
+O HTML servido pelo preview era idêntico ao index.html da branch base.
+
+Deploy v5.6 confirmado em 2026-11-01 00:33:38 UTC:
+- Commit do código: beefd95681459d405fa4494004d54028e5ace058.
+- Deployment: 562fb177-6b2d-4667-8f48-63b93909cd3d.
+- Worker version: 0067aba0-25ef-455d-b6f0-011f204604d7 (100%).
+- GitHub Actions: https://github.com/rvc3527-cell/radar-de-mercado/actions/runs/41257263226
+  concluído com sucesso no Node 22.
+- /probe após publicação: três ativos válidos, 180 candles fechados por ativo,
+  sem lacunas/duplicatas, idade 44 s. /observations respondeu normalmente.
+- Cron conferido novamente após deploy: */5 * * * *.
+
+Uma checagem pontual não comprova estabilidade de longo prazo. É necessário
+acompanhar múltiplos ciclos antes de considerar encerrada a fase de confiabilidade.
+
+## Primeira execução automática após deploy
+
+Confirmada no /health e em collector_runs: started_at 1793493349984
+(2026-11-01 00:35:49.984 UTC). Os três ativos reportaram version 5.6,
+HTTP 200, 180 candles contínuos, zero lacunas e duplicatas; idade 50–51 s.
+Nenhum erro por ativo. Nenhuma condição alinhada nessa execução, portanto é
+correto não criar novas observações. A avaliação de pendências foi executada
+para BTC (12 combinações), ETH (3) e SOL (12), com INSERT OR IGNORE preservando
+resultados anteriores. `evaluated` conta combinações avaliadas, não novas linhas.

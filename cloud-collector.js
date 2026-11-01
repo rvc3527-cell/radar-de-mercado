@@ -37,6 +37,21 @@ function validateCandles(raw,now,window=candleWindow(now)){
   if(diagnostics.missing)fail('MISSING_CANDLES','Histórico com '+diagnostics.missing+' minuto(s) ausente(s); sem interpolação',diagnostics);
   return {rows,diagnostics};
 }
+// Read only a bounded JSON error message, never arbitrary HTML or full bodies.
+async function upstreamError(response){
+  const diagnostics={serverDate:response.headers.get('date'),requestId:response.headers.get('cf-ray')};
+  if(!response.headers.get('content-type')?.toLowerCase().includes('application/json')||!response.body){try{await response.body?.cancel()}catch(error){}return diagnostics;}
+  const reader=response.body.getReader(),chunks=[];let bytes=0;
+  try{
+    for(;;){const {value,done}=await reader.read();if(done)break;bytes+=value.length;if(bytes>1024){diagnostics.upstreamMessage='Resposta de erro maior que o limite de diagnóstico';return diagnostics}chunks.push(value)}
+    const buffer=new Uint8Array(bytes);let offset=0;for(const chunk of chunks){buffer.set(chunk,offset);offset+=chunk.length}
+    const text=new TextDecoder().decode(buffer);
+    const data=JSON.parse(text);
+    if(typeof data?.message==='string')diagnostics.upstreamMessage=data.message.replace(/[\u0000-\u001f\u007f]/g,' ').slice(0,200);
+  }catch(error){/* Keep HTTP classification even if the error body is unreadable. */}
+  finally{try{await reader.cancel()}catch(error){}reader.releaseLock()}
+  return diagnostics;
+}
 async function fetchCandles(symbol,now=Date.now()){
   const window=candleWindow(now);
   const url=new URL('https://api.exchange.coinbase.com/products/'+symbol.replace('USD','-USD')+'/candles');
@@ -44,7 +59,7 @@ async function fetchCandles(symbol,now=Date.now()){
   let response;
   try{response=await fetch(url,{headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)});}catch(error){fail('API_NETWORK','Coinbase: falha de conexão ou tempo esgotado');}
   const api={httpStatus:response.status,cacheStatus:response.headers.get('cf-cache-status'),cacheAge:response.headers.get('age'),windowStart:window.start,windowEnd:window.end};
-  if(!response.ok)fail('API_HTTP','Coinbase HTTP '+response.status,api);
+  if(!response.ok){const details=await upstreamError(response);fail('API_HTTP','Coinbase HTTP '+response.status+(details.upstreamMessage?': '+details.upstreamMessage:''),{...api,...details})}
   let raw;
   try{raw=await response.json()}catch(error){fail('INVALID_RESPONSE','Coinbase: JSON inválido',api)}
   try{const data=validateCandles(raw,Date.now(),window);return {...data,diagnostics:{...api,...data.diagnostics}}}catch(error){error.diagnostics={...api,...error.diagnostics};throw error}
@@ -84,7 +99,7 @@ async function collect(env){
   return report;
 }
 const headers={'content-type':'application/json','cache-control':'no-store','access-control-allow-origin':'https://radar-de-mercado-preview.rvc3426.workers.dev'};
-export default {async scheduled(event,env,ctx){ctx.waitUntil(collect(env))},async fetch(request,env){const path=new URL(request.url).pathname;if(request.method!=='GET')return new Response('Method not allowed',{status:405});if(path==='/probe'){const checks=[];for(const symbol of SYMBOLS){try{const {diagnostics}=await fetchCandles(symbol);checks.push({symbol,ok:true,...diagnostics})}catch(error){checks.push({symbol,ok:false,...error.diagnostics,code:error.code||'API_NETWORK',error:String(error).slice(0,200)})}}return Response.json({checks,at:Date.now(),version:VERSION,source:'Coinbase Exchange USD spot',note:'Read-only upstream quality test; does not record signals.'},{headers})}if(path==='/health'){const last=await env.DB.prepare('SELECT started_at,report FROM collector_runs ORDER BY started_at DESC LIMIT 1').first();return Response.json({ok:true,version:VERSION,methodology_version:methodologyVersion,methodologyReady:await methodologyReady(env),database:!!env.DB,runAgeSeconds:last?Math.round((Date.now()-last.started_at)/1000):null,scheduleDelayed:!last||Date.now()-last.started_at>600000,last_run:last||null},{headers})}if(path==='/observations'){
+export default {async scheduled(event,env,ctx){ctx.waitUntil(collect(env))},async fetch(request,env){const path=new URL(request.url).pathname;if(request.method!=='GET')return new Response('Method not allowed',{status:405});if(path==='/probe'){const checks=[];for(const symbol of SYMBOLS){try{const {diagnostics}=await fetchCandles(symbol);checks.push({symbol,ok:true,...diagnostics})}catch(error){checks.push({symbol,ok:false,...error.diagnostics,code:error.code||'API_NETWORK',error:String(error).slice(0,200)})}}return Response.json({checks,at:Date.now(),version:VERSION,diagnosticsVersion:'http-errors-1',source:'Coinbase Exchange USD spot',note:'Read-only upstream quality test; does not record signals.'},{headers})}if(path==='/health'){const last=await env.DB.prepare('SELECT started_at,report FROM collector_runs ORDER BY started_at DESC LIMIT 1').first();return Response.json({ok:true,version:VERSION,methodology_version:methodologyVersion,methodologyReady:await methodologyReady(env),database:!!env.DB,runAgeSeconds:last?Math.round((Date.now()-last.started_at)/1000):null,scheduleDelayed:!last||Date.now()-last.started_at>600000,last_run:last||null},{headers})}if(path==='/observations'){
   const ready=await methodologyReady(env);
   const versionColumn=ready?'o.methodology_version':'NULL';
   // Limit observations before the JOIN: never truncate an observation's horizons.

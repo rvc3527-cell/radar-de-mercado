@@ -23,7 +23,7 @@ export async function panel({now=1800000010000,stored=[],fetch=async()=>new Resp
  class Clock extends Date{static now(){return now}}
  const series=()=>({setData(){},update(){}});
  const context=createContext({Date:Clock,Response,Request,URL,AbortSignal,console:{log(){},error(e){errors.push(e)}},setInterval(){},clearInterval(){},setTimeout(){},clearTimeout(){},fetch,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},document:{getElementById:get,createElement:()=>new Element(),querySelectorAll:()=>[],addEventListener(){},visibilityState:'visible'},ResizeObserver:class{observe(){}},WebSocket:class{close(){}},LightweightCharts:{createChart:()=>({addCandlestickSeries:series,addLineSeries:series,applyOptions(){},timeScale:()=>({fitContent(){}})})}});
- for(const f of ['indicators.js','statistics.js','engine.js'])runInContext(read(f),context,{filename:f});
+ for(const f of ['indicators.js','statistics.js','engine.js','dashboard.js'])runInContext(read(f),context,{filename:f});
  for(const match of read('index.html').matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))if(match[1].trim())runInContext(match[1],context,{filename:'index.html'});
  await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
  return {context,get,storage,errors,run:source=>runInContext(source,context)};

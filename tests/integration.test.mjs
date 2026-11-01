@@ -20,7 +20,7 @@ test('sinais calculados com vela anterior',()=>{
 
 test('estrutura de layout e CSS sem escapes literais',()=>{
  for(const id of ['grafico','visao-geral','indicadores','laboratorio','dataFreshness'])assert.ok(html.includes('id="'+id+'"'),id);
- const css=html.split('<style>')[1]?.split('</style>')[0];
+ const css=readFileSync(new URL('../petroleo.css',import.meta.url),'utf8');
  assert.ok(css,'stylesheet ausente');
  assert.ok(!css.includes(String.fromCharCode(92)+'n'),'CSS contem barra-n literal');
 });
@@ -51,8 +51,8 @@ test('laboratório mostra movimento bruto médio e custo de equilíbrio',()=>{
 });
 test('tabela de resultados tem rolagem horizontal no celular',()=>{
  assert.ok(html.includes('class="table-scroll"'));
- assert.ok(html.includes('overflow-x:auto'));
- assert.ok(html.includes('position:sticky;left:0'));
+ assert.ok(readFileSync(new URL('../petroleo.css',import.meta.url),'utf8').includes('overflow-x:auto'));
+ assert.ok(readFileSync(new URL('../petroleo.css',import.meta.url),'utf8').includes('position:sticky;left:0'));
 });
 
 test('referência Spot sem indicadores usa mesmas janelas e custos',()=>{
@@ -195,7 +195,7 @@ test('interface moderna prioriza oportunidade e mostra momento e duracao sem pro
  assert.ok(html.includes('Observar; sem entrada confirmada'));
  assert.ok(html.includes('Não validada'));
  assert.ok(html.includes('<details class="scanner-details">'));
- assert.ok(html.includes('#6d53f5'));
+ assert.ok(readFileSync(new URL('../petroleo.css',import.meta.url),'utf8').includes('--coral:#E9A88D'));
 });
 
 test('resumo principal exige dados recentes e evita sinais de entrada nao validados',()=>{

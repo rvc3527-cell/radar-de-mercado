@@ -1,0 +1,10 @@
+{
+  "consoleErrors": [],
+  "canvas": 7,
+  "overflow": false,
+  "price": "78.138,00",
+  "status": "○ Reconectando",
+  "source": "Consulta: 15:37:58 · Binance",
+  "cards": "BTC\nBitcoin\n↑ +0.07% · 1 min\n78.134,86 USDT\nDireção observada: Alta\nBinance · fechamento de 1 min · 15:37\nETH\nEthereum\n↑ +0.04% · 1 min\n2.271,00 USDT\nDireção observada: Baixa\nBinance · fechamento de 1 min · 15:37\nSOL\nSolana\n↑ +0.03% · 1 min\n94,97 USDT\nDireção observada: Baixa\nBinance · fechamento de 1 min · 15:37",
+  "collector": "BTC/USD\n✓ Candles validados\nETH/USD\n✓ Candles validados\nSOL/USD\n✓ Candles validados\nÚltima execução: 01/11/2026, 15:35:50 · Coinbase USD"
+}

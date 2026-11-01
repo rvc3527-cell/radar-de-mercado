@@ -1,5 +1,10 @@
 # Validação v5.7
 
+**Estado atualizado:** migração autorizada e aplicada, coletor e painel publicados
+no experimental. Ver [evidências de deploy](DEPLOY-v57.md). O relatório abaixo
+registra também as verificações anteriores à autorização. Após ajuste de rótulo
+do diagnóstico, a suíte passou de 82 para 83 testes, todos aprovados.
+
 Base inspecionada: fix/collector-integrity-v56, commit 118e625.
 Branch: feature/indicator-consistency-v57. Produção intocada.
 

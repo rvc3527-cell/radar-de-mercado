@@ -1,8 +1,12 @@
-# Migração proposta — AGUARDANDO APROVAÇÃO DO PROPRIETÁRIO
+# Migração v5.7 — APLICADA NO D1 EXPERIMENTAL
 
 Destino exclusivo: D1 `radar-de-mercado-preview-observations`,
 ID `a583aa28-6961-4f6c-a490-e8c4bf560816`.
-Nenhuma alteração de esquema remota ou publicação v5.7 foi executada nesta etapa.
+Autorização explícita recebida do proprietário nesta sessão. O SQL abaixo foi
+aplicado uma única vez em 1 de novembro de 2026, antes da publicação dos Workers
+experimentais. A coluna foi confirmada com PRAGMA. Consulte DEPLOY-v57.md para
+IDs das versões e verificação dos registros. O roteiro abaixo permanece como
+referência para novas implantações; não repetir ALTER no banco já migrado.
 
 ## SQL exato
 

@@ -56,3 +56,44 @@ etapa: 14 observações e 33 resultados; números mudam com o coletor ativo.
 As execuções recentes v5.6 retornaram 180 candles contínuos por ativo, HTTP 200,
 sem lacunas/duplicatas. Não houve execução da migração no D1 remoto, nem deploy
 v5.7. Publicação depende da aprovação descrita em MIGRACAO-v57.md.
+
+## Evidências remotas confirmadas
+
+- Commit de implementação: `20fdbbe896ac2d216bc28f468e231108ea08eef1`.
+- [GitHub Actions Node 22 — sucesso](https://github.com/rvc3527-cell/radar-de-mercado/actions/runs/41259210522).
+  Job `tests` concluído; etapas de testes, sintaxe e build aprovadas.
+- [PR #2 em rascunho](https://github.com/rvc3527-cell/radar-de-mercado/pull/2),
+  base fix/collector-integrity-v56. Não mesclado; aguarda migração autorizada.
+- Consulta D1 final somente leitura: 22 execuções, 17 observações, 45 resultados,
+  zero resultados órfãos, zero referências não positivas/direções inválidas/
+  timestamps desalinhados e zero horizontes inválidos nas verificações realizadas.
+  PRAGMA confirma que a coluna nova ainda não existe. Números são uma fotografia.
+- /health remoto ainda confirma v5.6 operacional, scheduleDelayed=false;
+  última execução consultada com 180 candles por ativo e sem erro.
+- Nenhuma operação de escrita foi enviada à API Cloudflare nesta etapa.
+
+## Arquivos alterados e finalidade
+
+| Arquivo | Finalidade |
+| --- | --- |
+| indicators.js | Implementação matemática única e adaptação de candles |
+| statistics.js | Grupos por metodologia e estatísticas sem sobreposição |
+| cloud-collector.js | Indicadores compartilhados, persistência v5.7 e API compatível |
+| cloud-schema.sql | Esquema de instalação nova com coluna opcional |
+| migrations/0001_methodology_v57.sql | ALTER proposto, não aplicado no D1 remoto |
+| index.html | Integração dos indicadores, rótulos, horários e separação de amostras |
+| scripts/build-preview.mjs | Artefato reproduzível de hospedagem preview |
+| scripts/smoke-mobile.py | Teste opcional do navegador com dados isolados |
+| tests/indicators.test.mjs | Referências matemáticas independentes |
+| tests/methodology.test.mjs | Paridade, migração, persistência e interface real em VM |
+| tests/preview-build.test.mjs | Conteúdo exato dos assets do Worker preview |
+| tests/helpers/runtime.mjs | Harness de SQLite e navegador para testes reais |
+| tests/fixtures/schema-v56.sql | Esquema antigo para validar migração |
+| tests/collector.test.mjs | Compatibilidade dos testes existentes com módulo compartilhado |
+| tests/integration.test.mjs | Remoção de expectativa textual coberta por teste executável |
+| .github/workflows/indicators.yml | Syntax check e build preview junto aos testes |
+| .gitignore | Evitar artefatos, dependências locais e arquivos de ambiente no Git |
+| README.md | Links e alerta de publicação condicionada à migração |
+| docs/METODOLOGIA-v57.md | Definições e diferenças de classificação preservadas |
+| docs/MIGRACAO-v57.md | SQL, impacto, autorização, implantação e reversão |
+| docs/VALIDACAO-v57.md | Evidências, cobertura, limites e lista de arquivos |

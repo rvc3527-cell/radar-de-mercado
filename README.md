@@ -34,3 +34,8 @@ experimental. O módulo `indicators.js` precisa acompanhar o coletor no upload;
 para o painel, gerar o artefato com `node scripts/build-preview.mjs`.
 
 [Evidências da implantação v5.7](docs/DEPLOY-v57.md).
+
+## Coletor 5.7.1
+
+[Correção confirmada do User-Agent exigido pela Coinbase e limitação 429](docs/COINBASE-HTTP-v571.md).
+A metodologia dos indicadores permanece v5.7; a atualização é operacional.

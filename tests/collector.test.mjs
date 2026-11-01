@@ -95,3 +95,32 @@ test('script do coletor e script inline têm sintaxe válida',async()=>{
  for(const m of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new Script(m[1]);
  assert.ok(source.includes('ctx.waitUntil(collect(env))'));
 });
+test('diagnóstico JSON de HTTP 400 preserva mensagem, data e identificação pública',async t=>{
+ t.mock.method(globalThis,'fetch',async()=>Response.json({message:'Invalid start\nend'},{status:400,headers:{date:'Sun, 01 Nov 2026 12:00:00 GMT','cf-ray':'public-request-id'}}));
+ await assert.rejects(fetchCandles('BTCUSD',now),e=>e.code==='API_HTTP'&&e.diagnostics.upstreamMessage==='Invalid start end'&&e.diagnostics.requestId==='public-request-id'&&e.diagnostics.serverDate==='Sun, 01 Nov 2026 12:00:00 GMT');
+});
+test('diagnóstico nunca publica corpo HTML do provedor',async t=>{
+ t.mock.method(globalThis,'fetch',async()=>new Response('<html>private upstream response</html>',{status:400,headers:{'content-type':'text/html'}}));
+ await assert.rejects(fetchCandles('BTCUSD',now),e=>e.code==='API_HTTP'&&!JSON.stringify(e.diagnostics).includes('private upstream'));
+});
+test('diagnóstico limita leitura e cancela corpo grande, mantendo HTTP 400',async t=>{
+ let cancelled=false;
+ t.mock.method(globalThis,'fetch',async()=>new Response(new ReadableStream({pull(controller){controller.enqueue(new Uint8Array(1025))},cancel(){cancelled=true}}),{status:400,headers:{'content-type':'application/json'}}));
+ await assert.rejects(fetchCandles('BTCUSD',now),e=>e.code==='API_HTTP'&&e.diagnostics.upstreamMessage.includes('limite'));
+ assert.equal(cancelled,true);
+});
+test('JSON de erro inválido não apaga classificação HTTP original',async t=>{
+ t.mock.method(globalThis,'fetch',async()=>new Response('{invalid',{status:400,headers:{'content-type':'application/json'}}));
+ await assert.rejects(fetchCandles('BTCUSD',now),e=>e.code==='API_HTTP'&&e.diagnostics.httpStatus===400);
+});
+test('Coinbase recebe User-Agent identificável mesmo quando a origem exige cabeçalho',async t=>{
+ t.mock.method(Date,'now',()=>now);
+ t.mock.method(globalThis,'fetch',async(url,options)=>{
+  if(!options.headers['User-Agent']?.startsWith('RadarDeMercado/5.7.1 '))return Response.json({message:'User-Agent header is required.'},{status:400});
+  assert.equal(options.headers.Accept,'application/json');
+  return Response.json(candles(),{headers:{'cf-cache-status':'MISS'}});
+ });
+ const {rows,diagnostics}=await fetchCandles('BTCUSD',now);
+ assert.equal(rows.length,180);assert.equal(diagnostics.httpStatus,200);assert.equal(diagnostics.cacheStatus,'MISS');
+ assert.match(diagnostics.requestUserAgent,/RadarDeMercado\/5\.7\.1/);
+});

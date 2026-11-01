@@ -98,3 +98,33 @@ Worker usado anteriormente. Conferir todos os assets servidos byte a byte após 
 
 Reversão: reimplantar preview Worker version 44daa126-068b-496b-aca2-d54c3cfe6416.
 Nenhuma reversão de banco ou coletor é necessária. Não há migração neste redesign.
+
+## Publicação confirmada
+
+- Commit funcional: 29ef242376a002b3af1c2c2dfa16492f6ecc443b.
+- [Actions aprovado](https://github.com/rvc3527-cell/radar-de-mercado/actions/runs/41321999785).
+- [PR #4](https://github.com/rvc3527-cell/radar-de-mercado/pull/4), sem merge em produção.
+- Publicado somente radar-de-mercado-preview em 2026-11-01 15:36:04 UTC.
+- Deployment: 6b3c5537-889a-438e-ad3b-852d8e60bed4.
+- Worker version: d77aa143-892e-44a6-a9e0-51e4c17d5830, ativo a 100%.
+- HTML, petroleo.css, dashboard.js, indicators.js, statistics.js e engine.js
+  servidos publicamente são idênticos byte a byte aos arquivos testados.
+- Produção mantém modified_on 2026-10-31T20:18:49.8865Z.
+- Coletor mantém modified_on 2026-11-01T15:12:40.027376Z e mesmo etag.
+  /health respondeu versão 5.7.1, scheduleDelayed false; execução das 15:35 UTC
+  validou BTC/ETH/SOL com HTTP 200 e 180 candles por ativo.
+- Nenhuma operação de escrita na API D1 ou upload de coletor nesta tarefa.
+
+Verificação do preview publicado com respostas reais atuais e biblioteca gráfica
+real: sete canvases, cotação e fonte visíveis, leitura do coletor e cartões corretos,
+zero erros JS e zero overflow em 390 px. Captura artifacts/live-preview-390.png e
+relatório artifacts/live-preview.json. Recursos HTTPS obtidos via curl com TLS
+validado e entregues ao Chromium, pois o navegador não confia no certificado do
+proxy local. Não se desativou TLS. O WebSocket nesse ambiente ficou reconectando;
+o status exibiu essa condição e os preços recebidos por REST. Não afirmamos teste
+de streaming estável nem Safari real. Essa limitação não foi mascarada como conexão
+ativa. O código WebSocket original permanece no site.
+
+As capturas overview-* usam o snapshot real para revisão visual consistente. A
+captura live-preview-* usa as respostas atuais do site publicado. Nenhum snapshot
+ou preço de teste é incluído no artefato de produção/preview.

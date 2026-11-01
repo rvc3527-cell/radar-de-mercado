@@ -158,3 +158,23 @@ As três usam HTTPS/JSON compatível com Workers; isso não certifica disponibil
 regional ou confiabilidade equivalente. Limites atuais específicos de Kraken/Binance
 não foram certificados nesta etapa. Não há comparação de uptime medida nem motivo
 para trocar automaticamente de fonte antes de observar esta política econômica.
+
+## Evidências de entrega antes da autorização
+
+- Commit funcional: 1a71550169d0e3695f4f79209a2fae74b0d57fcf.
+- PR em rascunho: https://github.com/rvc3527-cell/radar-de-mercado/pull/5
+- Actions concluído com sucesso:
+  https://github.com/rvc3527-cell/radar-de-mercado/actions/runs/41328084028
+- Contagem executada diretamente: 108 testes, 108 aprovados, zero falhas. Inclui
+  20 novos testes de rate limit e 88 testes anteriores.
+- Somente sete arquivos alterados: cloud-collector.js, cloud-schema.sql,
+  migrations/0002_collector_control_v572.sql, tests/collector.test.mjs,
+  tests/helpers/runtime.mjs, tests/rate-limit.test.mjs e este relatório.
+- indicators.js, statistics.js e engine.js permanecem inalterados. Front-end e CSS
+  do redesign não pertencem ao diff. Artefatos locais preexistentes não foram
+  adicionados ou sobrescritos nesta branch.
+- Migração remota e publicação da v5.7.2 NÃO executadas. O coletor publicado
+  permanece na v5.7.1; nenhuma escrita de API foi enviada ao Cloudflare nesta etapa.
+- Recuperação e cooldown comprovados nos testes isolados. A demonstração em Cron
+  real, a medição de 429 após deploy e a confirmação do D1 pós-migração permanecem
+  pendentes da autorização e implantação, sem alegação de estabilidade definitiva.

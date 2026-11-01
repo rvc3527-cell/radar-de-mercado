@@ -74,7 +74,7 @@ test('faixas descritivas mostram incerteza sem alegar validade temporal',()=>{
 test('modo iniciante apresenta explicação simples e controles acessíveis',()=>{
  for(const id of ['simpleStatus','simpleExplanation','simpleHistory','whyButton','simpleWhy','advancedToggle'])assert.ok(html.includes('id="'+id+'"'),id);
  assert.ok(html.includes('Mostrar análises avançadas'));
- assert.ok(html.includes('Nenhuma operação é recomendada'));
+ assert.ok(html.includes('Não recomenda operações.'));
  assert.ok(html.includes("$('simpleHistory').textContent=n?"));
 });
 
@@ -86,7 +86,7 @@ test('iniciante pode analisar um dia sem abrir laboratório',()=>{
 });
 test('resumo histórico é reiniciado ao trocar ativo e não promete previsão',()=>{
  assert.ok(html.includes('Ativo alterado. O histórico deste ativo'));
- assert.ok(html.includes('não uma previsão nem uma indicação de compra'));
+ assert.ok(html.includes('não uma previsão.'));
 });
 
 test('resumo iniciante so mostra resultado apos estudo solicitado',()=>{
@@ -95,7 +95,7 @@ test('resumo iniciante so mostra resultado apos estudo solicitado',()=>{
  assert.ok(html.includes('Esse resultado não prevê o futuro'));
 });
 test('troca de ativo reabilita botoes de estudo',()=>{
- assert.ok(html.includes("studyToken++;studyHistory=[];$('quickStudy').disabled=false;$('runHistory').disabled=false"));
+ assert.ok(html.includes("studyToken++;studyHistory=[];$('resultExplanation').hidden=true;$('quickStudy').disabled=false;$('runHistory').disabled=false"));
 });
 
 test('guia iniciante tem quatro licoes e controles',()=>{
@@ -192,7 +192,7 @@ test('interface moderna prioriza oportunidade e mostra momento e duracao sem pro
  for(const id of ['scanner','scanResults','scanAuto','scanJournal'])assert.ok(html.includes('id="'+id+'"'));
  assert.ok(html.includes('Oportunidades em observação'));
  assert.ok(html.includes('opportunity-card'));
- assert.ok(html.includes('Aguardar confirmação'));
+ assert.ok(html.includes('Observar; sem entrada confirmada'));
  assert.ok(html.includes('Não validada'));
  assert.ok(html.includes('<details class="scanner-details">'));
  assert.ok(html.includes('#6d53f5'));
@@ -227,7 +227,7 @@ test('status da coleta na nuvem isolada da amostra local',()=>{
  assert.ok(html.includes('id="cloudCollectorStatus"'));
  assert.ok(html.includes('function refreshCloudCollector()'));
  assert.ok(html.includes('radar-cloud-collector-preview.rvc3426.workers.dev/observations'));
- assert.ok(html.includes('dados remotos não confirmados'));
+ assert.ok(html.includes('A execução contínua ainda precisa ser monitorada.'));
 });
 
 test('painel remoto mostra estado sem observacoes e atualizacao manual',()=>{

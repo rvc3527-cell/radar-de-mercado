@@ -15,3 +15,10 @@ Painel estático de preços de criptomoedas com velas de 1 minuto, EMA 9, EMA 21
 - Não possui previsão nem registro persistente nesta versão.
 - Indicadores usam somente velas fechadas. O preço atual usa a vela em formação.
 - Reconexão busca novamente o histórico para preencher lacunas.
+
+## Continuação do projeto (v5.6 experimental)
+
+O projeto evoluiu além da v0.1 descrita acima. Leia a
+[auditoria técnica](docs/AUDITORIA-2026-11-01.md) e as
+[instruções do coletor](docs/COLETOR.md) antes de implantar.
+Produção exige autorização explícita do proprietário.

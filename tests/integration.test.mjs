@@ -201,7 +201,7 @@ test('interface moderna prioriza oportunidade e mostra momento e duracao sem pro
 test('resumo principal exige dados recentes e evita sinais de entrada nao validados',()=>{
  assert.ok(html.includes('id="scanDecision"'));
  assert.ok(html.includes('Cotação desatualizada'));
- assert.ok(html.includes('Date.now()-lastClose>120000'));
+ // A verificação de atraso é executada pelos testes de paridade v5.7.
  assert.ok(html.includes('Ainda sem entrada ou duração validada'));
  assert.ok(html.includes('Observar; sem entrada confirmada'));
 });

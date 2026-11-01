@@ -19,3 +19,10 @@ jobs:
           node-version: '22'
       - name: Executar testes dos indicadores, motor e integração
         run: node --test tests/*.test.mjs
+      - name: Validar sintaxe do coletor e gerar painel experimental
+        run: |
+          node --input-type=module --check < cloud-collector.js
+          node --check indicators.js
+          node --check statistics.js
+          node scripts/build-preview.mjs
+          git diff --check

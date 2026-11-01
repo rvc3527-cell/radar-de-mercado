@@ -1,9 +1,9 @@
+import './indicators.js';
 // Cloud collector prototype: isolated from production, no trades or order execution.
 const SYMBOLS=['BTCUSD','ETHUSD','SOLUSD'];
-function ema(a,n){let v=a[0],k=2/(n+1);for(let i=1;i<a.length;i++)v=a[i]*k+v*(1-k);return v}
-function rsi(a){let up=0,down=0;for(let i=a.length-14;i<a.length;i++){let d=a[i]-a[i-1];up+=Math.max(d,0);down+=Math.max(-d,0)}return down===0?100:100-100/(1+up/down)}
+const {analyzeCandles,methodologyVersion}=globalThis.RadarIndicators;
 const MINUTE=60000;
-const VERSION='5.6';
+const VERSION='5.7';
 function fail(code,message,diagnostics={}){const error=new Error(message);error.code=code;error.diagnostics=diagnostics;throw error}
 // Coinbase timestamps mark the START of the minute; our database stores its END.
 function candleWindow(now){
@@ -49,14 +49,19 @@ async function fetchCandles(symbol,now=Date.now()){
   try{raw=await response.json()}catch(error){fail('INVALID_RESPONSE','Coinbase: JSON inválido',api)}
   try{const data=validateCandles(raw,Date.now(),window);return {...data,diagnostics:{...api,...data.diagnostics}}}catch(error){error.diagnostics={...api,...error.diagnostics};throw error}
 }
+async function methodologyReady(env){const columns=await env.DB.prepare('PRAGMA table_info(observations)').all();return columns.results.some(x=>x.name==='methodology_version')}
 async function collect(env){
   const startedAt=Date.now(),report=[];
+  const ready=await methodologyReady(env);
   for(const symbol of SYMBOLS){
     try{
+      if(!ready)fail('METHODOLOGY_MIGRATION_REQUIRED','Migração v5.7 pendente; nenhuma observação nova foi gravada');
       const {rows,diagnostics}=await fetchCandles(symbol);
-      const last=rows.at(-1),prices=rows.map(x=>x.close),strength=rsi(prices),direction=ema(prices,9)>ema(prices,21)?1:-1;
-      const aligned=(direction===1&&strength>=50&&strength<70)||(direction===-1&&strength<=50&&strength>30);
-      if(aligned)await env.DB.prepare('INSERT OR IGNORE INTO observations(symbol,time,reference_price,direction) VALUES(?,?,?,?)').bind(symbol,last.time,last.close,direction).run();
+      const last=rows.at(-1);
+      // Preserve collector's historical EMA tie rule; scanner uses neutral (0).
+      const reading=analyzeCandles(rows,{now:Date.now(),timeKind:'close-ms',tieDirection:-1});
+      const {aligned,direction}=reading;
+      if(aligned)await env.DB.prepare('INSERT OR IGNORE INTO observations(symbol,time,reference_price,direction,methodology_version) VALUES(?,?,?,?,?)').bind(symbol,last.time,last.close,direction,methodologyVersion).run();
       const pending=await env.DB.prepare('SELECT * FROM observations WHERE symbol=? AND time>=?').bind(symbol,startedAt-7200000).all();
       const closes=new Map(rows.map(x=>[x.time,x.close]));
       let evaluated=0;
@@ -69,7 +74,7 @@ async function collect(env){
           evaluated++;
         }
       }
-      report.push({symbol,version:VERSION,aligned,...diagnostics,evaluated});
+      report.push({symbol,version:VERSION,methodology_version:methodologyVersion,ema9:reading.ema9,ema21:reading.ema21,rsi14:reading.rsi14,direction,aligned,...diagnostics,evaluated});
     }catch(error){
       const item={symbol,version:VERSION,...error.diagnostics,code:error.code||'STORAGE_ERROR',error:String(error).slice(0,200)};
       report.push(item);console.error(JSON.stringify({event:'collector_error',...item}));
@@ -79,4 +84,10 @@ async function collect(env){
   return report;
 }
 const headers={'content-type':'application/json','cache-control':'no-store','access-control-allow-origin':'https://radar-de-mercado-preview.rvc3426.workers.dev'};
-export default {async scheduled(event,env,ctx){ctx.waitUntil(collect(env))},async fetch(request,env){const path=new URL(request.url).pathname;if(request.method!=='GET')return new Response('Method not allowed',{status:405});if(path==='/probe'){const checks=[];for(const symbol of SYMBOLS){try{const {diagnostics}=await fetchCandles(symbol);checks.push({symbol,ok:true,...diagnostics})}catch(error){checks.push({symbol,ok:false,...error.diagnostics,code:error.code||'API_NETWORK',error:String(error).slice(0,200)})}}return Response.json({checks,at:Date.now(),version:VERSION,source:'Coinbase Exchange USD spot',note:'Read-only upstream quality test; does not record signals.'},{headers})}if(path==='/health'){const last=await env.DB.prepare('SELECT started_at,report FROM collector_runs ORDER BY started_at DESC LIMIT 1').first();return Response.json({ok:true,version:VERSION,database:!!env.DB,runAgeSeconds:last?Math.round((Date.now()-last.started_at)/1000):null,scheduleDelayed:!last||Date.now()-last.started_at>600000,last_run:last||null},{headers})}if(path==='/observations'){const rows=await env.DB.prepare('SELECT o.symbol,o.time,o.reference_price,o.direction,r.horizon,r.directional_pct FROM observations o LEFT JOIN results r ON o.symbol=r.symbol AND o.time=r.time ORDER BY o.time DESC LIMIT 180').all();return Response.json({observations:rows.results,note:'Educational price references, not executable entries.'},{headers})}return new Response('Not found',{status:404})}};
+export default {async scheduled(event,env,ctx){ctx.waitUntil(collect(env))},async fetch(request,env){const path=new URL(request.url).pathname;if(request.method!=='GET')return new Response('Method not allowed',{status:405});if(path==='/probe'){const checks=[];for(const symbol of SYMBOLS){try{const {diagnostics}=await fetchCandles(symbol);checks.push({symbol,ok:true,...diagnostics})}catch(error){checks.push({symbol,ok:false,...error.diagnostics,code:error.code||'API_NETWORK',error:String(error).slice(0,200)})}}return Response.json({checks,at:Date.now(),version:VERSION,source:'Coinbase Exchange USD spot',note:'Read-only upstream quality test; does not record signals.'},{headers})}if(path==='/health'){const last=await env.DB.prepare('SELECT started_at,report FROM collector_runs ORDER BY started_at DESC LIMIT 1').first();return Response.json({ok:true,version:VERSION,methodology_version:methodologyVersion,methodologyReady:await methodologyReady(env),database:!!env.DB,runAgeSeconds:last?Math.round((Date.now()-last.started_at)/1000):null,scheduleDelayed:!last||Date.now()-last.started_at>600000,last_run:last||null},{headers})}if(path==='/observations'){
+  const ready=await methodologyReady(env);
+  const versionColumn=ready?'o.methodology_version':'NULL';
+  // Limit observations before the JOIN: never truncate an observation's horizons.
+  const rows=await env.DB.prepare('WITH recent AS (SELECT * FROM observations ORDER BY time DESC,symbol LIMIT 180) SELECT o.symbol,o.time,o.reference_price,o.direction,'+versionColumn+' AS methodology_version,r.horizon,r.directional_pct FROM recent o LEFT JOIN results r ON o.symbol=r.symbol AND o.time=r.time ORDER BY o.time DESC,o.symbol,r.horizon').all();
+  return Response.json({observations:rows.results,methodology_version:methodologyVersion,methodologyReady:ready,at:Date.now(),limitObservations:180,note:'Educational price references, not executable entries. Legacy NULL methodology is unknown; results inherit the observation methodology. Recent window only.'},{headers})
+}return new Response('Not found',{status:404})}};

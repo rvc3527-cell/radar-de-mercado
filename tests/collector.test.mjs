@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
 const source=readFileSync(new URL('../cloud-collector.js',import.meta.url),'utf8');
-const {validateCandles,candleWindow,collect,fetchCandles,default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {validateCandles,candleWindow,collect,fetchCandles};').toString('base64'));
+const {validateCandles,candleWindow,collect,fetchCandles,default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source.replace("'./indicators.js'",JSON.stringify(new URL('../indicators.js',import.meta.url).href))+'\nexport {validateCandles,candleWindow,collect,fetchCandles};').toString('base64'));
 const now=1800000010000,end=Math.floor(now/60000)*60000;
 function candles(n=180){return Array.from({length:n},(_,i)=>[(end-(n-i)*60000)/1000,99,103,100,100+Math.sin(i/4),1])}
 function db(){
@@ -54,7 +54,7 @@ test('HTTP 429, JSON inválido e timeout são erros distintos',async t=>{
 test('coleta com SQL real é idempotente e calcula horizontes exatos',async t=>{
  t.mock.method(Date,'now',()=>now);t.mock.method(globalThis,'fetch',async()=>Response.json(candles()));
  const DB=db();t.after(()=>DB.sqlite.close());
- DB.sqlite.prepare('INSERT INTO observations VALUES(?,?,?,?)').run('BTCUSD',end-5*60000,100,-1);
+ DB.sqlite.prepare('INSERT INTO observations(symbol,time,reference_price,direction) VALUES(?,?,?,?)').run('BTCUSD',end-5*60000,100,-1);
  await collect({DB});
  const rows=DB.sqlite.prepare("SELECT * FROM results WHERE symbol='BTCUSD' AND time=? ORDER BY horizon").all(end-5*60000);
  assert.deepEqual(rows.map(x=>x.horizon),[1,3,5]);
@@ -75,7 +75,7 @@ test('falha de um ativo não interrompe outros e dados inválidos não geram reg
 test('lacunas impedem registros e resultados mesmo com preço final disponível',async t=>{
  t.mock.method(Date,'now',()=>now);t.mock.method(console,'error',()=>{});
  const raw=candles();raw.splice(-3,1);t.mock.method(globalThis,'fetch',async()=>Response.json(raw));
- const DB=db();t.after(()=>DB.sqlite.close());DB.sqlite.prepare('INSERT INTO observations VALUES(?,?,?,?)').run('BTCUSD',end-5*60000,100,1);
+ const DB=db();t.after(()=>DB.sqlite.close());DB.sqlite.prepare('INSERT INTO observations(symbol,time,reference_price,direction) VALUES(?,?,?,?)').run('BTCUSD',end-5*60000,100,1);
  const report=await collect({DB});assert.ok(report.every(x=>x.code==='MISSING_CANDLES'));
  assert.equal(DB.sqlite.prepare('SELECT COUNT(*) n FROM results').get().n,0);
 });

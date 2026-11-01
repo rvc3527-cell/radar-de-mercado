@@ -1,5 +1,9 @@
 # Operação do coletor experimental
 
+**Versão atual: v5.7.** Leia [implantação confirmada](DEPLOY-v57.md) e
+[migração aplicada e reversão](MIGRACAO-v57.md). O upload atual requer os módulos
+cloud-collector.js e indicators.js; os exemplos v5.6 abaixo são referência histórica.
+
 Único destino autorizado: radar-cloud-collector-preview.
 Não usar radar-de-mercado como destino.
 

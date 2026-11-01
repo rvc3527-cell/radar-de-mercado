@@ -22,3 +22,15 @@ O projeto evoluiu além da v0.1 descrita acima. Leia a
 [auditoria técnica](docs/AUDITORIA-2026-11-01.md) e as
 [instruções do coletor](docs/COLETOR.md) antes de implantar.
 Produção exige autorização explícita do proprietário.
+
+## v5.7 — indicadores compartilhados (experimental)
+
+- [Metodologia e regras preservadas](docs/METODOLOGIA-v57.md)
+- [Migração proposta, riscos e reversão](docs/MIGRACAO-v57.md)
+- [Validação e limitações](docs/VALIDACAO-v57.md)
+
+A migração foi autorizada pelo proprietário e aplicada exclusivamente no D1
+experimental. O módulo `indicators.js` precisa acompanhar o coletor no upload;
+para o painel, gerar o artefato com `node scripts/build-preview.mjs`.
+
+[Evidências da implantação v5.7](docs/DEPLOY-v57.md).

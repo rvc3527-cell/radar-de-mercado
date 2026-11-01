@@ -1,4 +1,4 @@
-# Coletor 5.7.2 — implementação pronta, migração aguardando autorização
+# Coletor 5.7.2 — publicado no experimental
 
 Branch fix/coinbase-rate-limit-v572 a partir de fix/coinbase-http-diagnostics-v571
 (004f783). A branch feature/petroleo-coral-redesign existe, está publicada e não
@@ -82,7 +82,12 @@ no teste. Estado antigo não se apresenta como consulta feita naquele momento.
 A forma básica checks/ok é compatível com o painel atual. A explicação textual do
 painel sobre “teste de conexão” pode ser refinada depois, sem tocar CSS nesta tarefa.
 
-## Migração proposta — NÃO EXECUTADA NO D1 REMOTO
+## Migração autorizada e aplicada no D1 experimental
+
+Após autorização explícita do proprietário nesta sessão, o SQL foi aplicado
+uma vez ao D1 experimental. Conferência por chave preservou 241 observações e
+720 resultados anteriores. Os trechos sobre aprovação abaixo descrevem o
+procedimento seguro de implantação; não indicam uma aprovação ainda pendente.
 
 Arquivo migrations/0002_collector_control_v572.sql:
 
@@ -145,7 +150,7 @@ Coinbase. Não há mecanismo de auto-migração no runtime.
 | Fonte | Candles / pares | Limites e disponibilidade | Custo / impacto |
 | --- | --- | --- | --- |
 | Coinbase Exchange | 1 min; BTC/ETH/SOL em USD, já usados | Público por IP 10/s, rajada 15; 429 observado | API pública sem assinatura paga, continuidade metodológica |
-| Kraken Spot | OHLC com intervalo de 1 min; pares USD devem ser confirmados na AssetPairs antes de migrar | Documento limita retorno a 720 entradas e inclui última vela não concluída; requer filtrar fechamento; rate limit/throttling próprio | Consulta pública; preços de outro livro/mercado, precisa identificação de provedor e estudo separado |
+| Kraken Spot | OHLC com intervalo de 1 min; BTC/ETH/SOL USD confirmados na AssetPairs, com status online na consulta | Documento limita retorno a 720 entradas e inclui última vela não concluída; requer filtrar fechamento; rate limit/throttling próprio | Consulta pública; preços de outro livro/mercado, precisa identificação de provedor e estudo separado |
 | Binance Spot | 1 min, BTC/ETH/SOL USDT já usados no scanner | Limites por peso/IP; houve 403 na coleta deste projeto, sem evidência de que deixou de ocorrer no Worker | API pública; USDT não equivale a USD, sem migração silenciosa |
 
 Referências:
@@ -173,8 +178,87 @@ para trocar automaticamente de fonte antes de observar esta política econômica
 - indicators.js, statistics.js e engine.js permanecem inalterados. Front-end e CSS
   do redesign não pertencem ao diff. Artefatos locais preexistentes não foram
   adicionados ou sobrescritos nesta branch.
-- Migração remota e publicação da v5.7.2 NÃO executadas. O coletor publicado
-  permanece na v5.7.1; nenhuma escrita de API foi enviada ao Cloudflare nesta etapa.
-- Recuperação e cooldown comprovados nos testes isolados. A demonstração em Cron
-  real, a medição de 429 após deploy e a confirmação do D1 pós-migração permanecem
-  pendentes da autorização e implantação, sem alegação de estabilidade definitiva.
+- Antes da autorização, a migração remota e publicação não haviam sido executadas.
+  Após o aceite explícito, foram realizadas conforme as evidências abaixo.
+- Antes da autorização, recuperação/cooldown tinham sido comprovados apenas em
+  testes isolados. Após implantação, ambos também foram observados em Cron real,
+  conforme os registros abaixo, sem alegação de disponibilidade permanente.
+
+
+## Implantação autorizada em 1 de novembro de 2026
+
+- Commit funcional publicado: 1a71550169d0e3695f4f79209a2fae74b0d57fcf;
+  fonte idêntica no commit de documentação 350aaf974b41992a2a0700331df866e301495511.
+- Actions anterior ao deploy aprovado: https://github.com/rvc3527-cell/radar-de-mercado/actions/runs/41328913092
+- Publicação: 2026-11-01 17:03:44 UTC, exclusivamente radar-cloud-collector-preview.
+- Deployment: 18288a53-3fe2-4c88-804d-8fb69d0c8038.
+- Worker version: 81657147-162c-44f0-8539-fb18da341d92, ativo a 100%.
+- Tabela collector_control criada e uma linha coinbase inicializada. PRAGMA
+  confirmou seis colunas e valores iniciais, sem edição das tabelas de dados.
+- Snapshot completo anterior, lido em páginas sem truncamento, salvo fora do Git:
+  /workspace/shared/collector-v572-before.json. 241 observações e 720 resultados
+  comparados por chave/campo após DDL: todos preservados.
+- Rollback de código: Worker version 61347c71-4a57-4a13-8687-106f5cb2e9e8 (5.7.1),
+  mantendo tabela de controle e dados. Não executar DROP ou restauração destrutiva.
+- Produção conserva modified_on 2026-10-31T20:18:49.8865Z; painel preview conserva
+  modified_on 2026-11-01T15:36:04.292031Z e mesmo etag. Não foram republicados.
+- Cron conferido após deploy: */5 * * * *, sem alteração desde sua criação.
+
+### Primeiro ciclo real e probe armazenado
+
+Execução started_at=1793552750204 (2026-11-01 17:05:50.204 UTC): ETH foi o primeiro
+ativo pela rotação de intervalo, recebeu HTTP 429 `Public rate limit exceeded`,
+sem Retry-After. Somente essa chamada foi feita. SOL e BTC foram registrados como
+COOLDOWN/deferred sem chamada à Coinbase. Cooldown persistido até 17:10:51.090 UTC.
+Lease liberada ao fim; lastCompletedAt 17:05:51.206 UTC, sem Worker esperando 5 min.
+
+/health retornou workerOk=true/database=true, mas ok=false e providerState=cooldown,
+providerLabel “Aguardando limite da API”. totals.http429=1, demais contadores zero.
+metricsSince identifica o início desse controle, sem confundir com erros históricos.
+
+Experimento de cinco GETs /probe consecutivos: todas as respostas mode=stored e
+estado cooldown. A linha collector_control e a contagem do diário foram idênticas
+antes/depois. A ausência de fetch Coinbase também é garantida pelos testes com
+30 chamadas repetidas e pelo caminho de código somente leitura.
+
+Com Cron de cinco minutos, o cooldown pode expirar logo DEPOIS de um tick; nesse
+caso, esse tick adia coleta e o próximo tenta novamente. Isso é conservador e
+intencional: não antecipamos Retry-After nem criamos tarefa extra no provedor.
+
+
+Avaliação complementar somente leitura da alternativa: AssetPairs da Kraken
+retornou XBTUSD (base XXBT/quote ZUSD), ETHUSD (XETH/ZUSD) e SOLUSD (SOL/ZUSD),
+todos online na consulta. Isso confirma catálogo, não uptime nem capacidade em
+Cloudflare. Nenhuma cotação Kraken entrou no D1, nos indicadores ou no painel.
+
+### Recuperação real demonstrada e limitações remanescentes
+
+Cron de 2026-11-01 17:10:50.356 UTC: após a aquisição da lease e leitura do controle,
+a primeira consulta começou às 17:10:51.218, já além do cooldown 17:10:51.090.
+SOL, BTC e ETH retornaram HTTP 200, com 180 candles válidos cada, idade 51–55 s,
+sem lacunas/duplicatas. SOL e ETH vieram com cache MISS, comprovando acesso à origem.
+Indicadores e metodologia v5.7 mantidos; três observações novas foram gravadas.
+O contador histórico manteve o 429, lastError foi limpo nos três ativos e
+consecutive429 voltou a zero. Lease finalizada e liberada, sem execução simultânea.
+
+Fotografia das 17:12 UTC: 244 observações e 723 resultados, zero órfãos. Todos os
+campos originais das 241 observações e 720 resultados fotografados antes da migração
+continuavam iguais; grupos antigos preservados (18 observações NULL nessa consulta).
+
+Consulta posterior de /health em 21:36:46 UTC demonstrou providerState=partial,
+ok=false, workerOk=true, cooldownActive=false e 11 erros 429 acumulados desde o
+início do controle. Sem 400 ou falhas de rede nesses novos contadores. O último
+run naquele momento era 21:35:50.074. Isso NÃO contradiz a recuperação demonstrada:
+o provedor continua podendo limitar ciclos posteriores e o sistema expõe a
+qualidade atual, sem dizer que o acesso está permanentemente estabilizado.
+
+Não se fabricaram falhas, cooldowns ou observações no banco remoto para produzir
+a evidência de recuperação: ambos os eventos vieram do Cron real e da Coinbase.
+
+Arquivos de evidência locais, fora do Git: /workspace/shared/v572-health-cooldown.json
+(estado após 429) e /workspace/shared/v572-health-recovered.json (consulta posterior,
+que efetivamente estava parcial e não deve ser descrita como totalmente saudável).
+
+A implantação foi concluída; permanece recomendada a medição da frequência de 429
+por vários dias e avaliação de alternativa em uma série separada, se a cobertura
+continuar insuficiente. Não prometer eliminação do rate limit do IP compartilhado.

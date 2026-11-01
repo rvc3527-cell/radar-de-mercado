@@ -3,7 +3,8 @@ import './indicators.js';
 const SYMBOLS=['BTCUSD','ETHUSD','SOLUSD'];
 const {analyzeCandles,methodologyVersion}=globalThis.RadarIndicators;
 const MINUTE=60000;
-const VERSION='5.7';
+const VERSION='5.7.1';
+const COINBASE_USER_AGENT='RadarDeMercado/5.7.1 (+https://github.com/rvc3527-cell/radar-de-mercado)';
 function fail(code,message,diagnostics={}){const error=new Error(message);error.code=code;error.diagnostics=diagnostics;throw error}
 // Coinbase timestamps mark the START of the minute; our database stores its END.
 function candleWindow(now){
@@ -57,8 +58,8 @@ async function fetchCandles(symbol,now=Date.now()){
   const url=new URL('https://api.exchange.coinbase.com/products/'+symbol.replace('USD','-USD')+'/candles');
   url.search=new URLSearchParams({granularity:'60',start:new Date(window.start).toISOString(),end:new Date(window.end).toISOString()});
   let response;
-  try{response=await fetch(url,{headers:{Accept:'application/json'},signal:AbortSignal.timeout(8000)});}catch(error){fail('API_NETWORK','Coinbase: falha de conexão ou tempo esgotado');}
-  const api={httpStatus:response.status,cacheStatus:response.headers.get('cf-cache-status'),cacheAge:response.headers.get('age'),windowStart:window.start,windowEnd:window.end};
+  try{response=await fetch(url,{headers:{Accept:'application/json','User-Agent':COINBASE_USER_AGENT},signal:AbortSignal.timeout(8000)});}catch(error){fail('API_NETWORK','Coinbase: falha de conexão ou tempo esgotado');}
+  const api={requestUserAgent:COINBASE_USER_AGENT,httpStatus:response.status,cacheStatus:response.headers.get('cf-cache-status'),cacheAge:response.headers.get('age'),windowStart:window.start,windowEnd:window.end};
   if(!response.ok){const details=await upstreamError(response);fail('API_HTTP','Coinbase HTTP '+response.status+(details.upstreamMessage?': '+details.upstreamMessage:''),{...api,...details})}
   let raw;
   try{raw=await response.json()}catch(error){fail('INVALID_RESPONSE','Coinbase: JSON inválido',api)}

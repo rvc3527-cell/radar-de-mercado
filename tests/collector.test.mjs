@@ -113,3 +113,14 @@ test('JSON de erro inválido não apaga classificação HTTP original',async t=>
  t.mock.method(globalThis,'fetch',async()=>new Response('{invalid',{status:400,headers:{'content-type':'application/json'}}));
  await assert.rejects(fetchCandles('BTCUSD',now),e=>e.code==='API_HTTP'&&e.diagnostics.httpStatus===400);
 });
+test('Coinbase recebe User-Agent identificável mesmo quando a origem exige cabeçalho',async t=>{
+ t.mock.method(Date,'now',()=>now);
+ t.mock.method(globalThis,'fetch',async(url,options)=>{
+  if(!options.headers['User-Agent']?.startsWith('RadarDeMercado/5.7.1 '))return Response.json({message:'User-Agent header is required.'},{status:400});
+  assert.equal(options.headers.Accept,'application/json');
+  return Response.json(candles(),{headers:{'cf-cache-status':'MISS'}});
+ });
+ const {rows,diagnostics}=await fetchCandles('BTCUSD',now);
+ assert.equal(rows.length,180);assert.equal(diagnostics.httpStatus,200);assert.equal(diagnostics.cacheStatus,'MISS');
+ assert.match(diagnostics.requestUserAgent,/RadarDeMercado\/5\.7\.1/);
+});

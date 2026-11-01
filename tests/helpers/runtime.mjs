@@ -3,10 +3,11 @@ import {DatabaseSync} from 'node:sqlite';
 import {createContext,runInContext} from 'node:vm';
 export const read=path=>readFileSync(new URL('../../'+path,import.meta.url),'utf8');
 export const collectorSource=read('cloud-collector.js');
-export const collector=await import('data:text/javascript;base64,'+Buffer.from(collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../../indicators.js',import.meta.url).href))+'\nexport {collect,validateCandles,methodologyReady};').toString('base64'));
+export const collector=await import('data:text/javascript;base64,'+Buffer.from(collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../../indicators.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {collectForTest as collect,validateCandles,methodologyReady};').toString('base64'));
 export function database({legacy=false}={}){
  const sqlite=new DatabaseSync(':memory:');sqlite.exec(read(legacy?'tests/fixtures/schema-v56.sql':'cloud-schema.sql'));
- return {sqlite,prepare(sql){let args=[];return {bind(...values){args=values;return this},async run(){return sqlite.prepare(sql).run(...args)},async all(){return {results:sqlite.prepare(sql).all(...args)}},async first(){return sqlite.prepare(sql).get(...args)}}}};
+ if(legacy)sqlite.exec(read('migrations/0002_collector_control_v572.sql'));
+ return {sqlite,async batch(stmts){sqlite.exec('BEGIN');try{const result=[];for(const stmt of stmts)result.push(await stmt.run());sqlite.exec('COMMIT');return result}catch(error){sqlite.exec('ROLLBACK');throw error}},prepare(sql){let args=[];return {bind(...values){args=values;return this},async run(){return sqlite.prepare(sql).run(...args)},async all(){return {results:sqlite.prepare(sql).all(...args)}},async first(){return sqlite.prepare(sql).get(...args)}}}};
 }
 class Element{
  constructor(){this.children=[];this.value='';this.style={};this.classList={toggle(){}};this.hidden=false;this.checked=false;this.disabled=false;this.dataset={};this._text=''}

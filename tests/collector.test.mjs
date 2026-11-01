@@ -3,12 +3,12 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
 const source=readFileSync(new URL('../cloud-collector.js',import.meta.url),'utf8');
-const {validateCandles,candleWindow,collect,fetchCandles,default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source.replace("'./indicators.js'",JSON.stringify(new URL('../indicators.js',import.meta.url).href))+'\nexport {validateCandles,candleWindow,collect,fetchCandles};').toString('base64'));
+const {validateCandles,candleWindow,collect,fetchCandles,default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source.replace("'./indicators.js'",JSON.stringify(new URL('../indicators.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {validateCandles,candleWindow,collectForTest as collect,fetchCandles};').toString('base64'));
 const now=1800000010000,end=Math.floor(now/60000)*60000;
 function candles(n=180){return Array.from({length:n},(_,i)=>[(end-(n-i)*60000)/1000,99,103,100,100+Math.sin(i/4),1])}
 function db(){
  const sqlite=new DatabaseSync(':memory:');sqlite.exec(readFileSync(new URL('../cloud-schema.sql',import.meta.url),'utf8'));
- return {sqlite,prepare(sql){let args=[];return {bind(...values){args=values;return this},async run(){return sqlite.prepare(sql).run(...args)},async all(){return {results:sqlite.prepare(sql).all(...args)}},async first(){return sqlite.prepare(sql).get(...args)}}}};
+ return {sqlite,async batch(stmts){sqlite.exec('BEGIN');try{const result=[];for(const stmt of stmts)result.push(await stmt.run());sqlite.exec('COMMIT');return result}catch(error){sqlite.exec('ROLLBACK');throw error}},prepare(sql){let args=[];return {bind(...values){args=values;return this},async run(){return sqlite.prepare(sql).run(...args)},async all(){return {results:sqlite.prepare(sql).all(...args)}},async first(){return sqlite.prepare(sql).get(...args)}}}};
 }
 test('ordena candles descendentes e converte abertura em fechamento',()=>{
  const {rows,diagnostics}=validateCandles(candles().reverse(),now);
@@ -82,7 +82,7 @@ test('lacunas impedem registros e resultados mesmo com preço final disponível'
 test('probe é somente leitura; health identifica ausência e atraso do Cron',async t=>{
  t.mock.method(Date,'now',()=>now);t.mock.method(globalThis,'fetch',async()=>Response.json(candles()));
  const DB=db();t.after(()=>DB.sqlite.close());
- const probe=await worker.fetch(new Request('https://test/probe'),{DB});assert.ok((await probe.json()).checks.every(x=>x.ok));
+ const probe=await worker.fetch(new Request('https://test/probe'),{DB});const stored=await probe.json();assert.equal(stored.mode,'stored');assert.ok(stored.checks.every(x=>!x.ok));
  assert.equal(DB.sqlite.prepare('SELECT COUNT(*) n FROM collector_runs').get().n,0);
  assert.equal((await (await worker.fetch(new Request('https://test/health'),{DB})).json()).scheduleDelayed,true);
  DB.sqlite.prepare('INSERT INTO collector_runs VALUES(?,?)').run(now,'[]');
@@ -116,11 +116,11 @@ test('JSON de erro inválido não apaga classificação HTTP original',async t=>
 test('Coinbase recebe User-Agent identificável mesmo quando a origem exige cabeçalho',async t=>{
  t.mock.method(Date,'now',()=>now);
  t.mock.method(globalThis,'fetch',async(url,options)=>{
-  if(!options.headers['User-Agent']?.startsWith('RadarDeMercado/5.7.1 '))return Response.json({message:'User-Agent header is required.'},{status:400});
+  if(!options.headers['User-Agent']?.startsWith('RadarDeMercado/5.7.2 '))return Response.json({message:'User-Agent header is required.'},{status:400});
   assert.equal(options.headers.Accept,'application/json');
   return Response.json(candles(),{headers:{'cf-cache-status':'MISS'}});
  });
  const {rows,diagnostics}=await fetchCandles('BTCUSD',now);
  assert.equal(rows.length,180);assert.equal(diagnostics.httpStatus,200);assert.equal(diagnostics.cacheStatus,'MISS');
- assert.match(diagnostics.requestUserAgent,/RadarDeMercado\/5\.7\.1/);
+ assert.match(diagnostics.requestUserAgent,/RadarDeMercado\/5\.7\.2/);
 });

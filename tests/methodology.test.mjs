@@ -115,3 +115,12 @@ test('painel remoto rotula versões, amostra pequena e horário, sem agregar ver
  assert.match(text,/Anterior — versão não comprovada/);assert.match(text,/v5.7/);assert.match(text,/0\.8000%/);assert.match(text,/9\.8000%/);assert.match(text,/amostra insuficiente/);assert.doesNotMatch(text,/5\.3000%/);
  assert.match(app.get('cloudUpdated').textContent,/Consulta:/);assert.match(app.get('cloudCollectorBoard').textContent,/BTC\/USD/);
 });
+test('diagnóstico distingue código ativo v5.7 de execução anterior sem metodologia comprovada',async()=>{
+ const app=await panel();
+ app.context.fetch=async()=>Response.json({methodology_version:'v5.7',scheduleDelayed:false,last_run:{started_at:now,report:JSON.stringify([{symbol:'BTCUSD',version:'5.6',aligned:true}])}});
+ await app.run('refreshCloudDiagnostics()');
+ const text=app.get('cloudCollectorDiagnostics').textContent;
+ assert.match(text,/Código ativo: v5\.7/);
+ assert.match(text,/BTCUSD: alinhado \[anterior — versão não comprovada\]/);
+ assert.doesNotMatch(text,/BTCUSD: alinhado \[v5\.7\]/);
+});

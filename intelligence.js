@@ -7,6 +7,7 @@
  const pct=n=>Number.isFinite(n)?(n>0?'+':'')+fmt(n)+'%':'—';
  const date=n=>Number.isFinite(n)?new Date(n).toLocaleString('pt-BR'):'Sem registro no período';
  const label=m=>m==='legacy-unversioned'?'Anterior · não comprovada':m;
+ let chartSnapshot=null,monitorSnapshot=null,resizeTimer=null;
  let query=null,cursors=[null],page=0,next=null,busy=false,started=false;
  async function request(path,params){const response=await fetch(BASE+path+'?'+params,{signal:AbortSignal.timeout(12000)});const data=await response.json();if(!response.ok)throw Error(data.error?.message||'Consulta indisponível');return data}
  function table(headers,rows){const t=el('table',undefined,'history-table'),head=el('thead'),tr=el('tr');headers.forEach(h=>tr.append(el('th',h)));head.append(tr);t.append(head);const body=el('tbody');for(const row of rows){const tr=el('tr');row.forEach((value,i)=>{const td=el('td');td.dataset.label=headers[i];if(typeof value==='string')td.textContent=value;else td.append(value);tr.append(td)});body.append(tr)}t.append(body);return t}
@@ -24,7 +25,7 @@
  function bars(parent,title,items,{percent=false,paired=false,note=''}={}){
   const box=el('article',undefined,'intelligence-chart');box.append(el('h3',title));parent.append(box);
   if(!items.length){empty(box,'Amostra insuficiente para este gráfico. São necessárias 30 avaliações válidas por grupo.');box.prepend(el('h3',title));return}
-  box.append(el('p',note));const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');const width=600,row=paired?65:49,height=items.length*row+30,left=100,right=85,plot=width-left-right;
+  box.append(el('p',note));const ns='http://www.w3.org/2000/svg',svg=document.createElementNS(ns,'svg');const width=Math.max(280,Math.min(700,box.clientWidth||600)),row=paired?65:49,height=items.length*row+30,left=95,right=75,plot=width-left-right;
   svg.setAttribute('viewBox',`0 0 ${width} ${height}`);svg.setAttribute('role','img');svg.setAttribute('aria-label',title+'. '+items.map(x=>x.label+': '+fmt(x.value,percent?3:0)+(percent?'%':'')+(paired?', após custos '+pct(x.net):'')).join('; '));
   const values=items.flatMap(x=>paired?[x.value,x.net]:[x.value]).filter(Number.isFinite),min=Math.min(0,...values),max=Math.max(0,...values),span=max-min||1,scale=v=>left+(v-min)/span*plot,zero=scale(0);
   function add(tag,attrs,text){const n=document.createElementNS(ns,tag);for(const [k,v] of Object.entries(attrs))n.setAttribute(k,v);if(text!==undefined)n.textContent=text;svg.append(n)}
@@ -33,6 +34,7 @@
   box.append(svg);
  }
  function charts(data){
+  chartSnapshot=data;
   const area=$('hiCharts');area.replaceChildren();const symbol=data.filters.symbol||'BTCUSD',h=data.filters.horizon||5,g=data.groups.find(x=>x.symbol===symbol&&x.horizon===h);
   $('hiChartContext').textContent=label(data.filters.methodology)+' · Distribuição e evolução: '+symbol.replace('USD','/USD')+' / '+h+' min. Coral: bruto; areia: após custos. Comparações usam amostras distintas, sem indicar o melhor ativo futuro.';
   bars(area,'Observações por dia',data.daily.slice(-31).map(x=>({label:x.day.slice(5),value:x.observations})),{note:'Contagem real por dia UTC, antes da seleção de janelas.'});
@@ -48,6 +50,7 @@
   $('hiHistory').replaceChildren(table(['Registro','Condição observada','Resultados direcionais brutos','Origem'],data.items.map(x=>[detail(x.symbol.replace('USD','/USD'),date(x.time)),detail(x.direction===1?'Alta ↑':x.direction===-1?'Baixa ↓':'Inválida','Referência: '+fmt(x.reference_price,2)+' '+(x.quote||'cotação não comprovada')),detail((query.get('horizon')?[Number(query.get('horizon'))]:[1,3,5]).map(h=>h+' min: '+(Number.isFinite(x.results[h])?pct(x.results[h]):'pendente / sem resultado')).join(' · '),label(x.methodology_version)),detail(x.source,x.study_type==='prospective'?'Prospectiva · D1':'Origem histórica sem comprovação')])));
  }
  function monitor(data,health){
+  monitorSnapshot={data,health};
   const states={operational:'Operacional',partial:'Parcialmente operacional',cooldown:'Aguardando limite da API',stale:'Dados desatualizados',unavailable:'Indisponível'};
   const status=health?states[health.providerState]||health.providerLabel||'Estado não informado':'Estado atual indisponível';
   $('hiMonitorStatus').textContent='Worker: '+(health?'respondeu à consulta':'sem resposta confirmada')+' · Fonte: '+status+' · Última execução no período: '+date(data.last_run?.started_at)+' · Última execução completa com sucesso: '+date(data.last_all_success_in_complete_slots)+'. Monitoramento confirmado desde '+date(data.instrumented_from)+'.';
@@ -66,7 +69,7 @@
  async function refresh(){
   if(busy)return;try{query=filters()}catch(e){$('hiStatus').textContent=e.message;return}
   busy=true;cursors=[null];page=0;next=null;$('hiRefresh').disabled=true;$('hiNext').disabled=true;$('hiPrevious').disabled=true;$('hiStatus').textContent='Consultando registros armazenados…';
-  for(const id of ['hiSummary','hiStatistics','hiCharts','hiHistory','hiMonitoring','hiAvailability','hiCooldown'])$(id).replaceChildren();$('hiPageStatus').textContent='Carregando histórico…';$('hiMonitorStatus').textContent='Carregando diagnósticos…';
+  chartSnapshot=null;monitorSnapshot=null;for(const id of ['hiSummary','hiStatistics','hiCharts','hiHistory','hiMonitoring','hiAvailability','hiCooldown'])$(id).replaceChildren();$('hiPageStatus').textContent='Carregando histórico…';$('hiMonitorStatus').textContent='Carregando diagnósticos…';
   const monitoringParams=new URLSearchParams({from:String(Math.max(Number(query.get('from')),Number(query.get('to'))-7*86400000)),to:query.get('to')});
   const responses=await Promise.allSettled([request('/history',query),request('/statistics',query),request('/collector-history',monitoringParams),request('/health',new URLSearchParams())]);
   if(responses[0].status==='fulfilled'){const d=responses[0].value;history(d);for(const value of d.methodologies)if(![...$('hiMethod').options].some(x=>x.value===value)){const option=el('option',label(value));option.value=value;$('hiMethod').append(option)}}else $('hiPageStatus').textContent=responses[0].reason.message;
@@ -77,7 +80,9 @@
  document.addEventListener('DOMContentLoaded',()=>{
   const now=Date.now();$('hiFrom').value=new Date(now-6*86400000).toISOString().slice(0,10);$('hiTo').value=new Date(now).toISOString().slice(0,10);
   $('intelligenceFilters').addEventListener('submit',e=>{e.preventDefault();refresh()});$('hiNext').addEventListener('click',()=>{if(next&&!busy){cursors[page+1]=next;loadPage(page+1,next)}});$('hiPrevious').addEventListener('click',()=>{if(page>0&&!busy)loadPage(page-1,cursors[page-1])});
-  function activate(){if(location.hash==='#observacoes'&&!started){started=true;refresh()}}activate();window.addEventListener('hashchange',activate);
+  function redraw(){if(chartSnapshot)charts(chartSnapshot);if(monitorSnapshot)monitor(monitorSnapshot.data,monitorSnapshot.health)}
+  function activate(){if(location.hash!=='#observacoes')return;if(!started){started=true;refresh()}else redraw()}activate();window.addEventListener('hashchange',activate);
+  window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(location.hash==='#observacoes')redraw()},150)});
   setInterval(()=>{if(started&&!document.querySelector('[data-view="observacoes"]').hidden&&document.visibilityState==='visible'&&$('cloudAuto').checked)refresh()},300000);
  });
  root.RadarIntelligence=Object.freeze({statistics,charts,history,monitor,refresh});

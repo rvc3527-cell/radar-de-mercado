@@ -39,6 +39,11 @@ try:
    page.locator('.dashboard-nav [data-route="observacoes"]').click();page.wait_for_function("!document.getElementById('hiRefresh').disabled && document.getElementById('hiStatistics').textContent.includes('n =')")
    assert 'Atualizado' in page.locator('#hiStatus').inner_text();assert page.locator('#hiHistory tbody tr').count()==25;assert page.locator('#hiCharts svg').count()>0
    assert page.locator('#hiMonitoring tbody tr').count()==3
+   assert page.evaluate("[...document.querySelectorAll('#hiCharts svg text')].every(x=>parseFloat(getComputedStyle(x).fontSize)*x.getCTM().a>=11)"),(width,'chart labels too small')
+   if width==1440:
+    page.set_viewport_size({'width':375,'height':844});page.wait_for_timeout(250)
+    assert page.evaluate("[...document.querySelectorAll('#hiCharts svg text')].every(x=>parseFloat(getComputedStyle(x).fontSize)*x.getCTM().a>=11)")
+    page.set_viewport_size({'width':1440,'height':1000});page.wait_for_timeout(250)
    first=page.locator('#hiHistory tbody tr').first.inner_text();page.locator('#hiNext').click();page.wait_for_function("document.getElementById('hiPageStatus').textContent.includes('página 2')");assert first!=page.locator('#hiHistory tbody tr').first.inner_text()
    page.locator('#hiPrevious').click();page.wait_for_function("document.getElementById('hiPageStatus').textContent.includes('página 1')");assert first==page.locator('#hiHistory tbody tr').first.inner_text()
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),(width,'overflow')

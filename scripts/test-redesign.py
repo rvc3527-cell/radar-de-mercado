@@ -4,13 +4,18 @@ No production writes. Requires local Playwright/Chromium. Not a Safari certifica
 import functools,http.server,json,pathlib,threading,argparse,time
 from playwright.sync_api import sync_playwright
 root=pathlib.Path(__file__).resolve().parent.parent
-parser=argparse.ArgumentParser();parser.add_argument('--origin');parser.add_argument('--no-screenshots',action='store_true');parser.add_argument('--snapshot',default=str(root/'artifacts/market-snapshot.json'));args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--origin');parser.add_argument('--report');parser.add_argument('--no-screenshots',action='store_true');parser.add_argument('--snapshot',default=str(root/'artifacts/market-snapshot.json'));args=parser.parse_args()
 snapshot=json.loads(pathlib.Path(args.snapshot).read_text())
 class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,directory=str(root)))
 threading.Thread(target=server.serve_forever,daemon=True).start()
 origin=args.origin or f'http://127.0.0.1:{server.server_port}'
+def navigate(page,name):
+ if name=='configuracoes':page.locator('.settings-shortcut').click()
+ elif name=='laboratorio':
+  page.locator('.settings-shortcut').click();page.locator('.v7-tool-links [data-route="laboratorio"]').click()
+ else:page.locator('.dashboard-nav [data-route="'+name+'"]').click()
 results=[]
 try:
  with sync_playwright() as p:
@@ -36,10 +41,9 @@ try:
    assert page.locator('#readingTrend').inner_text() in ['Alta','Baixa','Neutra']
    assert page.locator('.market-card').first.inner_text().find('USDT')>=0
    if not args.no_screenshots:page.screenshot(path=str(root/f'artifacts/overview-{width}.png'),full_page=True)
-   page.locator('.market-card').nth(1).click();assert page.locator('#symbol').input_value()=='ETHUSDT'
+   navigate(page,'graficos');page.locator('.market-card').nth(1).click();assert page.locator('#symbol').input_value()=='ETHUSDT'
    for name in ['analises','observacoes','laboratorio','educacao','configuracoes','overview']:
-    if name=='configuracoes' and width<600:page.locator('.settings-shortcut').click()
-    else:page.locator('.dashboard-nav [data-route="'+name+'"]').click()
+    navigate(page,name)
     assert page.locator('[data-view="'+name+'"]').is_visible(),(width,name)
     assert page.evaluate('document.documentElement.scrollWidth <= innerWidth'),(width,name,'overflow')
     if name=='observacoes':
@@ -55,11 +59,11 @@ try:
      page.locator('#advancedToggle').click();assert page.locator('#advancedToggle').get_attribute('aria-expanded')=='true'
      page.locator('#cloudAuto').uncheck();assert not page.locator('#cloudAuto').is_checked()
    page.reload(wait_until='networkidle');assert page.locator('[data-view="overview"]').is_visible()
-   page.locator('.dashboard-nav [data-route="laboratorio"]').click();page.locator('#runHistory').click();page.wait_for_function("!document.querySelector('#runHistory').disabled")
+   navigate(page,'laboratorio');page.locator('#runHistory').click();page.wait_for_function("!document.querySelector('#runHistory').disabled")
    assert not errors,errors
    metrics=page.evaluate("({dom:document.querySelectorAll('*').length,transfer:performance.getEntriesByType('resource').reduce((s,x)=>s+x.transferSize,0),paint:performance.getEntriesByType('paint').map(x=>({name:x.name,ms:x.startTime}))})")
    results.append({'width':width,'passed':True,'loadSeconds':round(elapsed,3),'consoleErrors':errors,'metrics':metrics})
    context.close()
   browser.close()
- print(json.dumps(results,ensure_ascii=False,indent=2));(root/('artifacts/compat-browser-results.json' if args.no_screenshots else 'artifacts/browser-results.json')).write_text(json.dumps(results,ensure_ascii=False,indent=2))
+ print(json.dumps(results,ensure_ascii=False,indent=2));(root/(args.report or ('artifacts/compat-browser-results.json' if args.no_screenshots else 'artifacts/browser-results.json'))).write_text(json.dumps(results,ensure_ascii=False,indent=2))
 finally:server.shutdown()

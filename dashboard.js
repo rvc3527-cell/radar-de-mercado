@@ -30,14 +30,14 @@ function updateReading({trend,r,aligned,count}){
   document.getElementById('readingQuality').textContent=age===null?'Aguardando candles fechados.':age>120?'Dados desatualizados · '+age+' s desde o fechamento':count+' candles fechados · referência há '+age+' s';
 }
 function showDashboardRoute(route,{scroll=true}={}){
-  const actual=route==='mercados'?'overview':route;
-  const allowed=['overview','analises','observacoes','laboratorio','educacao','configuracoes'];
+  const actual=route==='mercados'?'graficos':route;
+  const allowed=['overview','graficos','analises','observacoes','laboratorio','educacao','configuracoes'];
   if(!allowed.includes(actual))return false;
   document.querySelectorAll('[data-view]').forEach(x=>{x.hidden=x.dataset.view!==actual});
   document.querySelectorAll('.dashboard-nav [data-route]').forEach(x=>{if(x.dataset.route===route)x.setAttribute('aria-current','page');else x.removeAttribute('aria-current')});
-  const names={overview:'Visão Geral',mercados:'Mercados',analises:'Análises',observacoes:'Observações',laboratorio:'Laboratório',educacao:'Educação',configuracoes:'Configurações'};
+  const names={overview:'Oportunidades',graficos:'Gráficos',mercados:'Gráficos',analises:'Análise',observacoes:'Histórico',laboratorio:'Laboratório',educacao:'Aprender',configuracoes:'Configurações'};
   document.getElementById('sectionTitle').textContent=names[route];
-  if(typeof chart!=='undefined'&&chart)requestAnimationFrame(()=>chart.applyOptions({width:document.getElementById('chart').clientWidth}));
+  if(actual==='graficos'&&typeof chart!=='undefined'&&chart)requestAnimationFrame(()=>{chart.applyOptions({width:document.getElementById('chart').clientWidth});chart.timeScale().fitContent()});
   if(scroll){if(route==='mercados')document.getElementById('mercados').scrollIntoView({block:'start'});else window.scrollTo({top:0,behavior:'auto'})}
   return true;
 }

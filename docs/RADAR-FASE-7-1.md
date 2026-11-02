@@ -19,6 +19,8 @@ Preview confirmado pela API: site versão 32ac8d3c-06a2-4144-8d08-e9035aa2ddb1 (
 
 Consulta D1 somente leitura em 02/11/2026: 377 observações (359 v5.7 e 18 legadas), 1.113 resultados, zero resultados órfãos; todas as consultas retornaram rows_written=0. Execução armazenada 11:55 UTC: três ativos HTTP 200, 180 candles, sem lacunas/duplicatas. 12:00 UTC: BTC 200/180 candles, ETH 429, SOL adiado pelo cooldown. Isso confirma funcionamento do agendamento e recuperação parcial, não eliminação do rate limit. Não foi feita sondagem ativa à Coinbase.
 
+Rechecagem final via API autenticada do Cloudflare, 17:13 UTC: Cron inalterado; registros 17:00/17:05/17:10 UTC confirmam cadência. Às 17:05 os três ativos retornaram HTTP 200/180 candles, sem lacunas/duplicatas, idades 51–55s; às 17:10 SOL recebeu 429 e os demais foram adiados pelo cooldown. SELECT limitado aos três últimos registros: rows_read=3, rows_written=0, changed_db=false. GETs públicos /health e /probe feitos pelo Python deste ambiente retornaram HTTP 403, corpo Cloudflare `error code: 1010`; portanto o acesso público desses endpoints não foi confirmado nesta origem. Não confundir o bloqueio de acesso HTTP com falha do Cron, nem afirmar que toda a infraestrutura está saudável. Não foram alteradas regras de segurança para contornar o bloqueio.
+
 Testes de entrada: 164 casos Node executados e aprovados. Workflow Node 22 aprova testes, sintaxe e build. Testes existentes cobrem indicadores matemáticos, persistência D1/SQLite, migrações locais, cooldown/concorrência, estatísticas, filtros, separação metodológica e política v7.0. Harnesses Chromium existentes cobrem navegação e quatro larguras; não equivalem a Safari real.
 
 ## Achados e gravidade
@@ -121,7 +123,7 @@ Erros de precondição (ID/tempo inválido), concorrência esgotada ou store ind
 
 ## Publicação e preservação
 
-Entrega por PR contra `feature/radar-simple-digital-v70`, preservando a revisão empilhada e sem merge automático. Resultado do Actions será associado ao commit da branch e registrado no PR após sua execução.
+Entrega pelo [PR #8](https://github.com/rvc3527-cell/radar-de-mercado/pull/8), contra `feature/radar-simple-digital-v70`, preservando a revisão empilhada e sem merge automático. Commits: `cff129b` (correções isoladas) e `65308fa` (simulador/testes/evidências). [GitHub Actions 41488631914](https://github.com/rvc3527-cell/radar-de-mercado/actions/runs/41488631914) aprovado no commit `65308faff07f8be33fae69706cc353d87c9cbfea`; logs Node 22 confirmam 216 testes, 216 aprovados, zero falhas, mais sintaxe e build aprovados. Atualizações documentais posteriores têm suas próprias execuções na aba Actions.
 
 Nenhuma implantação nesta fase: Preview permanece na v7.0 já publicada, coletor permanece 5.7.2, Cron/bindings preservados. Nenhuma migração SQL nova, nenhum índice/tabela criado remotamente, nenhum dado histórico alterado/apagado. Contagens D1 acima são uma fotografia de auditoria; o Cron continua acrescentando dados normalmente. Produção intocada.
 

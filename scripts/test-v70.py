@@ -4,7 +4,7 @@ Chromium emulation is not a real Safari certification. --origin supports the Pre
 import argparse,functools,http.server,json,pathlib,subprocess,threading,time,urllib.request
 from playwright.sync_api import sync_playwright
 root=pathlib.Path(__file__).resolve().parent.parent
-parser=argparse.ArgumentParser();parser.add_argument('--origin');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--origin');parser.add_argument('--artifact-prefix',default='v70');args=parser.parse_args()
 snapshot=json.loads((root/'artifacts/market-snapshot.json').read_text())
 class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*args):pass
@@ -43,9 +43,9 @@ try:
    text=page.locator('[data-view="overview"]').inner_text();assert 'RSI 14:' not in text and 'EMA 9:' not in text and 'ENTRAR AGORA' not in text
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth'),width
    assert not any('/statistics?' in u for u in requests),'F6 should remain lazy'
-   page.screenshot(path=str(root/f'artifacts/v70-opportunities-{width}.png'),full_page=False)
+   page.screenshot(path=str(root/f'artifacts/{args.artifact_prefix}-opportunities-{width}.png'),full_page=False)
    if width in [1440,390]:
-    page.locator('.v7-secondary-grid').scroll_into_view_if_needed();page.screenshot(path=str(root/f'artifacts/v70-analysis-{width}.png'),full_page=False)
+    page.locator('.v7-secondary-grid').scroll_into_view_if_needed();page.screenshot(path=str(root/f'artifacts/{args.artifact_prefix}-analysis-{width}.png'),full_page=False)
    page.locator('#v7Understand').click();assert page.locator('#v7Technical').evaluate('(x)=>x.open');assert 'v7.0-observe-1' in page.locator('#v7Technical').inner_text()
    # The first 30 seconds of a closed minute make the record prospective for every horizon.
    ref=page.evaluate('Math.max(...RadarV70.getAssessments().map(x=>x.reference_time||0))')
@@ -74,5 +74,5 @@ try:
    metrics=page.evaluate("({nodes:document.querySelectorAll('*').length,paint:performance.getEntriesByType('paint').map(x=>({name:x.name,ms:x.startTime})),transfer:performance.getEntriesByType('resource').reduce((s,x)=>s+x.transferSize,0)})")
    results.append({'width':width,'passed':True,'seconds':round(time.monotonic()-start,2),'pageerrors':errors,'coinbaseBrowserRequests':sum('api.exchange.coinbase.com' in u for u in requests),'metrics':metrics});ctx.close()
   browser.close()
- (root/'artifacts/v70-browser.json').write_text(json.dumps({'engine':'Chromium','origin':origin,'snapshotAt':snapshot['at'],'results':results},ensure_ascii=False,indent=2));print(json.dumps(results,ensure_ascii=False,indent=2))
+ (root/f'artifacts/{args.artifact_prefix}-browser.json').write_text(json.dumps({'engine':'Chromium','origin':origin,'snapshotAt':snapshot['at'],'results':results},ensure_ascii=False,indent=2));print(json.dumps(results,ensure_ascii=False,indent=2))
 finally:api.terminate();api.wait();server.shutdown()

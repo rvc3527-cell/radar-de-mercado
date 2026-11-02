@@ -92,7 +92,7 @@
     return out;
   }
   function createRecord(assessment,now,records=[]) {
-    if(!assessment.features || !supported(assessment.instrument) || assessment.age_ms<5000 || now-assessment.reference_time>=30000 || now<assessment.reference_time || ![1,-1].includes(assessment.direction))throw Error('Aguarde um candle recém-fechado para registrar antes dos resultados.');
+    if(!Number.isSafeInteger(now)||!assessment||assessment.policy!==POLICY||!Number.isSafeInteger(assessment.reference_time)||assessment.reference_time<=0||assessment.reference_time%MINUTE!==0||!Number.isFinite(assessment.reference_price)||assessment.reference_price<=0||!Number.isFinite(assessment.age_ms)||!assessment.features || !supported(assessment.instrument) || assessment.age_ms<5000 || now-assessment.reference_time>=30000 || now<assessment.reference_time || ![1,-1].includes(assessment.direction))throw Error('Aguarde um candle recém-fechado para registrar antes dos resultados.');
     const key=[scopeKey(assessment.instrument),POLICY,assessment.reference_time].join(':');
     if(records.some(x=>x.id===key))return null;
     return {id:key,instrument:{...assessment.instrument},policy:POLICY,study_type:'prospective-local',time:assessment.reference_time,observed_at:now,reference_price:assessment.reference_price,direction:assessment.direction,technical_ready:assessment.technical_ready,eligible:assessment.eligible,window:assessment.window,features:{...assessment.features},checks:{...assessment.checks},blockers:assessment.blockers.map(x=>({...x})),results:{}};

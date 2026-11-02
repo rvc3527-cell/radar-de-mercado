@@ -74,6 +74,7 @@
     if(!fresh||sample.apiAvailable===false)out.dimensions=out.dimensions.map(d=>({...d,state:'Não avaliada'}));
     out.quality=fresh&&sample.apiAvailable!==false?(factors===4?'Consistente':factors>=2?'Parcial':'Fraca'):'Não avaliada';
     if(!fresh)block('STALE','Os dados estão atrasados. Aguarde uma atualização válida.');
+    if(out.age_ms>=30000)block('CONFIRMATION_AGE','Aguarde um fechamento mais recente antes de confirmar acompanhamento.');
     if(sample.apiAvailable===false)block('API','A consulta à fonte falhou. A leitura armazenada não confirma uma nova condição.');
     if(!aligned)block('ALIGNMENT','A direção e a força do movimento ainda não concordam.');
     if(!trend)block('TREND','O mercado ainda não apresenta uma direção suficientemente definida.');
@@ -116,7 +117,8 @@
   }
   function planState(record,current,now=Date.now()) {
     if(record?.eligible && record.window && now>=record.time+record.window*MINUTE)return 'ENCERRADO';
-    if(record?.eligible && (!current.eligible || record.direction!==current.direction || scopeKey(record.instrument)!==scopeKey(current.instrument)))return 'INVALIDADO';
+    if(record?.eligible && (!current.features || current.blockers.some(b=>!['EVIDENCE','CONFIRMATION_AGE'].includes(b.code)) || record.direction!==current.direction || scopeKey(record.instrument)!==scopeKey(current.instrument)))return 'INVALIDADO';
+    if(record?.eligible)return 'CONDIÇÕES CONFIRMADAS';
     return current.eligible?'CONDIÇÕES CONFIRMADAS':'AGUARDANDO';
   }
   root.RadarOpportunity=Object.freeze({policy:POLICY,methodology:MATH,rules:RULES,instrument,scopeKey,supported,assess,evidence,createRecord,reconcile,rankGroups,planState,validRecord});

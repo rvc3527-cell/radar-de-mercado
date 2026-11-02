@@ -42,11 +42,18 @@ test('resultados posteriores usam preço exato do mesmo provedor e não sobrescr
  const again=O.reconcile(updated,{instrument:O.instrument('BTCUSDT'),raw},END+6*MIN);assert.equal(again[0],updated[0]);assert.equal(O.reconcile([record],{instrument:O.instrument('ETHUSDT'),raw},END+6*MIN)[0],record);
 });
 test('ausência de preço futuro mantém pendente, sem interpolar ou fazer rede',()=>{const a=O.assess(sample(),{now:NOW}),r=O.createRecord(a,NOW),s=sample();assert.equal(Object.keys(O.reconcile([r],s,END+10*MIN)[0].results).length,0)});
-test('planos confirmados podem ser invalidados ou encerrados sem executar ordem',()=>{const a=O.assess(sample(),{now:NOW,records:cohort()}),r=O.createRecord(a,NOW);assert.equal(O.planState(r,a,NOW),'CONDIÇÕES CONFIRMADAS');assert.equal(O.planState(r,{...a,eligible:false},NOW),'INVALIDADO');assert.equal(O.planState(r,a,END+3*MIN),'ENCERRADO')});
+test('planos confirmados podem ser invalidados ou encerrados sem executar ordem',()=>{const a=O.assess(sample(),{now:NOW,records:cohort()}),r=O.createRecord(a,NOW);assert.equal(O.planState(r,a,NOW),'CONDIÇÕES CONFIRMADAS');assert.equal(O.planState(r,{...a,eligible:false,blockers:[{code:'VOLATILITY'}]},NOW),'INVALIDADO');assert.equal(O.planState(r,a,END+3*MIN),'ENCERRADO')});
 test('ranking mantém provedores/moedas separados e não usa maior valorização',()=>{const a=O.assess(sample(),{now:NOW}),b=O.assess({...sample(),instrument:{...O.instrument('ETHUSDT'),provider:'Coinbase',quote:'USD'}},{now:NOW});assert.equal(O.rankGroups([a,b]).length,2);const same={...a,instrument:O.instrument('ETHUSDT'),features:{...a.features,move5:99}};assert.equal(O.rankGroups([same,a])[0].items[0].instrument.symbol,'BTCUSDT')});
 test('nenhuma oportunidade disponível produz lista sem elegíveis',()=>{const rows=['BTCUSDT','ETHUSDT','SOLUSDT'].map(symbol=>O.assess({instrument:O.instrument(symbol),raw:candles({constant:true})},{now:NOW}));assert.equal(rows.filter(x=>x.eligible).length,0)});
 test('texto do tema digital tem contraste 4.5 nas superfícies usadas',()=>{
  const css=readFileSync(new URL('../digital.css',import.meta.url),'utf8'),tokens=Object.fromEntries([...css.matchAll(/--([a-z-]+):(#\w{6})/g)].map(x=>[x[1],x[2]]));
  const luminance=h=>{const c=h.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722};
  for(const text of ['sand','muted','coral','cyan','negative-text'])for(const surface of ['bg','secondary','panel','raised']){const a=luminance(tokens[text]),b=luminance(tokens[surface]);assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,text+' on '+surface)}
+});
+
+test('fechamento antigo para uma entrada não pode confirmar janela que já avançou',()=>{
+ const a=O.assess(sample(),{now:END+61000,records:cohort()});assert.equal(a.eligible,false);assert.ok(codes(a).includes('CONFIRMATION_AGE'));assert.equal(a.status,'WAIT');
+});
+test('vencimento do gatilho de entrada não invalida sozinho acompanhamento já registrado',()=>{
+ const a=O.assess(sample(),{now:NOW,records:cohort()}),r=O.createRecord(a,NOW),later=O.assess(sample(),{now:END+61000,records:cohort()});assert.equal(O.planState(r,later,END+61000),'CONDIÇÕES CONFIRMADAS');
 });

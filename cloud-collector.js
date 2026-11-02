@@ -1,3 +1,4 @@
+import {handleHistorical} from './historical.js';
 import './indicators.js';
 // Cloud collector prototype: isolated from production, no trades or order execution.
 const SYMBOLS=['BTCUSD','ETHUSD','SOLUSD'];
@@ -175,7 +176,7 @@ async function collect(env,{pause=ms=>new Promise(resolve=>setTimeout(resolve,ms
   return report;
 }
 const headers={'content-type':'application/json','cache-control':'no-store','access-control-allow-origin':'https://radar-de-mercado-preview.rvc3426.workers.dev'};
-export default {async scheduled(event,env,ctx){ctx.waitUntil(collect(env))},async fetch(request,env){const path=new URL(request.url).pathname;if(request.method!=='GET')return new Response('Method not allowed',{status:405});if(path==='/probe'){
+export default {async scheduled(event,env,ctx){ctx.waitUntil(collect(env))},async fetch(request,env){const path=new URL(request.url).pathname;if(request.method!=='GET')return new Response('Method not allowed',{status:405});const historical=await handleHistorical(request,env,headers);if(historical)return historical;if(path==='/probe'){
  const data=await healthData(env);
  return Response.json({checks:data.assets.map(x=>({...x,ok:x.fresh&&!x.lastError&&!data.cooldownActive,error:x.lastError?('Última tentativa: '+(x.lastError.httpStatus||x.lastError.code)):undefined})),at:data.at,version:VERSION,source:'Coinbase Exchange USD spot',mode:'stored',providerState:data.providerState,cooldownUntil:data.cooldownUntil,note:'Diagnóstico armazenado. Nenhuma consulta à Coinbase foi realizada.'},{headers})
 }if(path==='/health')return Response.json(await healthData(env),{headers});if(path==='/observations'){

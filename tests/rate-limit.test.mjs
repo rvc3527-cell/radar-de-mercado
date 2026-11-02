@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {read,collectorSource,database} from './helpers/runtime.mjs';
-const source=collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../indicators.js',import.meta.url).href));
+const source=collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../indicators.js',import.meta.url).href)).replace("'./historical.js'",JSON.stringify(new URL('../historical.js',import.meta.url).href));
 const C=await import('data:text/javascript;base64,'+Buffer.from(source+'\nexport {collect,healthData,retryAfterUntil,cooldownUntil};').toString('base64'));
 const base=1800000010000,end=Math.floor(base/60000)*60000;
 const candles=(at=base)=>Array.from({length:180},(_,i)=>[(Math.floor(at/60000)*60000-(180-i)*60000)/1000,90,110,100,100+Math.sin(i/4),1]);

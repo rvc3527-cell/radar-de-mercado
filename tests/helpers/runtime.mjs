@@ -3,7 +3,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {createContext,runInContext} from 'node:vm';
 export const read=path=>readFileSync(new URL('../../'+path,import.meta.url),'utf8');
 export const collectorSource=read('cloud-collector.js');
-export const collector=await import('data:text/javascript;base64,'+Buffer.from(collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../../indicators.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {collectForTest as collect,validateCandles,methodologyReady};').toString('base64'));
+export const collector=await import('data:text/javascript;base64,'+Buffer.from(collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../../indicators.js',import.meta.url).href)).replace("'./historical.js'",JSON.stringify(new URL('../../historical.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {collectForTest as collect,validateCandles,methodologyReady};').toString('base64'));
 export function database({legacy=false}={}){
  const sqlite=new DatabaseSync(':memory:');sqlite.exec(read(legacy?'tests/fixtures/schema-v56.sql':'cloud-schema.sql'));
  if(legacy)sqlite.exec(read('migrations/0002_collector_control_v572.sql'));
@@ -23,7 +23,7 @@ export async function panel({now=1800000010000,stored=[],fetch=async()=>new Resp
  class Clock extends Date{static now(){return now}}
  const series=()=>({setData(){},update(){}});
  const context=createContext({Date:Clock,Response,Request,URL,AbortSignal,console:{log(){},error(e){errors.push(e)}},setInterval(){},clearInterval(){},setTimeout(){},clearTimeout(){},fetch,localStorage:{getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v)},document:{getElementById:get,createElement:()=>new Element(),querySelectorAll:()=>[],addEventListener(){},visibilityState:'visible'},ResizeObserver:class{observe(){}},WebSocket:class{close(){}},LightweightCharts:{createChart:()=>({addCandlestickSeries:series,addLineSeries:series,applyOptions(){},timeScale:()=>({fitContent(){}})})}});
- for(const f of ['indicators.js','statistics.js','engine.js'])runInContext(read(f),context,{filename:f});
+ for(const f of ['indicators.js','statistics.js','engine.js','dashboard.js'])runInContext(read(f),context,{filename:f});
  for(const match of read('index.html').matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))if(match[1].trim())runInContext(match[1],context,{filename:'index.html'});
  await new Promise(resolve=>setImmediate(resolve));await new Promise(resolve=>setImmediate(resolve));
  return {context,get,storage,errors,run:source=>runInContext(source,context)};

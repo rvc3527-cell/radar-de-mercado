@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {DatabaseSync} from 'node:sqlite';
 const source=readFileSync(new URL('../cloud-collector.js',import.meta.url),'utf8');
-const {validateCandles,candleWindow,collect,fetchCandles,default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source.replace("'./indicators.js'",JSON.stringify(new URL('../indicators.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {validateCandles,candleWindow,collectForTest as collect,fetchCandles};').toString('base64'));
+const {validateCandles,candleWindow,collect,fetchCandles,default:worker}=await import('data:text/javascript;base64,'+Buffer.from(source.replace("'./indicators.js'",JSON.stringify(new URL('../indicators.js',import.meta.url).href)).replace("'./historical.js'",JSON.stringify(new URL('../historical.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {validateCandles,candleWindow,collectForTest as collect,fetchCandles};').toString('base64'));
 const now=1800000010000,end=Math.floor(now/60000)*60000;
 function candles(n=180){return Array.from({length:n},(_,i)=>[(end-(n-i)*60000)/1000,99,103,100,100+Math.sin(i/4),1])}
 function db(){

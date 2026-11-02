@@ -1,0 +1,287 @@
+{
+  "verifiedAt": 1793582392594,
+  "assetsSha256": {
+    "index.html": "6d8db0edac7d4c7302087fbaa9ce8006bebf69182b63e5e9d80acf6318dcf10a",
+    "indicators.js": "8e08fc19979d2d96cbf4c53dd12d47f6bbbea4343fcfe7a7df3c1c1ad1287e37",
+    "statistics.js": "1d1b233cfabc463839d8df2e6b9d14d3614eed139a4bb746e41936f9054723ce",
+    "engine.js": "e3a66eff1dcac9c27403e439cd2560635ebe680a8e513b38bdb0b404c575de2c",
+    "dashboard.js": "47b25a291a0d4e3588d1f8afe239e2d1cfe2a449286f1965c4a86cdff537a85b",
+    "intelligence.js": "8a4aacee57f77537e64f99a44268dd2ccdd8adce5ba795178fca34075233c9c6",
+    "petroleo.css": "ce5a614e4849598435bbd54fc41293c861e95120bd7d372fa3c5f44bdbff9a3d"
+  },
+  "history": {
+    "observations": 271,
+    "pages": 11,
+    "methodology": "v5.7",
+    "range": {
+      "from": 1792977592594,
+      "to": 1793580592594,
+      "methodology": "v5.7",
+      "limit": 25
+    }
+  },
+  "statistics": "Compared with independent Python mean/median/counts for all asset/horizon groups",
+  "health": {
+    "ok": false,
+    "workerOk": true,
+    "database": true,
+    "version": "5.7.2",
+    "methodology_version": "v5.7",
+    "methodologyReady": true,
+    "controlReady": true,
+    "providerState": "cooldown",
+    "providerLabel": "Aguardando limite da API",
+    "cooldownUntil": 1793582452612,
+    "cooldownActive": true,
+    "leaseActive": false,
+    "metricsSince": 1793552750204,
+    "totals": {
+      "http429": 22,
+      "http400": 0,
+      "networkErrors": 0
+    },
+    "assets": [
+      {
+        "symbol": "BTCUSD",
+        "lastSuccessAt": 1793582151389,
+        "lastCandleAt": 1793582100000,
+        "lastAttemptAt": 1793582150789,
+        "lastError": null,
+        "http429": 3,
+        "http400": 0,
+        "networkErrors": 0,
+        "ageSeconds": 297,
+        "fresh": true
+      },
+      {
+        "symbol": "ETHUSD",
+        "lastSuccessAt": 1793581853162,
+        "lastCandleAt": 1793581800000,
+        "lastAttemptAt": 1793582152495,
+        "lastError": {
+          "code": "API_HTTP",
+          "httpStatus": 429,
+          "at": 1793582152612
+        },
+        "http429": 9,
+        "http400": 0,
+        "networkErrors": 0,
+        "ageSeconds": 597,
+        "fresh": true
+      },
+      {
+        "symbol": "SOLUSD",
+        "lastSuccessAt": 1793581850413,
+        "lastCandleAt": 1793581800000,
+        "lastAttemptAt": 1793581850272,
+        "lastError": null,
+        "http429": 10,
+        "http400": 0,
+        "networkErrors": 0,
+        "ageSeconds": 597,
+        "fresh": true
+      }
+    ],
+    "runAgeSeconds": 247,
+    "scheduleDelayed": false,
+    "last_run": {
+      "started_at": 1793582150218,
+      "report": "[{\"symbol\":\"BTCUSD\",\"version\":\"5.7.2\",\"methodology_version\":\"v5.7\",\"ema9\":78257.58284557195,\"ema21\":78176.66395125912,\"rsi14\":71.34335867065116,\"direction\":1,\"aligned\":false,\"requestUserAgent\":\"RadarDeMercado/5.7.2 (+https://github.com/rvc3527-cell/radar-de-mercado)\",\"httpStatus\":200,\"cacheStatus\":\"HIT\",\"cacheAge\":\"96\",\"retryAfter\":null,\"windowStart\":1793571300000,\"windowEnd\":1793582100000,\"received\":180,\"duplicates\":0,\"missing\":0,\"candles\":180,\"latest\":1793582100000,\"ageSeconds\":51,\"evaluated\":3},{\"symbol\":\"ETHUSD\",\"version\":\"5.7.2\",\"requestUserAgent\":\"RadarDeMercado/5.7.2 (+https://github.com/rvc3527-cell/radar-de-mercado)\",\"httpStatus\":429,\"cacheStatus\":\"BYPASS\",\"cacheAge\":null,\"retryAfter\":null,\"windowStart\":1793571300000,\"windowEnd\":1793582100000,\"serverDate\":\"Mon, 02 Nov 2026 01:15:52 GMT\",\"requestId\":\"a53f4a652e980206-WAW\",\"upstreamMessage\":\"Public rate limit exceeded\",\"code\":\"API_HTTP\",\"error\":\"Error: Coinbase HTTP 429: Public rate limit exceeded\",\"cooldownUntil\":1793582452612},{\"symbol\":\"SOLUSD\",\"version\":\"5.7.2\",\"code\":\"COOLDOWN\",\"deferred\":true,\"cooldownUntil\":1793582452612,\"error\":\"Aguardando limite da API; chamada adiada\"}]"
+    },
+    "at": 1793582397717
+  },
+  "monitoring": {
+    "api_version": "v6.0",
+    "generated_at": 1793582398504,
+    "source": "collector_runs no D1; sem requisições Coinbase",
+    "from": 1793495992594,
+    "to": 1793582392594,
+    "recorded_runs": 288,
+    "instrumented_from": 1793488553686,
+    "expected_slots": 287,
+    "recorded_slots": 287,
+    "last_run": {
+      "started_at": 1793582150218
+    },
+    "last_all_success_in_complete_slots": 1793581850149,
+    "assets": [
+      {
+        "symbol": "BTCUSD",
+        "expected": 287,
+        "success": 131,
+        "http400": 77,
+        "http429": 13,
+        "network": 0,
+        "cooldown": 66,
+        "rejected": 0,
+        "otherError": 0,
+        "unknown": 0,
+        "missing": 0,
+        "missingMinutes": 0,
+        "duplicateCandles": 0,
+        "last_success_in_period": 1793582150218,
+        "availability_pct": 45.64459930313589
+      },
+      {
+        "symbol": "ETHUSD",
+        "expected": 287,
+        "success": 118,
+        "http400": 87,
+        "http429": 19,
+        "network": 0,
+        "cooldown": 63,
+        "rejected": 0,
+        "otherError": 0,
+        "unknown": 0,
+        "missing": 0,
+        "missingMinutes": 0,
+        "duplicateCandles": 0,
+        "last_success_in_period": 1793581850149,
+        "availability_pct": 41.11498257839721
+      },
+      {
+        "symbol": "SOLUSD",
+        "expected": 287,
+        "success": 115,
+        "http400": 88,
+        "http429": 21,
+        "network": 0,
+        "cooldown": 63,
+        "rejected": 0,
+        "otherError": 0,
+        "unknown": 0,
+        "missing": 0,
+        "missingMinutes": 0,
+        "duplicateCandles": 0,
+        "last_success_in_period": 1793581850149,
+        "availability_pct": 40.069686411149824
+      }
+    ],
+    "daily": [
+      {
+        "day": "2026-11-01",
+        "expected": 816,
+        "success": 342,
+        "http400": 252,
+        "http429": 50,
+        "network": 0,
+        "cooldown": 172,
+        "rejected": 0,
+        "otherError": 0,
+        "unknown": 0,
+        "missing": 0,
+        "missingMinutes": 0,
+        "duplicateCandles": 0,
+        "availability_pct": 41.911764705882355
+      },
+      {
+        "day": "2026-11-02",
+        "expected": 45,
+        "success": 22,
+        "http400": 0,
+        "http429": 3,
+        "network": 0,
+        "cooldown": 20,
+        "rejected": 0,
+        "otherError": 0,
+        "unknown": 0,
+        "missing": 0,
+        "missingMinutes": 0,
+        "duplicateCandles": 0,
+        "availability_pct": 48.888888888888886
+      }
+    ],
+    "cooldown": {
+      "periods": 21,
+      "total_seconds": 17106.301000000003,
+      "recent": [
+        {
+          "start": 1793552750204,
+          "end": 1793553051090
+        },
+        {
+          "start": 1793553351496,
+          "end": 1793553654078
+        },
+        {
+          "start": 1793553654834,
+          "end": 1793554281624
+        },
+        {
+          "start": 1793554550387,
+          "end": 1793558152478
+        },
+        {
+          "start": 1793558450923,
+          "end": 1793562051569
+        },
+        {
+          "start": 1793562650489,
+          "end": 1793562951689
+        },
+        {
+          "start": 1793563250277,
+          "end": 1793563851316
+        },
+        {
+          "start": 1793564150730,
+          "end": 1793565354308
+        },
+        {
+          "start": 1793565650325,
+          "end": 1793568051033
+        },
+        {
+          "start": 1793568650926,
+          "end": 1793568953921
+        },
+        {
+          "start": 1793569553250,
+          "end": 1793569854369
+        },
+        {
+          "start": 1793570751016,
+          "end": 1793571053814
+        },
+        {
+          "start": 1793571350454,
+          "end": 1793571953491
+        },
+        {
+          "start": 1793573150444,
+          "end": 1793573451882
+        },
+        {
+          "start": 1793574650723,
+          "end": 1793574951465
+        },
+        {
+          "start": 1793575550517,
+          "end": 1793575855432
+        },
+        {
+          "start": 1793577350598,
+          "end": 1793577651907
+        },
+        {
+          "start": 1793577951154,
+          "end": 1793578555865
+        },
+        {
+          "start": 1793579150373,
+          "end": 1793579451132
+        },
+        {
+          "start": 1793580049978,
+          "end": 1793580350559
+        },
+        {
+          "start": 1793582150218,
+          "end": 1793582392595
+        }
+      ]
+    },
+    "note": "Disponibilidade = slots completos com candles válidos / slots esperados por ativo. Cooldown não é erro HTTP; slot ausente não prova erro de rede. Intervalo atual incompleto excluído."
+  },
+  "probeMode": "stored"
+}

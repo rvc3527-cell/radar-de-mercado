@@ -3,3 +3,8 @@ node_modules/
 .env
 .env.*
 !.env.example
+artifacts/market-snapshot.json
+artifacts/lightweight-charts.js
+
+__pycache__/
+*.pyc

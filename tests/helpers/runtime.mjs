@@ -3,7 +3,7 @@ import {DatabaseSync} from 'node:sqlite';
 import {createContext,runInContext} from 'node:vm';
 export const read=path=>readFileSync(new URL('../../'+path,import.meta.url),'utf8');
 export const collectorSource=read('cloud-collector.js');
-export const collector=await import('data:text/javascript;base64,'+Buffer.from(collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../../indicators.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {collectForTest as collect,validateCandles,methodologyReady};').toString('base64'));
+export const collector=await import('data:text/javascript;base64,'+Buffer.from(collectorSource.replace("'./indicators.js'",JSON.stringify(new URL('../../indicators.js',import.meta.url).href)).replace("'./historical.js'",JSON.stringify(new URL('../../historical.js',import.meta.url).href))+'\nconst collectForTest=env=>collect(env,{pause:async()=>{}}); export {collectForTest as collect,validateCandles,methodologyReady};').toString('base64'));
 export function database({legacy=false}={}){
  const sqlite=new DatabaseSync(':memory:');sqlite.exec(read(legacy?'tests/fixtures/schema-v56.sql':'cloud-schema.sql'));
  if(legacy)sqlite.exec(read('migrations/0002_collector_control_v572.sql'));

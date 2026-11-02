@@ -24,5 +24,8 @@ jobs:
           node --input-type=module --check < cloud-collector.js
           node --check indicators.js
           node --check statistics.js
+          node --input-type=module --check < historical.js
+          node --check intelligence.js
+          node --check dashboard.js
           node scripts/build-preview.mjs
           git diff --check

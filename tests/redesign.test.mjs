@@ -7,7 +7,7 @@ test('redesign preserva todos os IDs funcionais sem duplicação',()=>{
  const ids=[...read('index.html').matchAll(/\bid="([^"]+)"/g)].map(x=>x[1]);
  assert.equal(ids.length,new Set(ids).size);for(const id of contract.ids)assert.ok(ids.includes(id),id);
 });
-test('coletor, esquema, fórmulas e motor permanecem byte a byte como a v5.7.1',()=>{
+test('esquema integrado v5.7.2, fórmulas e motor permanecem preservados',()=>{
  for(const [name,sha] of Object.entries(contract.protected))assert.equal(createHash('sha256').update(read(name)).digest('hex'),sha,name);
 });
 test('cartões mostram USDT, período, fonte e estado indisponível sem inventar cotação',async()=>{
@@ -24,4 +24,9 @@ test('textos pequenos atendem contraste 4.5 nas superfícies do tema',()=>{
  const css=read('petroleo.css');const tokens=Object.fromEntries([...css.matchAll(/--([a-z-]+):(#\w{6})/g)].map(x=>[x[1],x[2]]));
  const luminance=h=>{const c=h.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return c[0]*.2126+c[1]*.7152+c[2]*.0722};
  for(const text of ['sand','muted','coral','positive','negative-text'])for(const surface of ['bg','secondary','panel','raised']){const a=luminance(tokens[text]),b=luminance(tokens[surface]);assert.ok((Math.max(a,b)+.05)/(Math.min(a,b)+.05)>=4.5,text+' on '+surface)}
+});
+
+test('agendamento, coleta e controle v572 permanecem byte a byte fora do novo roteamento',()=>{
+ const original=read('cloud-collector.js').replace("import {handleHistorical} from './historical.js';\n",'').replace('const historical=await handleHistorical(request,env,headers);if(historical)return historical;','');
+ assert.equal(createHash('sha256').update(original).digest('hex'),contract.collector_v572_sha256);
 });

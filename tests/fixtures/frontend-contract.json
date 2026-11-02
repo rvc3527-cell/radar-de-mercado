@@ -112,7 +112,7 @@
     "indicators.js": "8e08fc19979d2d96cbf4c53dd12d47f6bbbea4343fcfe7a7df3c1c1ad1287e37",
     "statistics.js": "1d1b233cfabc463839d8df2e6b9d14d3614eed139a4bb746e41936f9054723ce",
     "engine.js": "e3a66eff1dcac9c27403e439cd2560635ebe680a8e513b38bdb0b404c575de2c",
-    "cloud-collector.js": "35d68e5a935e55b9bffd37bdffd80e6ea18a3b06bb9de35da36e676af4615a24",
-    "cloud-schema.sql": "c458e1078997e2e9db6b6684bc03a36f8127266f555c5a2722850203ce74b9de"
-  }
+    "cloud-schema.sql": "392ab5c5ace38ef335a6cd8f6e5f8e213f0ede7d500d5581e133b82e0a4aa4b7"
+  },
+  "collector_v572_sha256": "eec2bc6ad8f1c757d0da368d01d1ea86e89cfbdb2b252cf085fe5a991f096ff5"
 }

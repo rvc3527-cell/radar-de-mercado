@@ -1,0 +1,91 @@
+{
+  "engine": "Chromium",
+  "snapshotAt": 1793546909265,
+  "origin": "http://127.0.0.1:33275",
+  "checks": [
+    {
+      "width": 1440,
+      "passed": true,
+      "seconds": 3.0,
+      "errors": [],
+      "historyRequests": 17,
+      "metrics": {
+        "nodes": 1059,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 452
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 452
+          }
+        ],
+        "transfer": 148368
+      }
+    },
+    {
+      "width": 768,
+      "passed": true,
+      "seconds": 2.14,
+      "errors": [],
+      "historyRequests": 17,
+      "metrics": {
+        "nodes": 1059,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 368
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 368
+          }
+        ],
+        "transfer": 148368
+      }
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "seconds": 2.19,
+      "errors": [],
+      "historyRequests": 17,
+      "metrics": {
+        "nodes": 1059,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 392
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 392
+          }
+        ],
+        "transfer": 148368
+      }
+    },
+    {
+      "width": 375,
+      "passed": true,
+      "seconds": 2.25,
+      "errors": [],
+      "historyRequests": 17,
+      "metrics": {
+        "nodes": 1059,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 396
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 396
+          }
+        ],
+        "transfer": 148368
+      }
+    }
+  ]
+}

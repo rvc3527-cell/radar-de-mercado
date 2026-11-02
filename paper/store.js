@@ -13,11 +13,12 @@ export class MemoryPaperStore {
   exportJSON() {return JSON.stringify([...this.documents]);}
 }
 export class IndexedDBPaperStore {
-  constructor({name='radar-paper-trading-v1',factory=globalThis.indexedDB}={}) {this.name=name;this.factory=factory;this.connection=null;}
+  constructor({name='radar-paper-trading-v1',factory}={}) {this.name=name;this.factory=factory;this.connection=null;}
   async database() {
     if(!this.connection)this.connection=new Promise((resolve,reject)=>{
-      if(!this.factory){reject(new Error('INDEXEDDB_UNAVAILABLE'));return}
-      const request=this.factory.open(this.name,1);
+      const factory=this.factory??globalThis.indexedDB;
+      if(!factory){reject(new Error('INDEXEDDB_UNAVAILABLE'));return}
+      const request=factory.open(this.name,1);
       request.onupgradeneeded=()=>{if(!request.result.objectStoreNames.contains('wallets'))request.result.createObjectStore('wallets')};
       request.onsuccess=()=>{const db=request.result;db.onversionchange=()=>db.close();resolve(db)};
       request.onerror=()=>reject(request.error);request.onblocked=()=>reject(new Error('INDEXEDDB_BLOCKED'));
@@ -34,7 +35,7 @@ export class IndexedDBPaperStore {
   async compareAndSwap(walletId,expected,document) {
     const db=await this.database();return new Promise((resolve,reject)=>{
       const tx=db.transaction('wallets','readwrite'),store=tx.objectStore('wallets'),request=store.get(walletId);let changed=false;
-      request.onsuccess=()=>{if(validVersion(request.result,expected,document)){store.put(clone(document),walletId);changed=true}};
+      request.onsuccess=()=>{try{if(validVersion(request.result,expected,document)){store.put(clone(document),walletId);changed=true}}catch(error){reject(error);tx.abort()}};
       tx.oncomplete=()=>resolve(changed);tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error||new Error('STORAGE_ABORT'));
     });
   }

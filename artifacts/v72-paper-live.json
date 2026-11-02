@@ -1,0 +1,23 @@
+{
+  "browser": "Chromium",
+  "origin": "https://radar-de-mercado-preview.rvc3426.workers.dev",
+  "realSafari": false,
+  "live": true,
+  "transport": "urllib-tls-verified",
+  "checks": [
+    {
+      "width": 390,
+      "live": true,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": 0,
+      "fixtureOpened": null,
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T18:10:00.000Z&end=2026-11-02T21:10:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1"
+      ],
+      "errors": []
+    }
+  ]
+}

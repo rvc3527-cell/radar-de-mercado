@@ -11,7 +11,7 @@ permissions:
 jobs:
   tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -31,4 +31,6 @@ jobs:
           node --check opportunities.js
           for file in paper/*.js; do node --check "$file"; done
           node scripts/build-preview.mjs
+          node scripts/build-preview.mjs dist/preview-worker.mjs --module
+          node --check dist/preview-worker.mjs
           git diff --check

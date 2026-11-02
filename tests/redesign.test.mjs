@@ -16,7 +16,7 @@ test('cartões mostram USDT, período, fonte e estado indisponível sem inventar
  assert.match(text,/100,00 USDT/);assert.match(text,/1 min/);assert.match(text,/Binance/);assert.match(text,/Cotação desatualizada/);assert.match(text,/Indisponível/);
 });
 test('monitoramento não chama erro HTTP de candles válidos',async()=>{
- const app=await panel();app.context.input={last_run:{started_at:1800000000000,report:JSON.stringify([{symbol:'BTCUSD',error:'limite',httpStatus:429},{symbol:'ETHUSD',aligned:false}])}};
+ const app=await panel();app.context.input={last_run:{started_at:1800000000000,report:JSON.stringify([{symbol:'BTCUSD',error:'limite',httpStatus:429},{symbol:'ETHUSD',aligned:false,httpStatus:200,candles:180,latest:1800000000000}])}};
  app.run('renderCollectorStates(input)');const text=app.get('collectorStates').textContent;
  assert.match(text,/Falha 429/);assert.match(text,/✓ Candles validados/);assert.match(text,/Sem execução confirmada/);
 });

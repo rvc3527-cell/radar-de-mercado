@@ -54,14 +54,17 @@ document.addEventListener('DOMContentLoaded',()=>{
   setInterval(()=>{if(document.visibilityState==='visible'&&document.getElementById('cloudAuto').checked){refreshCloudCollector();refreshCloudDiagnostics();}},300000);
   document.getElementById('symbol').addEventListener('change',()=>document.querySelectorAll('[data-asset]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.asset===document.getElementById('symbol').value))));
 });
+function storedCollectorReport(raw){
+ try{const data=JSON.parse(raw||'[]');if(!Array.isArray(data))return [];const report=data.filter(x=>x&&typeof x==='object'&&!Array.isArray(x)&&['BTCUSD','ETHUSD','SOLUSD'].includes(x.symbol)),counts=new Map();for(const x of report)counts.set(x.symbol,(counts.get(x.symbol)||0)+1);return report.filter(x=>counts.get(x.symbol)===1)}catch(error){return []}
+}
 function renderCollectorStates(data){
   const area=document.getElementById('collectorStates');if(!area)return;area.replaceChildren();
-  let report=[];try{report=JSON.parse(data.last_run?.report||'[]')}catch(error){}
+  const report=storedCollectorReport(data.last_run?.report);
   for(const symbol of ['BTCUSD','ETHUSD','SOLUSD']){
     const item=report.find(x=>x.symbol===symbol),row=document.createElement('div'),title=document.createElement('strong'),state=document.createElement('span');
     title.textContent=symbol.replace('USD','/USD');
-    state.textContent=!item?'Sem execução confirmada':item.error?'Falha '+(item.httpStatus||'de coleta'):data.scheduleDelayed?'Execução atrasada':'✓ Candles validados';
-    state.className=!item||data.scheduleDelayed?'muted':item.error?'down':'up';
+    state.textContent=!item?'Sem execução confirmada':item.error?'Falha '+(item.httpStatus||'de coleta'):data.scheduleDelayed?'Execução atrasada':item.httpStatus===200&&Number.isSafeInteger(item.latest)&&item.candles>=40?'✓ Candles validados':'Diagnóstico incompleto';
+    state.className=!item||data.scheduleDelayed||state.textContent==='Diagnóstico incompleto'?'muted':item.error?'down':'up';
     row.append(title,state);area.append(row);
   }
   const time=document.createElement('small');time.className='collector-time';time.textContent=data.last_run?'Última execução: '+new Date(data.last_run.started_at).toLocaleString('pt-BR')+' · Coinbase USD':'Aguardando primeira execução';area.append(time);

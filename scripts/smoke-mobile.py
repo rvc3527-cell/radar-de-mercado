@@ -26,13 +26,15 @@ try:
    if 'unpkg.com' in url:route.fulfill(body=chart,content_type='application/javascript')
    elif 'binance.vision' in url:route.fulfill(json=raw)
    elif 'radar-cloud-collector-preview' in url:
-    if '/observations' in url:route.fulfill(json=remote)
+    if any('/'+name in url for name in ['history','statistics','collector-history']):route.fulfill(status=503,json={'error':{'message':'Histórico indisponível no cenário legado'}})
+    elif '/observations' in url:route.fulfill(json=remote)
     elif '/health' in url:route.fulfill(json={'last_run':{'started_at':now,'report':'[]'},'methodology_version':'v5.7','scheduleDelayed':False})
     else:route.fulfill(json={'checks':[]})
    else:route.continue_()
   context.route('**/*',routes);page=context.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)))
   page.goto(f'http://127.0.0.1:{server.server_port}/',wait_until='networkidle')
   page.wait_for_function("document.querySelector('#scanStatus').textContent.includes('concluída')")
+  page.locator('.dashboard-nav [data-route="observacoes"]').tap()
   assert page.locator('#methodologyInfo').is_visible()
   assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth'), 'Horizontal overflow'
   text=page.locator('#cloudHorizonResults').inner_text()
@@ -42,7 +44,7 @@ try:
   data=json.loads(page.evaluate("localStorage.getItem('radar-observations-v1')"))
   assert next(x for x in data if x['time']==legacy['time'])==legacy
   assert any(x.get('methodology_version')=='v5.7' for x in data)
-  page.locator('#advancedToggle').tap();assert page.locator('#laboratorio').is_visible()
+  page.locator('.settings-shortcut').tap();page.locator('#advancedToggle').tap();page.locator('.dashboard-nav [data-route="laboratorio"]').tap();assert page.locator('#laboratorio').is_visible()
   assert not errors,errors
   page.screenshot(path=f'/tmp/radar-v57-{args.browser}-mobile.png',full_page=True)
   print(json.dumps({'browser':args.browser,'device':'iPhone 13 emulation','checks':9,'passed':9,'failed':0,'page_errors':errors,'screenshot':f'/tmp/radar-v57-{args.browser}-mobile.png'},ensure_ascii=False))

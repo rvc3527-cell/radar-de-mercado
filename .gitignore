@@ -5,3 +5,6 @@ node_modules/
 !.env.example
 artifacts/market-snapshot.json
 artifacts/lightweight-charts.js
+
+__pycache__/
+*.pyc

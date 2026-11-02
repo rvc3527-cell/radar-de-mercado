@@ -39,3 +39,16 @@ para o painel, gerar o artefato com `node scripts/build-preview.mjs`.
 
 [Correção confirmada do User-Agent exigido pela Coinbase e limitação 429](docs/COINBASE-HTTP-v571.md).
 A metodologia dos indicadores permanece v5.7; a atualização é operacional.
+
+## Fase 6 — Inteligência Estatística (Preview)
+
+[Documentação, APIs, evidências, implantação e reversão](docs/HISTORICAL-INTELLIGENCE-v60.md).
+
+Histórico paginado, filtros, estatísticas por metodologia e monitoramento histórico
+na seção Observações do dashboard Petróleo & Coral. GET /history, /statistics e
+/collector-history usam somente D1, sem novas consultas à Coinbase. Nenhuma
+migração nesta fase. Preserva indicadores v5.7 e controle do coletor v5.7.2.
+
+[Preview experimental](https://radar-de-mercado-preview.rvc3426.workers.dev/#observacoes)
+· [PR para revisão](https://github.com/rvc3527-cell/radar-de-mercado/pull/6).
+Produção permanece protegida; os passos de publicação v0.1 acima são históricos.

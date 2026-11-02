@@ -22,10 +22,12 @@ with sync_playwright() as p:
    r.fulfill(body=body,content_type=kind,headers={'access-control-allow-origin':origin})
   ctx.route('**/*',route);page=ctx.new_page();errors=[];page.on('pageerror',lambda e:errors.append(str(e)));page.goto(origin,wait_until='networkidle')
   page.locator('.dashboard-nav [data-route="observacoes"]').click();page.wait_for_function("document.getElementById('hiStatus').textContent.includes('Atualizado')")
+  assert page.evaluate('closedCandles().length>=40'), 'Candles reais insuficientes no gráfico'
+  assert page.locator('#price').inner_text().strip()!='—'
   assert page.locator('#hiHistory tbody tr').count()>0;assert page.locator('#hiCharts svg').count()>0;assert page.locator('#chart canvas').count()>0;assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
   page.evaluate("document.getElementById('inteligencia').scrollIntoView({block:'start'})");page.screenshot(path=str(root/f'artifacts/live-intelligence-{width}.png'),full_page=False)
   assert not errors,errors
-  results.append({'width':width,'pageerrors':errors,'historyRows':page.locator('#hiHistory tbody tr').count(),'chartCanvases':page.locator('#chart canvas').count(),'monitor':page.locator('#hiMonitorStatus').inner_text(),'status':page.locator('#hiStatus').inner_text()})
+  results.append({'width':width,'pageerrors':errors,'historyRows':page.locator('#hiHistory tbody tr').count(),'chartCanvases':page.locator('#chart canvas').count(),'closedMarketCandles':page.evaluate('closedCandles().length'),'marketPrice':page.locator('#price').inner_text(),'monitor':page.locator('#hiMonitorStatus').inner_text(),'status':page.locator('#hiStatus').inner_text()})
   ctx.close()
  browser.close()
 (root/'artifacts/live-intelligence-browser.json').write_text(json.dumps({'at':int(time.time()*1000),'engine':'Chromium','transport':'HTTPS via curl, WebSocket disabled in harness','checks':results},ensure_ascii=False,indent=2));print(json.dumps(results,ensure_ascii=False,indent=2))

@@ -1,0 +1,23 @@
+{
+  "at": 1793582410443,
+  "engine": "Chromium",
+  "transport": "HTTPS via curl, WebSocket disabled in harness",
+  "checks": [
+    {
+      "width": 1440,
+      "pageerrors": [],
+      "historyRows": 25,
+      "chartCanvases": 7,
+      "monitor": "Worker: respondeu à consulta · Fonte: Aguardando limite da API · Última execução no período: 02/11/2026, 01:15:50 · Última execução completa com sucesso: 02/11/2026, 01:10:50. Monitoramento confirmado desde 31/10/2026, 23:15:53.",
+      "status": "Atualizado em 02/11/2026, 01:20:07. v5.7 · Coinbase USD para v5.7 · Período UTC. Resultados históricos não estimam lucros futuros."
+    },
+    {
+      "width": 390,
+      "pageerrors": [],
+      "historyRows": 25,
+      "chartCanvases": 7,
+      "monitor": "Worker: respondeu à consulta · Fonte: Aguardando limite da API · Última execução no período: 02/11/2026, 01:15:50 · Última execução completa com sucesso: 02/11/2026, 01:10:50. Monitoramento confirmado desde 31/10/2026, 23:15:53.",
+      "status": "Atualizado em 02/11/2026, 01:20:10. v5.7 · Coinbase USD para v5.7 · Período UTC. Resultados históricos não estimam lucros futuros."
+    }
+  ]
+}

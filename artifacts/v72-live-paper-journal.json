@@ -1,11 +1,11 @@
 {
   "format": "radar-supervised-export-v72",
-  "exportedAt": 1793650739580,
+  "exportedAt": 1793653844208,
   "warning": "Local fictitious data is not a permanent backup or market performance proof.",
   "journal": {
     "schema": "radar-paper-v1",
     "walletId": "supervised-btc-usd-v72",
-    "version": 6,
+    "version": 7,
     "config": {
       "currency": "USD",
       "initialBalance": 10000,
@@ -23,19 +23,19 @@
         "seq": 1,
         "command": {
           "type": "note",
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:check",
-          "at": 1793650720913,
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:check",
+          "at": 1793653825312,
           "reviewed": false,
           "payload": {
             "kind": "SESSION_CHECK",
-            "details": "{\"config\":{\"currency\":\"USD\",\"initialBalance\":10000,\"maxRiskBps\":100,\"dailyLossBps\":300,\"maxPositions\":1,\"maxAssetExposureBps\":1000,\"feeBps\":10,\"slippageBps\":5,\"maxSpreadBps\":20,\"maxQuoteAgeMs\":10000},\"at\":1793650720913,\"mode\":\"supervised\",\"budget\":1000,\"reserve\":200}"
+            "details": "{\"config\":{\"currency\":\"USD\",\"initialBalance\":10000,\"maxRiskBps\":100,\"dailyLossBps\":300,\"maxPositions\":1,\"maxAssetExposureBps\":1000,\"feeBps\":10,\"slippageBps\":5,\"maxSpreadBps\":20,\"maxQuoteAgeMs\":10000},\"at\":1793653825312,\"mode\":\"supervised\",\"budget\":1000,\"reserve\":200}"
           },
           "issues": false
         },
         "decision": {
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:check",
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:check",
           "type": "note",
-          "at": 1793650720913,
+          "at": 1793653825312,
           "approved": true,
           "code": "NOTED",
           "fills": [],
@@ -55,19 +55,19 @@
         "seq": 2,
         "command": {
           "type": "note",
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:start",
-          "at": 1793650721462,
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:start",
+          "at": 1793653825953,
           "reviewed": false,
           "payload": {
             "kind": "SESSION_START",
-            "details": "{\"at\":1793650721462,\"endsAt\":1793654321462,\"config\":{\"currency\":\"USD\",\"initialBalance\":10000,\"maxRiskBps\":100,\"dailyLossBps\":300,\"maxPositions\":1,\"maxAssetExposureBps\":1000,\"feeBps\":10,\"slippageBps\":5,\"maxSpreadBps\":20,\"maxQuoteAgeMs\":10000},\"policy\":\"v7.2-paper-test-1\",\"mode\":\"supervised\"}"
+            "details": "{\"at\":1793653825953,\"endsAt\":1793657425953,\"config\":{\"currency\":\"USD\",\"initialBalance\":10000,\"maxRiskBps\":100,\"dailyLossBps\":300,\"maxPositions\":1,\"maxAssetExposureBps\":1000,\"feeBps\":10,\"slippageBps\":5,\"maxSpreadBps\":20,\"maxQuoteAgeMs\":10000},\"policy\":\"v7.2-paper-test-1\",\"mode\":\"supervised\"}"
           },
           "issues": false
         },
         "decision": {
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:start",
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:start",
           "type": "note",
-          "at": 1793650721462,
+          "at": 1793653825953,
           "approved": true,
           "code": "NOTED",
           "fills": [],
@@ -87,8 +87,8 @@
         "seq": 3,
         "command": {
           "type": "quote",
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:initial-quote",
-          "at": 1793650721466,
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:initial-quote",
+          "at": 1793653825955,
           "reviewed": false,
           "payload": {
             "quote": {
@@ -99,21 +99,21 @@
                 "quote": "USD",
                 "symbol": "BTC-USD"
               },
-              "at": 1793650721141,
-              "sequence": 138681200910,
-              "bid": 76875.21,
-              "ask": 76875.22,
-              "bidSize": 0.02621647,
-              "askSize": 0.05385816,
+              "at": 1793653825562,
+              "sequence": 138683567356,
+              "bid": 76729.15,
+              "ask": 76729.16,
+              "bidSize": 0.00521308,
+              "askSize": 0.22871523,
               "available": true
             }
           },
           "issues": false
         },
         "decision": {
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:initial-quote",
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:initial-quote",
           "type": "quote",
-          "at": 1793650721466,
+          "at": 1793653825955,
           "approved": true,
           "code": "QUOTE_ACCEPTED",
           "fills": [],
@@ -134,8 +134,8 @@
         "seq": 4,
         "command": {
           "type": "resume",
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:review",
-          "at": 1793650721470,
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:review",
+          "at": 1793653825959,
           "reviewed": true,
           "payload": {
             "reason": "User explicitly activated supervised fictitious session"
@@ -143,9 +143,9 @@
           "issues": false
         },
         "decision": {
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:review",
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:review",
           "type": "resume",
-          "at": 1793650721470,
+          "at": 1793653825959,
           "approved": true,
           "code": "REVIEWED",
           "fills": [],
@@ -165,19 +165,19 @@
         "seq": 5,
         "command": {
           "type": "note",
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:decision:1793650680000",
-          "at": 1793650721474,
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:decision:1793653800000:wait",
+          "at": 1793653825963,
           "reviewed": true,
           "payload": {
             "kind": "STRATEGY_DECISION",
-            "details": "{\"at\":1793650721474,\"time\":1793650680000,\"reason\":\"Aguardar: tendência e dois fechamentos de alta ainda não confirmados.\",\"proposal\":null,\"evidence\":{\"policy\":\"v7.2-paper-test-1\",\"methodology\":\"v5.7\",\"instrument\":{\"provider\":\"coinbase-exchange\",\"market\":\"spot\",\"base\":\"BTC\",\"quote\":\"USD\",\"symbol\":\"BTC-USD\"},\"start\":1793639880,\"closeTime\":1793650680000,\"closes\":[77329.88,77328.81,77277.02,77213.48,77184.54,77187,77223.32,77153.93,77134,77004.53,77054.51,77037.63,76999.99,76979,76948.12,76938.85,76918.82,76903.17,77009.92,76976.26,76969.59,76890.19,76882.02,76885.74,76944.41,76872.48,76882.29,76798.77,76728.52,76739.29,76762.65,76862.1,76983.51,76930.96,76864.14,76805.72,76842.67,76962.14,77007.44,76991.28,77065.49,77028.36,77010.06,77060.83,77113.4,77124.27,77189.79,77189.71,77211.09,77130.71,77209.01,77251.21,77183.61,77171.08,77163.68,77169.11,77111.27,77067.64,77088.91,77101.08,77082.93,77036.06,77028.07,77008.92,77020.15,77036.96,76981.01,76936.05,76941.32,76917.79,76861.24,76830.71,76892.71,76798.51,76842.06,76851.83,76828.63,76877.21,76907.95,76922.34,76968.27,76941.3,76860,76842.23,76814.91,76780.32,76804.57,76860.14,76856.01,76887.33,76861.88,76886.01,76903.51,76864.4,76834.31,76887.7,76880.96,76911.38,76897.3,76871.71,76857.33,76882.82,76895.82,76843.51,76818.22,76823.8,76817.12,76757.05,76784.96,76808.41,76805,76818.62,76873.44,76856.57,76859.13,76834.02,76870.86,76862.32,76888,76849.77,76841.25,76836.01,76772,76752.24,76828.15,76862.13,76877.84,76811,76766.43,76900.29,76861.06,76880.79,76879.81,76818.8,76796.33,76776.96,76787.99,76761.74,76725.41,76671.08,76640.42,76634.79,76617.34,76666.05,76641.05,76614.22,76658.29,76622.93,76622.46,76576.9,76584.79,76580.42,76656.95,76752.92,76793.23,76785.43,76797.37,76734.69,76794.62,76815.03,76865.57,76957.58,76950.87,76865.73,76812.41,76879.81,76881.25,76832.6,76816.07,76817.18,76868.32,76825.16,76823.42,76794.14,76776.55,76776.09,76775,76898.37,76891.3,76858.94],\"ranges10\":[[76802.05,76873.75],[76791.64,76879.79],[76808.09,76861.61],[76788.94,76842.55],[76755.96,76817.91],[76758.28,76810],[76753.87,76783.41],[76768.1,76898.38],[76874.99,76917.5],[76858.93,76915.1]],\"ema9\":76840.32130725034,\"ema21\":76823.33800035242,\"rsi14\":54.87031284394942,\"maxRangePct\":0.16941841550087322,\"extensionPct\":0.024230368162059257}}"
+            "details": "{\"at\":1793653825963,\"time\":1793653800000,\"reason\":\"Aguardar: tendência e dois fechamentos de alta ainda não confirmados.\",\"proposal\":null,\"evidence\":{\"policy\":\"v7.2-paper-test-1\",\"methodology\":\"v5.7\",\"instrument\":{\"provider\":\"coinbase-exchange\",\"market\":\"spot\",\"base\":\"BTC\",\"quote\":\"USD\",\"symbol\":\"BTC-USD\"},\"start\":1793643000,\"closeTime\":1793653800000,\"closes\":[77183.61,77171.08,77163.68,77169.11,77111.27,77067.64,77088.91,77101.08,77082.93,77036.06,77028.07,77008.92,77020.15,77036.96,76981.01,76936.05,76941.32,76917.79,76861.24,76830.71,76892.71,76798.51,76842.06,76851.83,76828.63,76877.21,76907.95,76922.34,76968.27,76941.3,76860,76842.23,76814.91,76780.32,76804.57,76860.14,76856.01,76887.33,76861.88,76886.01,76903.51,76864.4,76834.31,76887.7,76880.96,76911.38,76897.3,76871.71,76857.33,76882.82,76895.82,76843.51,76818.22,76823.8,76817.12,76757.05,76784.96,76808.41,76805,76818.62,76873.44,76856.57,76859.13,76834.02,76870.86,76862.32,76888,76849.77,76841.25,76836.01,76772,76752.24,76828.15,76862.13,76877.84,76811,76766.43,76900.29,76861.06,76880.79,76879.81,76818.8,76796.33,76776.96,76787.99,76761.74,76725.41,76671.08,76640.42,76634.79,76617.34,76666.05,76641.05,76614.22,76658.29,76622.93,76622.46,76576.9,76584.79,76580.42,76656.95,76752.92,76793.23,76785.43,76797.37,76734.69,76794.62,76815.03,76865.57,76957.58,76950.87,76865.73,76812.41,76879.81,76881.25,76832.6,76816.07,76817.18,76868.32,76825.16,76823.42,76794.14,76776.55,76776.09,76775,76898.37,76891.3,76858.94,76866.77,76997.14,77035.3,77032.92,76988.18,77030.84,77061.54,77013.25,76970.02,76903.08,76883.97,76870.57,76794.28,76757.59,76775.5,76790,76805.14,76722.79,76790.02,76745.66,76756.99,76729.69,76724.89,76695.31,76738.22,76764.93,76747.91,76779.81,76869.67,76837.52,76826.67,76858.76,76790.75,76762.26,76760.36,76786.35,76780.97,76700.98,76687.98,76587.26,76622.3,76641.36,76592.57,76582.69,76738,76668.19,76687.49,76695.59,76735.31,76814.57,76750.72,76738.24],\"ranges10\":[[76588.03,76649.36],[76573.58,76638.38],[76565.46,76757.01],[76657.74,76733.8],[76658.47,76693],[76687.49,76744.65],[76663.41,76764.23],[76723.57,76824.99],[76744.63,76814.57],[76731.24,76758.08]],\"ema9\":76724.78804850562,\"ema21\":76723.53511414003,\"rsi14\":50.645751689520026,\"maxRangePct\":0.24961557507361198,\"extensionPct\":0.017532732036840137}}"
           },
           "issues": false
         },
         "decision": {
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:decision:1793650680000",
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:decision:1793653800000:wait",
           "type": "note",
-          "at": 1793650721474,
+          "at": 1793653825963,
           "approved": true,
           "code": "NOTED",
           "fills": [],
@@ -197,8 +197,8 @@
         "seq": 6,
         "command": {
           "type": "quote",
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:q:138681215764",
-          "at": 1793650737618,
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:q:138683574528",
+          "at": 1793653842242,
           "reviewed": true,
           "payload": {
             "quote": {
@@ -209,21 +209,21 @@
                 "quote": "USD",
                 "symbol": "BTC-USD"
               },
-              "at": 1793650735641,
-              "sequence": 138681215764,
-              "bid": 76860.67,
-              "ask": 76861.04,
-              "bidSize": 0.03829283,
-              "askSize": 0.00520447,
+              "at": 1793653840130,
+              "sequence": 138683574528,
+              "bid": 76732.99,
+              "ask": 76733,
+              "bidSize": 0.04078255,
+              "askSize": 0.13268436,
               "available": true
             }
           },
           "issues": false
         },
         "decision": {
-          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:q:138681215764",
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:q:138683574528",
           "type": "quote",
-          "at": 1793650737618,
+          "at": 1793653842242,
           "approved": true,
           "code": "QUOTE_ACCEPTED",
           "fills": [],
@@ -239,8 +239,40 @@
             "executions": []
           }
         }
+      },
+      {
+        "seq": 7,
+        "command": {
+          "type": "note",
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:end",
+          "at": 1793653844141,
+          "reviewed": true,
+          "payload": {
+            "kind": "SESSION_END",
+            "details": "{\"at\":1793653844141,\"reason\":\"Sessão encerrada pelo usuário. Posições fictícias não foram fechadas automaticamente.\",\"closePositions\":false}"
+          },
+          "issues": false
+        },
+        "decision": {
+          "id": "s72:dc6764aa-26a8-4f66-94de-c9a91f53a05b:end",
+          "type": "note",
+          "at": 1793653844141,
+          "approved": true,
+          "code": "NOTED",
+          "fills": [],
+          "marketAccepted": false,
+          "accounting": {
+            "units": "quote-micros/base-1e8",
+            "cash": 10000000000,
+            "realized": 0,
+            "fees": 0,
+            "slippage": 0,
+            "positions": [],
+            "executions": []
+          }
+        }
       }
     ],
-    "checksum": "e401be33dcfcb0ad8389b7115e8728afd6ecdcc243ca29a6920e13d687e1fd19"
+    "checksum": "5b1c9d05aa2365316e756eec303e114a83f03d80e5a1e719fabef250cc2cb5b0"
   }
 }

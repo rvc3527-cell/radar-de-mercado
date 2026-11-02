@@ -44,6 +44,12 @@ try:
        c=100+i*.005+math.sin((i+5)*math.pi/4)*.04;data.append([end-(60-i)*60,c-.02,c+.02,c,c,1])
       r.fulfill(json=data[::-1])
      else:r.fulfill(json={'bids':[['100.3','100',1]],'asks':[['100.31','100',1]],'auction_mode':False,'auction':None,'sequence':now[0],'time':datetime.datetime.fromtimestamp((now[0]-500)/1000,datetime.timezone.utc).isoformat(timespec='milliseconds').replace('+00:00','Z')})
+    elif args.tls_helper and args.origin and url.startswith(origin):
+     with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'RadarDeMercado/7.2 (+https://github.com/rvc3527-cell/radar-de-mercado)'}),timeout=8) as response:
+      body=response.read();relative=urllib.parse.urlsplit(url).path.lstrip('/') or 'index.html';local=root/relative
+      if not local.is_file():local=root/'index.html'
+      assert body==local.read_bytes(),relative
+      r.fulfill(status=response.status,body=body,headers={'content-type':response.headers.get('Content-Type','text/plain')})
     else:r.continue_()
    context.route('**/*',route);page=context.new_page();page.on('pageerror',lambda e:errors.append(str(e)));page.on('requestfailed',lambda r:failures.append({'url':r.url,'failure':r.failure}));page.on('console',lambda m:console.append(m.text) if m.type=='error' else None);page.goto(origin+'/#simulacao',wait_until='networkidle');page.wait_for_selector('#paperPrepare')
    assert page.locator('#paperState').inner_text()=='Desativado';assert not market;assert page.locator('#paperStart').is_disabled()
@@ -64,6 +70,10 @@ try:
    if args.live:(root/'artifacts/v72-live-paper-journal.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
    initial_trades=len([e for e in data['journal']['events'] if e['decision']['code']=='OPENED']);page.locator('#paperEnd').click();page.wait_for_function("document.getElementById('paperState').textContent==='Encerrado'")
    if not args.live:assert 'posições fictícias abertas' in page.locator('#paperResidual').inner_text()
+   if args.live:
+    with page.expect_download() as final_download:page.locator('#paperExport').click()
+    final_data=json.loads(pathlib.Path(final_download.value.path()).read_text());assert final_data['journal']['events'][-1]['command']['payload']['kind']=='SESSION_END'
+    (root/'artifacts/v72-live-paper-journal.json').write_text(json.dumps(final_data,ensure_ascii=False,indent=2))
    old=len(market);page.reload(wait_until='networkidle');assert page.locator('#paperState').inner_text()=='Desativado';assert len(market)==old
    page.locator('#paperRestore').click();page.wait_for_function("document.getElementById('paperCash').textContent!=='Não carregado'")
    assert page.locator('#paperState').inner_text()=='Desativado';assert len(market)==old;assert not errors,errors
@@ -73,6 +83,6 @@ try:
     mode['offline']=True;now[0]+=15000;page.evaluate('(n)=>{window.__paperNow=n;localStorage.setItem("v72-clock",String(n))}',now[0]);page.locator('#paperPrepare').click();page.wait_for_function("document.getElementById('paperState').textContent==='Pausado por falha'");assert page.locator('#paperOpen').inner_text()=='1'
    checks.append({'width':width,'live':args.live,'ready':True,'passed':True,'prospectiveOpened':initial_trades if args.live else None,'fixtureOpened':initial_trades if not args.live else None,'marketRequests':market,'errors':errors});context.close()
   browser.close()
- report={'browser':'Chromium','realSafari':False,'live':args.live,'transport':'urllib-tls-verified' if args.tls_helper else 'browser-native','checks':checks};out=root/('artifacts/v72-paper-live.json' if args.live else 'artifacts/v72-paper-browser.json');out.write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
+ report={'browser':'Chromium','origin':origin,'realSafari':False,'live':args.live,'transport':'urllib-tls-verified' if args.tls_helper else 'browser-native','checks':checks};out=root/('artifacts/v72-paper-live.json' if args.live else 'artifacts/v72-paper-browser.json');out.write_text(json.dumps(report,ensure_ascii=False,indent=2));print(json.dumps(report,ensure_ascii=False,indent=2))
  if not args.live:assert all(x.get('passed') for x in checks),checks
 finally:server.shutdown()

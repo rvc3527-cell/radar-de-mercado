@@ -190,7 +190,7 @@ test('coleta automatica opt-in apenas com aba visivel',()=>{
 
 test('interface moderna prioriza oportunidade e mostra momento e duracao sem prometer sinais',()=>{
  for(const id of ['scanner','scanResults','scanAuto','scanJournal'])assert.ok(html.includes('id="'+id+'"'));
- assert.ok(html.includes('Oportunidades em observação'));
+ assert.ok(html.includes('Condições dos ativos'));
  assert.ok(html.includes('opportunity-card'));
  assert.ok(html.includes('Observar; sem entrada confirmada'));
  assert.ok(html.includes('Não validada'));

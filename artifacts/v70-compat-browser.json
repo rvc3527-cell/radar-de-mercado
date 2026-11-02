@@ -1,0 +1,82 @@
+[
+  {
+    "width": 1440,
+    "passed": true,
+    "loadSeconds": 1.079,
+    "consoleErrors": [],
+    "metrics": {
+      "dom": 983,
+      "transfer": 88047,
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 132
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 132
+        }
+      ]
+    }
+  },
+  {
+    "width": 768,
+    "passed": true,
+    "loadSeconds": 1.09,
+    "consoleErrors": [],
+    "metrics": {
+      "dom": 983,
+      "transfer": 88047,
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 120
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 120
+        }
+      ]
+    }
+  },
+  {
+    "width": 390,
+    "passed": true,
+    "loadSeconds": 1.002,
+    "consoleErrors": [],
+    "metrics": {
+      "dom": 983,
+      "transfer": 88047,
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 84
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 84
+        }
+      ]
+    }
+  },
+  {
+    "width": 375,
+    "passed": true,
+    "loadSeconds": 1.024,
+    "consoleErrors": [],
+    "metrics": {
+      "dom": 983,
+      "transfer": 88047,
+      "paint": [
+        {
+          "name": "first-paint",
+          "ms": 116
+        },
+        {
+          "name": "first-contentful-paint",
+          "ms": 116
+        }
+      ]
+    }
+  }
+]

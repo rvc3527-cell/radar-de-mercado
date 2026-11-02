@@ -44,7 +44,7 @@ try:
   data=json.loads(page.evaluate("localStorage.getItem('radar-observations-v1')"))
   assert next(x for x in data if x['time']==legacy['time'])==legacy
   assert any(x.get('methodology_version')=='v5.7' for x in data)
-  page.locator('.settings-shortcut').tap();page.locator('#advancedToggle').tap();page.locator('.dashboard-nav [data-route="laboratorio"]').tap();assert page.locator('#laboratorio').is_visible()
+  page.locator('.settings-shortcut').tap();page.locator('#advancedToggle').tap();page.locator('.v7-tool-links [data-route="laboratorio"]').tap();assert page.locator('#laboratorio').is_visible()
   assert not errors,errors
   page.screenshot(path=f'/tmp/radar-v57-{args.browser}-mobile.png',full_page=True)
   print(json.dumps({'browser':args.browser,'device':'iPhone 13 emulation','checks':9,'passed':9,'failed':0,'page_errors':errors,'screenshot':f'/tmp/radar-v57-{args.browser}-mobile.png'},ensure_ascii=False))

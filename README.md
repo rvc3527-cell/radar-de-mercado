@@ -52,3 +52,10 @@ migração nesta fase. Preserva indicadores v5.7 e controle do coletor v5.7.2.
 [Preview experimental](https://radar-de-mercado-preview.rvc3426.workers.dev/#observacoes)
 · [PR para revisão](https://github.com/rvc3527-cell/radar-de-mercado/pull/6).
 Produção permanece protegida; os passos de publicação v0.1 acima são históricos.
+
+## Radar 7.0 — Oportunidades (Preview)
+
+[Arquitetura auditada, regras de bloqueio, evidência e testes](docs/RADAR-v70.md).
+Tela simples com análise determinística e detalhes acessíveis. Sem amostra
+prospectiva compatível, mostra AGUARDAR. Política v7.0-observe-1 separada dos
+indicadores v5.7 e do histórico Coinbase USD. Sem alteração no D1 ou no coletor.

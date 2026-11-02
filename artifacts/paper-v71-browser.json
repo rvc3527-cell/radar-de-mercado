@@ -1,0 +1,48 @@
+{
+  "engine": "Chromium",
+  "syntheticQuotes": true,
+  "checks": [
+    {
+      "width": 1440,
+      "beforeReload": {
+        "approved": true,
+        "cash": 9900,
+        "positions": 1,
+        "trades": 1
+      },
+      "afterReload": {
+        "restoredCash": 9900,
+        "restoredPositions": 1,
+        "armed": false,
+        "cachedExecutable": false,
+        "duplicate": true,
+        "blocked": "SESSION_REVIEW_REQUIRED",
+        "concurrentApproved": 1,
+        "positions": 2,
+        "trades": 2
+      },
+      "pageerrors": []
+    },
+    {
+      "width": 390,
+      "beforeReload": {
+        "approved": true,
+        "cash": 9900,
+        "positions": 1,
+        "trades": 1
+      },
+      "afterReload": {
+        "restoredCash": 9900,
+        "restoredPositions": 1,
+        "armed": false,
+        "cachedExecutable": false,
+        "duplicate": true,
+        "blocked": "SESSION_REVIEW_REQUIRED",
+        "concurrentApproved": 1,
+        "positions": 2,
+        "trades": 2
+      },
+      "pageerrors": []
+    }
+  ]
+}

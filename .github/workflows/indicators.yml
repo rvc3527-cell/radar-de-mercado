@@ -29,5 +29,6 @@ jobs:
           node --check dashboard.js
           node --check opportunity-engine.js
           node --check opportunities.js
+          for file in paper/*.js; do node --check "$file"; done
           node scripts/build-preview.mjs
           git diff --check

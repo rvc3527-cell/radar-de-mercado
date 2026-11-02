@@ -1,0 +1,91 @@
+{
+  "engine": "Chromium",
+  "origin": "http://127.0.0.1:36961",
+  "snapshotAt": 1793546909265,
+  "results": [
+    {
+      "width": 1440,
+      "passed": true,
+      "seconds": 2.69,
+      "pageerrors": [],
+      "coinbaseBrowserRequests": 0,
+      "metrics": {
+        "nodes": 1811,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 468
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 468
+          }
+        ],
+        "transfer": 89844
+      }
+    },
+    {
+      "width": 768,
+      "passed": true,
+      "seconds": 2.4,
+      "pageerrors": [],
+      "coinbaseBrowserRequests": 0,
+      "metrics": {
+        "nodes": 1811,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 424
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 424
+          }
+        ],
+        "transfer": 89844
+      }
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "seconds": 2.2,
+      "pageerrors": [],
+      "coinbaseBrowserRequests": 0,
+      "metrics": {
+        "nodes": 1811,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 436
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 436
+          }
+        ],
+        "transfer": 89844
+      }
+    },
+    {
+      "width": 375,
+      "passed": true,
+      "seconds": 2.19,
+      "pageerrors": [],
+      "coinbaseBrowserRequests": 0,
+      "metrics": {
+        "nodes": 1811,
+        "paint": [
+          {
+            "name": "first-paint",
+            "ms": 332
+          },
+          {
+            "name": "first-contentful-paint",
+            "ms": 332
+          }
+        ],
+        "transfer": 89844
+      }
+    }
+  ]
+}

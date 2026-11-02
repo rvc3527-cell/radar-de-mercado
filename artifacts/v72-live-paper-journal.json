@@ -1,0 +1,246 @@
+{
+  "format": "radar-supervised-export-v72",
+  "exportedAt": 1793650739580,
+  "warning": "Local fictitious data is not a permanent backup or market performance proof.",
+  "journal": {
+    "schema": "radar-paper-v1",
+    "walletId": "supervised-btc-usd-v72",
+    "version": 6,
+    "config": {
+      "currency": "USD",
+      "initialBalance": 10000,
+      "maxRiskBps": 100,
+      "dailyLossBps": 300,
+      "maxPositions": 1,
+      "maxAssetExposureBps": 1000,
+      "feeBps": 10,
+      "slippageBps": 5,
+      "maxSpreadBps": 20,
+      "maxQuoteAgeMs": 10000
+    },
+    "events": [
+      {
+        "seq": 1,
+        "command": {
+          "type": "note",
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:check",
+          "at": 1793650720913,
+          "reviewed": false,
+          "payload": {
+            "kind": "SESSION_CHECK",
+            "details": "{\"config\":{\"currency\":\"USD\",\"initialBalance\":10000,\"maxRiskBps\":100,\"dailyLossBps\":300,\"maxPositions\":1,\"maxAssetExposureBps\":1000,\"feeBps\":10,\"slippageBps\":5,\"maxSpreadBps\":20,\"maxQuoteAgeMs\":10000},\"at\":1793650720913,\"mode\":\"supervised\",\"budget\":1000,\"reserve\":200}"
+          },
+          "issues": false
+        },
+        "decision": {
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:check",
+          "type": "note",
+          "at": 1793650720913,
+          "approved": true,
+          "code": "NOTED",
+          "fills": [],
+          "marketAccepted": false,
+          "accounting": {
+            "units": "quote-micros/base-1e8",
+            "cash": 10000000000,
+            "realized": 0,
+            "fees": 0,
+            "slippage": 0,
+            "positions": [],
+            "executions": []
+          }
+        }
+      },
+      {
+        "seq": 2,
+        "command": {
+          "type": "note",
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:start",
+          "at": 1793650721462,
+          "reviewed": false,
+          "payload": {
+            "kind": "SESSION_START",
+            "details": "{\"at\":1793650721462,\"endsAt\":1793654321462,\"config\":{\"currency\":\"USD\",\"initialBalance\":10000,\"maxRiskBps\":100,\"dailyLossBps\":300,\"maxPositions\":1,\"maxAssetExposureBps\":1000,\"feeBps\":10,\"slippageBps\":5,\"maxSpreadBps\":20,\"maxQuoteAgeMs\":10000},\"policy\":\"v7.2-paper-test-1\",\"mode\":\"supervised\"}"
+          },
+          "issues": false
+        },
+        "decision": {
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:start",
+          "type": "note",
+          "at": 1793650721462,
+          "approved": true,
+          "code": "NOTED",
+          "fills": [],
+          "marketAccepted": false,
+          "accounting": {
+            "units": "quote-micros/base-1e8",
+            "cash": 10000000000,
+            "realized": 0,
+            "fees": 0,
+            "slippage": 0,
+            "positions": [],
+            "executions": []
+          }
+        }
+      },
+      {
+        "seq": 3,
+        "command": {
+          "type": "quote",
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:initial-quote",
+          "at": 1793650721466,
+          "reviewed": false,
+          "payload": {
+            "quote": {
+              "instrument": {
+                "provider": "coinbase-exchange",
+                "market": "spot",
+                "base": "BTC",
+                "quote": "USD",
+                "symbol": "BTC-USD"
+              },
+              "at": 1793650721141,
+              "sequence": 138681200910,
+              "bid": 76875.21,
+              "ask": 76875.22,
+              "bidSize": 0.02621647,
+              "askSize": 0.05385816,
+              "available": true
+            }
+          },
+          "issues": false
+        },
+        "decision": {
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:initial-quote",
+          "type": "quote",
+          "at": 1793650721466,
+          "approved": true,
+          "code": "QUOTE_ACCEPTED",
+          "fills": [],
+          "marketAccepted": true,
+          "exits": [],
+          "accounting": {
+            "units": "quote-micros/base-1e8",
+            "cash": 10000000000,
+            "realized": 0,
+            "fees": 0,
+            "slippage": 0,
+            "positions": [],
+            "executions": []
+          }
+        }
+      },
+      {
+        "seq": 4,
+        "command": {
+          "type": "resume",
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:review",
+          "at": 1793650721470,
+          "reviewed": true,
+          "payload": {
+            "reason": "User explicitly activated supervised fictitious session"
+          },
+          "issues": false
+        },
+        "decision": {
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:review",
+          "type": "resume",
+          "at": 1793650721470,
+          "approved": true,
+          "code": "REVIEWED",
+          "fills": [],
+          "marketAccepted": false,
+          "accounting": {
+            "units": "quote-micros/base-1e8",
+            "cash": 10000000000,
+            "realized": 0,
+            "fees": 0,
+            "slippage": 0,
+            "positions": [],
+            "executions": []
+          }
+        }
+      },
+      {
+        "seq": 5,
+        "command": {
+          "type": "note",
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:decision:1793650680000",
+          "at": 1793650721474,
+          "reviewed": true,
+          "payload": {
+            "kind": "STRATEGY_DECISION",
+            "details": "{\"at\":1793650721474,\"time\":1793650680000,\"reason\":\"Aguardar: tendência e dois fechamentos de alta ainda não confirmados.\",\"proposal\":null,\"evidence\":{\"policy\":\"v7.2-paper-test-1\",\"methodology\":\"v5.7\",\"instrument\":{\"provider\":\"coinbase-exchange\",\"market\":\"spot\",\"base\":\"BTC\",\"quote\":\"USD\",\"symbol\":\"BTC-USD\"},\"start\":1793639880,\"closeTime\":1793650680000,\"closes\":[77329.88,77328.81,77277.02,77213.48,77184.54,77187,77223.32,77153.93,77134,77004.53,77054.51,77037.63,76999.99,76979,76948.12,76938.85,76918.82,76903.17,77009.92,76976.26,76969.59,76890.19,76882.02,76885.74,76944.41,76872.48,76882.29,76798.77,76728.52,76739.29,76762.65,76862.1,76983.51,76930.96,76864.14,76805.72,76842.67,76962.14,77007.44,76991.28,77065.49,77028.36,77010.06,77060.83,77113.4,77124.27,77189.79,77189.71,77211.09,77130.71,77209.01,77251.21,77183.61,77171.08,77163.68,77169.11,77111.27,77067.64,77088.91,77101.08,77082.93,77036.06,77028.07,77008.92,77020.15,77036.96,76981.01,76936.05,76941.32,76917.79,76861.24,76830.71,76892.71,76798.51,76842.06,76851.83,76828.63,76877.21,76907.95,76922.34,76968.27,76941.3,76860,76842.23,76814.91,76780.32,76804.57,76860.14,76856.01,76887.33,76861.88,76886.01,76903.51,76864.4,76834.31,76887.7,76880.96,76911.38,76897.3,76871.71,76857.33,76882.82,76895.82,76843.51,76818.22,76823.8,76817.12,76757.05,76784.96,76808.41,76805,76818.62,76873.44,76856.57,76859.13,76834.02,76870.86,76862.32,76888,76849.77,76841.25,76836.01,76772,76752.24,76828.15,76862.13,76877.84,76811,76766.43,76900.29,76861.06,76880.79,76879.81,76818.8,76796.33,76776.96,76787.99,76761.74,76725.41,76671.08,76640.42,76634.79,76617.34,76666.05,76641.05,76614.22,76658.29,76622.93,76622.46,76576.9,76584.79,76580.42,76656.95,76752.92,76793.23,76785.43,76797.37,76734.69,76794.62,76815.03,76865.57,76957.58,76950.87,76865.73,76812.41,76879.81,76881.25,76832.6,76816.07,76817.18,76868.32,76825.16,76823.42,76794.14,76776.55,76776.09,76775,76898.37,76891.3,76858.94],\"ranges10\":[[76802.05,76873.75],[76791.64,76879.79],[76808.09,76861.61],[76788.94,76842.55],[76755.96,76817.91],[76758.28,76810],[76753.87,76783.41],[76768.1,76898.38],[76874.99,76917.5],[76858.93,76915.1]],\"ema9\":76840.32130725034,\"ema21\":76823.33800035242,\"rsi14\":54.87031284394942,\"maxRangePct\":0.16941841550087322,\"extensionPct\":0.024230368162059257}}"
+          },
+          "issues": false
+        },
+        "decision": {
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:decision:1793650680000",
+          "type": "note",
+          "at": 1793650721474,
+          "approved": true,
+          "code": "NOTED",
+          "fills": [],
+          "marketAccepted": false,
+          "accounting": {
+            "units": "quote-micros/base-1e8",
+            "cash": 10000000000,
+            "realized": 0,
+            "fees": 0,
+            "slippage": 0,
+            "positions": [],
+            "executions": []
+          }
+        }
+      },
+      {
+        "seq": 6,
+        "command": {
+          "type": "quote",
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:q:138681215764",
+          "at": 1793650737618,
+          "reviewed": true,
+          "payload": {
+            "quote": {
+              "instrument": {
+                "provider": "coinbase-exchange",
+                "market": "spot",
+                "base": "BTC",
+                "quote": "USD",
+                "symbol": "BTC-USD"
+              },
+              "at": 1793650735641,
+              "sequence": 138681215764,
+              "bid": 76860.67,
+              "ask": 76861.04,
+              "bidSize": 0.03829283,
+              "askSize": 0.00520447,
+              "available": true
+            }
+          },
+          "issues": false
+        },
+        "decision": {
+          "id": "s72:d03cf28a-ccb2-439f-b6af-bbec7672ce3f:q:138681215764",
+          "type": "quote",
+          "at": 1793650737618,
+          "approved": true,
+          "code": "QUOTE_ACCEPTED",
+          "fills": [],
+          "marketAccepted": true,
+          "exits": [],
+          "accounting": {
+            "units": "quote-micros/base-1e8",
+            "cash": 10000000000,
+            "realized": 0,
+            "fees": 0,
+            "slippage": 0,
+            "positions": [],
+            "executions": []
+          }
+        }
+      }
+    ],
+    "checksum": "e401be33dcfcb0ad8389b7115e8728afd6ecdcc243ca29a6920e13d687e1fd19"
+  }
+}

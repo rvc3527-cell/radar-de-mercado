@@ -1,0 +1,68 @@
+{
+  "browser": "Chromium",
+  "realSafari": false,
+  "live": false,
+  "transport": "browser-native",
+  "checks": [
+    {
+      "width": 1440,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z"
+      ],
+      "errors": []
+    },
+    {
+      "width": 768,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z"
+      ],
+      "errors": []
+    },
+    {
+      "width": 390,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z"
+      ],
+      "errors": []
+    },
+    {
+      "width": 375,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z"
+      ],
+      "errors": []
+    }
+  ]
+}

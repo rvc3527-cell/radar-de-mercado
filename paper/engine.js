@@ -2,6 +2,7 @@ import {PaperError,invariant,checked,cash,publicCash,publicQty,sell} from './mon
 import {genesis,advance} from './integrity.js';
 import {DEFAULTS,configuration,keyOf,normalizedQuote,valuation,daily,opening,validInstrument} from './risk.js';
 const SCHEMA='radar-paper-v1',MAX_EVENTS=10000;
+const noteText=x=>typeof x==='string'&&x.length<=16384&&!/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/.test(x)?x:null;
 const clone=x=>JSON.parse(JSON.stringify(x));
 const idOK=x=>typeof x==='string'&&/^[A-Za-z0-9_.:-]{1,100}$/.test(x)&&!['__proto__','constructor','prototype'].includes(x);
 const scalar=x=>typeof x==='number'&&Number.isFinite(x)||typeof x==='boolean'||(typeof x==='string'&&x.length<=160&&!/[\u0000-\u001f\u007f]/.test(x))?x:null;
@@ -47,12 +48,16 @@ function closePosition(s,p,q,c,at,fillId,reason,strategyId) {
   return fillId;
 }
 function reduce(previous,c,config) {
-  let s=clone(previous);const answer={id:c.id,type:c.type,at:c.at,approved:true,code:'OK',fills:[],marketAccepted:false};
+  // The reducer never mutates the idempotency map. Replay owns that map and
+  // appends only after auditing; copying it at every event made replay quadratic.
+  const {processed,...wallet}=previous;let s={...clone(wallet),processed};const answer={id:c.id,type:c.type,at:c.at,approved:true,code:'OK',fills:[],marketAccepted:false};
   try {
     daily(s,config,c.at);
     if(c.issues) {if(c.type==='quote')s.halted='INVALID_FEED';throw new PaperError('UNSUPPORTED_FIELDS')}
     if(c.type==='failure') {
       invariant(['NETWORK','PROVIDER','DATA','STORAGE'].includes(c.payload.code),'FAILURE_CODE');s.halted=c.payload.code;s.operatorReviewed=false;invalidateQuotes(s,null,config);answer.code='HALTED';
+    } else if(c.type==='note') {
+      invariant(['SESSION_CHECK','SESSION_START','SESSION_END','SESSION_PAUSE','STRATEGY_DECISION'].includes(c.payload.kind)&&noteText(c.payload.details)!==null,'INVALID_NOTE');answer.code='NOTED';
     } else if(c.type==='resume') {
       invariant(typeof c.payload.reason==='string'&&c.payload.reason.trim().length>=3&&c.payload.reason.length<=160,'REVIEW_REASON');
       invariant(c.reviewed,'SESSION_QUOTES_REQUIRED');const v=valuation(s,config,c.at);invariant(!s.day.locked,'DAILY_LOSS');invariant(v.stale.length===0,'PORTFOLIO_STALE');invariant(v.illiquid.length===0,'PORTFOLIO_ILLIQUID');
@@ -98,12 +103,12 @@ function reduce(previous,c,config) {
   }
   daily(s,config,c.at);s.lastAt=c.at;return {state:s,decision:answer};
 }
-function conflict(previous,c,config) {const state=clone(previous);daily(state,config,c.at);state.lastAt=c.at;return {state,decision:reject(c,'DUPLICATE_ID_CONFLICT')}}
+function conflict(previous,c,config) {const {processed,...wallet}=previous,state={...clone(wallet),processed};daily(state,config,c.at);state.lastAt=c.at;return {state,decision:reject(c,'DUPLICATE_ID_CONFLICT')}}
 function audit(result,previous) {
   const s=result.state;result.decision.accounting={units:'quote-micros/base-1e8',cash:s.cash,realized:s.realized,fees:s.totalFees,slippage:s.totalSlippage,positions:Object.values(s.positions).map(p=>({id:p.id,quantity:p.quantity,entryCost:p.entryCost,stop:p.stop,risk:p.risk})),executions:s.trades.slice(previous.trades.length)};return result;
 }
 function validCommand(c) {
-  return keysMatch(c,['type','id','at','reviewed','payload','issues'])&&['proposal','quote','failure','resume'].includes(c.type)&&idOK(c.id)&&Number.isSafeInteger(c.at)&&c.at>0&&typeof c.reviewed==='boolean'&&typeof c.issues==='boolean'&&c.payload&&typeof c.payload==='object';
+  return keysMatch(c,['type','id','at','reviewed','payload','issues'])&&['proposal','quote','failure','resume','note'].includes(c.type)&&idOK(c.id)&&Number.isSafeInteger(c.at)&&c.at>0&&typeof c.reviewed==='boolean'&&typeof c.issues==='boolean'&&c.payload&&typeof c.payload==='object';
 }
 async function replay(doc,walletId) {
   invariant(keysMatch(doc,['schema','walletId','version','config','events','checksum'])&&Object.keys(doc).length===6&&typeof doc.checksum==='string'&&/^[a-f0-9]{64}$/.test(doc.checksum)&&doc.schema===SCHEMA&&doc.walletId===walletId&&Array.isArray(doc.events)&&doc.version===doc.events.length&&doc.version<=MAX_EVENTS,'CORRUPT_JOURNAL');
@@ -112,7 +117,7 @@ async function replay(doc,walletId) {
   for(let i=0;i<doc.events.length;i++) {
     const event=doc.events[i],command=event.command;
     invariant(keysMatch(event,['seq','command','decision'])&&Object.keys(event).length===3&&event.seq===i+1&&validCommand(command)&&command.at>=state.lastAt,'CORRUPT_JOURNAL');
-    let canonical;const issues={bad:false};if(command.type==='proposal')canonical=proposalPayload(command.payload.proposal,command.payload.quote).payload;else if(command.type==='quote')canonical={quote:cleanQuote(command.payload.quote,issues)};else canonical=command.type==='failure'?{code:scalar(command.payload.code)}:{reason:scalar(command.payload.reason)};invariant(JSON.stringify(canonical)===JSON.stringify(command.payload),'CORRUPT_JOURNAL');
+    let canonical;const issues={bad:false};if(command.type==='proposal')canonical=proposalPayload(command.payload.proposal,command.payload.quote).payload;else if(command.type==='quote')canonical={quote:cleanQuote(command.payload.quote,issues)};else if(command.type==='note')canonical={kind:scalar(command.payload.kind),details:noteText(command.payload.details)};else canonical=command.type==='failure'?{code:scalar(command.payload.code)}:{reason:scalar(command.payload.reason)};invariant(JSON.stringify(canonical)===JSON.stringify(command.payload),'CORRUPT_JOURNAL');
     const old=state.processed[requestKey(command)];let result;
     if(old){invariant(old.fingerprint!==fingerprint(command),'CORRUPT_JOURNAL');result=conflict(state,command,config)}else result=reduce(state,command,config);
     result=audit(result,state);invariant(JSON.stringify(result.decision)===JSON.stringify(event.decision),'CORRUPT_JOURNAL');state=result.state;
@@ -168,6 +173,10 @@ export class PaperTradingEngine {
     invariant(keysMatch(input,['id','code','now'])&&idOK(input.id),'COMMAND_ID');
     const answer=await this.#execute({type:'failure',id:input.id,at:this.#time(input.now),reviewed:this.#armed,payload:{code:scalar(input.code)},issues:false});if(answer.approved&&!answer.duplicate)this.#sessionQuotes.clear();return answer;
   }
+  async recordNote(input) {
+    invariant(keysMatch(input,['id','kind','details','now'])&&idOK(input.id),'COMMAND_ID');
+    return this.#execute({type:'note',id:input.id,at:this.#time(input.now),reviewed:this.#armed,payload:{kind:scalar(input.kind),details:noteText(input.details)},issues:false});
+  }
   async resume(input) {
     invariant(keysMatch(input,['id','reason','now'])&&idOK(input.id),'COMMAND_ID');
     const doc=await this.exportJournal(),{state}=await replay(doc,this.#walletId),marketReviewed=Object.values(state.positions).every(p=>this.#sessionQuotes.has(keyOf(p.instrument)));
@@ -191,6 +200,6 @@ export class PaperTradingEngine {
     const v=valuation(s,config,at);for(const p of Object.values(s.positions))if(!this.#sessionQuotes.has(keyOf(p.instrument))){v.stale.push(keyOf(p.instrument));v.illiquid.push(keyOf(p.instrument))}const d=s.day?{...s.day,loss:Math.max(0,s.day.startEquity-v.equity)}:null;
     const positions=Object.values(s.positions).map(p=>({...p,quantity:publicQty(p.quantity),entryPrice:publicCash(p.entryPrice),entryCost:publicCash(p.entryCost),stop:publicCash(p.stop),risk:publicCash(p.risk)}));
     const trades=s.trades.map(t=>({...t,quantity:publicQty(t.quantity),price:publicCash(t.price),gross:publicCash(t.gross),fees:publicCash(t.fees),net:publicCash(t.net),slippage:publicCash(t.slippage),pnl:publicCash(t.pnl)}));
-    return {schema:SCHEMA,walletId:this.#walletId,version:doc.version,currency:config.currency,initialBalance:config.initialBalance,cash:publicCash(s.cash),equity:publicCash(v.equity),realized:publicCash(s.realized),unrealized:publicCash(v.unrealized),fees:publicCash(s.totalFees),slippage:publicCash(s.totalSlippage),positions,trades,sessionReviewed:this.#armed,halted:this.#fault||s.halted,valuationFresh:v.stale.length===0,liquidationExecutable:v.illiquid.length===0,staleInstruments:v.stale,day:d?{...d,startEquity:publicCash(d.startEquity),loss:publicCash(d.loss)}:null,config};
+    return {schema:SCHEMA,walletId:this.#walletId,version:doc.version,capacity:{used:doc.version,limit:MAX_EVENTS,remaining:MAX_EVENTS-doc.version},currency:config.currency,initialBalance:config.initialBalance,cash:publicCash(s.cash),equity:publicCash(v.equity),realized:publicCash(s.realized),unrealized:publicCash(v.unrealized),fees:publicCash(s.totalFees),slippage:publicCash(s.totalSlippage),positions,trades,sessionReviewed:this.#armed,halted:this.#fault||s.halted,valuationFresh:v.stale.length===0,liquidationExecutable:v.illiquid.length===0,staleInstruments:v.stale,day:d?{...d,startEquity:publicCash(d.startEquity),loss:publicCash(d.loss)}:null,config};
   }
 }

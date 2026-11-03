@@ -4,11 +4,15 @@ TLS is checked by urllib using the managed environment CA/proxy. Not Safari.
 import argparse,functools,hashlib,http.server,json,pathlib,threading,time,urllib.request,urllib.error
 from playwright.sync_api import sync_playwright
 root=pathlib.Path(__file__).resolve().parent.parent
-parser=argparse.ArgumentParser();parser.add_argument('--minutes',type=int,choices=[60,120],default=60);args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--minutes',type=int,choices=[60,120],default=60);parser.add_argument('--output',required=True,help='New capture JSON path; existing evidence is never overwritten');args=parser.parse_args()
+output=(root/args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
+try:
+ with output.open('x'):pass
+except FileExistsError:parser.error('Output already exists; choose a new path. Original evidence was preserved.')
 class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*a):pass
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,directory=str(root)));threading.Thread(target=server.serve_forever,daemon=True).start()
-origin=f'http://127.0.0.1:{server.server_port}';output=root/'artifacts/v73-prospective.json';manifest={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (root/'paper').glob('*.js')}
+origin=f'http://127.0.0.1:{server.server_port}';manifest={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in (root/'paper').glob('*.js')}
 requests=[];errors=[];data=None;started=time.time()
 try:
  with sync_playwright() as p:

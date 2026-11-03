@@ -54,6 +54,7 @@ Reprodução isolada: `node scripts/diagnose-liquidity-v74.mjs`. O script verifi
 | scripts/diagnose-liquidity-v74.mjs | Investigação reproduzível sem mercado/API |
 | scripts/test-archive-v74.py | Fluxo de arquivo/IndexedDB nativo, abort, repetição, compartilhamento cancelado e quatro dimensões |
 | scripts/review-v73-trace.py | Prefixo configurável para não sobrescrever evidências anteriores |
+| scripts/prospective-v73.py | Caminho de saída explícito e criação exclusiva; recusa sobrescrever capturas anteriores |
 | artifacts/v74-* | Evidências separadas das originais v7.2/v7.3 |
 
 Não alterados: `paper/engine.js`, `paper/risk.js`, `paper/money.js`, `paper/strategy.js`, `paper/market.js`, indicadores, estatísticas, coletor, configurações de Cron e D1. Nenhuma dependência paga ou infraestrutura adicional.
@@ -139,7 +140,7 @@ Protocolo reproduzível para o próximo ensaio supervisionado:
 5. Ao terminar ou pausar, registrar duração planejada/efetiva e monitorada, condições de mercado disponíveis, bloqueios/motivos, entradas/saídas, preço/qty/time/seq, custos/PnL/drawdown amostrados e posições pendentes. Duração parcial deve ser rotulada parcial. Patrimônio estimado não é liquidação executada.
 6. Encerrar propostas; não fechar a preços inventados. Exportar relatório e backup integral, salvar em Arquivos, selecionar/verificar novamente, conservar original e SHA. Não apagar eventos. Comparar sessões somente com origem/fonte/moeda/estratégia/custos/método compatíveis; dados futuros não entram nas decisões anteriores.
 
-Harness opcional existente: `python scripts/prospective-v73.py --help`; usar os argumentos documentados pelo próprio script e prefixo novo, nunca sobrescrever o original v73. A automação de QA não substitui supervisão física de iPhone. O protocolo de 120min foi coberto por fixture virtual; isso não prova disponibilidade futura do provedor nem uma sessão real de duas horas.
+Harness opcional: `python scripts/prospective-v73.py --minutes 60 --output artifacts/v74-prospective-NOVO-ID-60m.json` (ou `--minutes 120` e outro caminho). O caminho deve ser novo; criação exclusiva recusa substituir qualquer evidência existente antes de consultar a rede. Help e recusa do caminho original v73 foram executados e aprovados, SHA original intacto. Não foi iniciado novo ensaio real por esses testes de CLI. A automação de QA não substitui supervisão física de iPhone. O protocolo de 120min foi coberto por fixture virtual; isso não prova disponibilidade futura do provedor nem uma sessão real de duas horas.
 
 ## 9. Preview e revisão
 

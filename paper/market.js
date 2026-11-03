@@ -35,30 +35,34 @@ export function parseCandles(raw,now,indicators) {
   const latest=rows.at(-1).time*1000+MINUTE;invariant(now-latest>=5000&&now-latest<=90000,'CANDLE_STALE');return rows;
 }
 export class CoinbasePaperFeed {
-  constructor({fetcher=(...args)=>globalThis.fetch(...args),clock=()=>Date.now(),indicators=globalThis.RadarIndicators,cooldown}={}){
-    this.fetcher=fetcher;this.clock=clock;this.indicators=indicators;this.cooldown=cooldown;this.lastRequest=0;this.lastCandles=0;this.previous=null;this.rows=null;this.busy=false;
+  constructor({fetcher=(...args)=>globalThis.fetch(...args),clock=()=>Date.now(),monotonic=()=>performance.now(),indicators=globalThis.RadarIndicators,cooldown}={}){
+    this.fetcher=fetcher;this.clock=clock;this.monotonic=monotonic;this.indicators=indicators;this.cooldown=cooldown;this.lastRequest=0;this.lastCandles=0;this.previous=null;this.rows=null;this.busy=false;this.requests=[];
   }
   storage(){return this.cooldown??globalThis.localStorage}
   cooldownUntil(){const store=this.storage();invariant(store,'COOLDOWN_STORAGE');const n=Number(store.getItem('radar-paper-coinbase-cooldown-v72')||0);invariant(Number.isSafeInteger(n)&&n>=0,'COOLDOWN_STORAGE');return n}
   async request(path) {
     const now=this.clock();invariant(now>=this.cooldownUntil(),'COOLDOWN');
     const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),5000);
+    const started=this.monotonic(),observation={kind:path.startsWith('/book')?'book':'candles',startedAt:now,status:null,latencyMs:null,error:null};this.requests.push(observation);
     try{
       const response=await this.fetcher(BASE+path,{cache:'no-store',credentials:'omit',signal:controller.signal});
+      observation.status=response.status;
       if(response.status===429){const until=retryUntil(response.headers.get('Retry-After'),this.clock());this.storage().setItem('radar-paper-coinbase-cooldown-v72',String(until));invariant(this.cooldownUntil()===until,'COOLDOWN_STORAGE')}
       invariant(response.ok,'HTTP_'+response.status);
       const reader=response.body?.getReader();let text='';
       if(reader){const decoder=new TextDecoder();let bytes=0;try{for(;;){const {done,value}=await reader.read();if(done)break;bytes+=value.byteLength;invariant(bytes<=65536,'RESPONSE_SIZE');text+=decoder.decode(value,{stream:true})}text+=decoder.decode()}finally{await reader.cancel()}}
       else {text=await response.text();invariant(text.length<=65536,'RESPONSE_SIZE')}
-      return JSON.parse(text);
-    }finally{clearTimeout(timer)}
+      try{return JSON.parse(text)}catch(_){invariant(false,'INVALID_JSON')}
+    }catch(error){observation.error=error.code||(controller.signal.aborted?'TIMEOUT':'NETWORK');throw error}
+    finally{observation.finishedAt=this.clock();observation.latencyMs=Math.max(0,Math.round(this.monotonic()-started));clearTimeout(timer)}
   }
   async sample() {
-    const now=this.clock();invariant(!this.busy,'FEED_BUSY');invariant(now>=this.cooldownUntil(),'COOLDOWN');invariant(now-this.lastRequest>=POLLING_MS,'POLL_INTERVAL');this.busy=true;this.lastRequest=now;
+    const now=this.clock();invariant(!this.busy,'FEED_BUSY');invariant(now>=this.cooldownUntil(),'COOLDOWN');invariant(now-this.lastRequest>=POLLING_MS,'POLL_INTERVAL');this.busy=true;this.lastRequest=now;this.requests=[];
     try{
       if(!this.rows||now-this.lastCandles>=60000){const end=Math.floor((now-5000)/MINUTE)*MINUTE,start=end-180*MINUTE;this.rows=parseCandles(await this.request('/candles?granularity=60&start='+new Date(start).toISOString()+'&end='+new Date(end).toISOString()),this.clock(),this.indicators);this.lastCandles=now}
       const quote=parseBook(await this.request('/book?level=1'),this.clock(),this.previous);this.previous=quote;
-      return {quote,rows:this.rows,receivedAt:this.clock(),source:'Coinbase Exchange · BTC/USD'};
-    }finally{this.busy=false}
+      return {quote,rows:this.rows,receivedAt:this.clock(),source:'Coinbase Exchange · BTC/USD',telemetry:{version:'v7.3',outcome:'valid',receivedAt:this.clock(),requests:this.requests.map(x=>({...x}))}};
+    }catch(error){let until=null;try{until=this.cooldownUntil()}catch(_){}error.paperTelemetry={version:'v7.3',outcome:'rejected',reason:error.code||'NETWORK',receivedAt:this.clock(),requests:this.requests.map(x=>({...x})),cooldownUntil:until};throw error}
+    finally{this.busy=false}
   }
 }

@@ -1,0 +1,869 @@
+{
+  "readerVersion": "v7.3-report-1",
+  "readerSha256": "65146e7060e7ec89c141a740bd7423ed98a22e65200c75addd230b85a43df1a4",
+  "captureSha256": "840744695270d8c854a2924e3545c9e7fd6325ee29b20061c31b97a004d6e895",
+  "originalJournalChecksum": "612d905eb4ec1798581790a892710be22d27ceb2d195d58f25d3e445d8c0f4f7",
+  "originalRuntimeReason": "DATA",
+  "sourceMode": "real-prospective",
+  "transport": "urllib-tls-verified",
+  "report": {
+    "version": "v7.3-report-1",
+    "walletId": "supervised-btc-usd-v72",
+    "journalChecksum": "612d905eb4ec1798581790a892710be22d27ceb2d195d58f25d3e445d8c0f4f7",
+    "journalVersion": 201,
+    "preflights": [
+      {
+        "id": "s72:477d38f6-bc0e-4cc1-8f85-e40416e90f88",
+        "at": 1793668487788,
+        "origin": "prospective-real",
+        "status": "activated",
+        "failure": null,
+        "telemetry": null
+      }
+    ],
+    "sessions": [
+      {
+        "id": "s72:477d38f6-bc0e-4cc1-8f85-e40416e90f88",
+        "strategy": "ema-observe-v72",
+        "policy": "v7.2-paper-test-1",
+        "methodology": "v5.7",
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "declaredInstrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "observedInstruments": [
+          {
+            "provider": "coinbase-exchange",
+            "market": "spot",
+            "base": "BTC",
+            "quote": "USD",
+            "symbol": "BTC-USD"
+          }
+        ],
+        "origin": "prospective-real",
+        "originTrust": "host-declared",
+        "config": {
+          "currency": "USD",
+          "initialBalance": 10000,
+          "maxRiskBps": 100,
+          "dailyLossBps": 300,
+          "maxPositions": 1,
+          "maxAssetExposureBps": 1000,
+          "feeBps": 10,
+          "slippageBps": 5,
+          "maxSpreadBps": 20,
+          "maxQuoteAgeMs": 10000
+        },
+        "startedAt": 1793668488234,
+        "plannedEndAt": 1793672088234,
+        "endedAt": 1793670804479,
+        "lastObservedAt": 1793670804479,
+        "status": "paused-risk",
+        "reason": "NO_EXIT_LIQUIDITY",
+        "terminationConfirmed": true,
+        "elapsedMs": 2316245,
+        "monitoredMs": 2316097,
+        "exposureMs": 304098,
+        "capitalInitial": 10000,
+        "capitalFinalEstimated": 9999.011617,
+        "cashFinal": 9999.011617,
+        "netSimulated": -0.988383,
+        "realizedDuringSession": -0.988383,
+        "fees": 1.000513,
+        "slippage": 0.500256,
+        "costs": 1.500769,
+        "drawdownObserved": 1.80885,
+        "drawdownObservedPct": 0.0180885,
+        "opened": 1,
+        "closed": 1,
+        "winners": 0,
+        "losers": 1,
+        "breakeven": 0,
+        "validRoundTrips": 1,
+        "averageWin": null,
+        "averageLoss": -0.988383,
+        "hitRate": null,
+        "expectancy": null,
+        "sampleSufficient": false,
+        "sampleMinimum": 30,
+        "carriedPositions": 0,
+        "residualPositions": [],
+        "valuationFresh": true,
+        "operations": {
+          "validQuotes": 153,
+          "rejectedQuotes": 0,
+          "sampleFailures": 0,
+          "requests": 192,
+          "http400": 0,
+          "http429": 0,
+          "networkErrors": 0,
+          "networkInterruptions": 0,
+          "supervisionInterruptions": 0,
+          "timeouts": 0,
+          "cooldownUntil": null,
+          "monitoredMs": 2316097,
+          "waitDecisions": 36,
+          "proposalsApproved": 2,
+          "proposalsRejected": 1,
+          "entriesRejected": 1,
+          "protectiveExitsRejected": 0,
+          "riskBlocks": 1,
+          "lastQuoteAt": 1793670804336,
+          "uniqueSequences": 153,
+          "latencyBookMs": {
+            "n": 153,
+            "min": 50,
+            "max": 288,
+            "mean": 120.69281045751634
+          },
+          "dataAgeMs": {
+            "n": 153,
+            "min": 146,
+            "max": 2518,
+            "mean": 1270.235294117647
+          },
+          "telemetrySamples": 153
+        },
+        "decisions": [
+          {
+            "at": 1793668488260,
+            "reason": "Proposta fictícia: médias alinhadas, força moderada e dois fechamentos de alta. Evidência de rentabilidade ainda não validada.",
+            "originalReason": "Proposta fictícia: médias alinhadas, força moderada e dois fechamentos de alta. Evidência de rentabilidade ainda não validada.",
+            "factors": [],
+            "action": "open",
+            "proposalId": "v72:open:BTC-USD:1793668440000",
+            "outcome": {
+              "approved": true,
+              "code": "OPENED"
+            }
+          },
+          {
+            "at": 1793668549292,
+            "reason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "originalReason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793668609897,
+            "reason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "originalReason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793668670713,
+            "reason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "originalReason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793668731524,
+            "reason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "originalReason": "Posição fictícia acompanhada; stop permanece condicionado ao bid disponível.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793668792353,
+            "reason": "Saída fictícia: limite experimental de cinco minutos de exposição atingido.",
+            "originalReason": "Saída fictícia: alinhamento terminou, força excessiva ou limite experimental de cinco minutos.",
+            "factors": [
+              "limite experimental de cinco minutos de exposição atingido"
+            ],
+            "action": "close",
+            "proposalId": "v72:close:v72:open:BTC-USD:1793668440000:1793668740000",
+            "outcome": {
+              "approved": true,
+              "code": "CLOSED"
+            }
+          },
+          {
+            "at": 1793668852940,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793668913870,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793668974665,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669035564,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669096392,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669157525,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669218456,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669279411,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669340163,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669401170,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669462210,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669523304,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669584104,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669645078,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669706002,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669766674,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669827396,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669888525,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793669949436,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670010253,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670071017,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670132021,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670193117,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670254047,
+            "reason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "originalReason": "Aguardar: livro atual não confirma o contexto dos fechamentos.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670314858,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670376320,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670437654,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670498901,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670559826,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670620928,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670682254,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670743350,
+            "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "originalReason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+            "factors": [],
+            "action": "wait",
+            "proposalId": null
+          },
+          {
+            "at": 1793670804390,
+            "reason": "Proposta fictícia: médias alinhadas, força moderada e dois fechamentos de alta. Evidência de rentabilidade ainda não validada.",
+            "originalReason": "Proposta fictícia: médias alinhadas, força moderada e dois fechamentos de alta. Evidência de rentabilidade ainda não validada.",
+            "factors": [],
+            "action": "open",
+            "proposalId": "v72:open:BTC-USD:1793670780000",
+            "outcome": {
+              "approved": false,
+              "code": "NO_EXIT_LIQUIDITY"
+            }
+          }
+        ],
+        "executions": [
+          {
+            "id": "open:v72:open:BTC-USD:1793668440000",
+            "positionId": "v72:open:BTC-USD:1793668440000",
+            "side": "buy",
+            "at": 1793668488268,
+            "quoteAt": 1793668486119,
+            "sequence": 138690433712,
+            "quantity": 0.00648591,
+            "price": 77128.715085,
+            "fees": 0.50025,
+            "slippage": 0.25,
+            "pnl": 0,
+            "reason": "Proposta fictícia: médias alinhadas, força moderada e dois fechamentos de alta. Evidência de rentabilidade ainda não validada."
+          },
+          {
+            "id": "close:v72:close:v72:open:BTC-USD:1793668440000:1793668740000",
+            "positionId": "v72:open:BTC-USD:1793668440000",
+            "side": "sell",
+            "at": 1793668792366,
+            "quoteAt": 1793668792039,
+            "sequence": 138690635617,
+            "quantity": 0.00648591,
+            "price": 77130.585415,
+            "fees": 0.500263,
+            "slippage": 0.250256,
+            "pnl": -0.988383,
+            "reason": "Saída fictícia: limite experimental de cinco minutos de exposição atingido."
+          }
+        ],
+        "conditions": [
+          {
+            "at": 1793668488260,
+            "ema9": 77087.43404435877,
+            "ema21": 77051.3573122419,
+            "rsi14": 63.58524294187248,
+            "maxRangePct": 0.08719830295492871,
+            "extensionPct": 0.034565887386905914
+          },
+          {
+            "at": 1793668549292,
+            "ema9": 77088.92123548701,
+            "ema21": 77055.31301272483,
+            "rsi14": 59.56156318113973,
+            "maxRangePct": null,
+            "extensionPct": null
+          },
+          {
+            "at": 1793668609897,
+            "ema9": 77076.1849883896,
+            "ema21": 77052.57910441322,
+            "rsi14": 47.76336494075955,
+            "maxRangePct": null,
+            "extensionPct": null
+          },
+          {
+            "at": 1793668670713,
+            "ema9": 77081.62199071169,
+            "ema21": 77057.19646029334,
+            "rsi14": 57.85194670221288,
+            "maxRangePct": null,
+            "extensionPct": null
+          },
+          {
+            "at": 1793668731524,
+            "ema9": 77085.84959256936,
+            "ema21": 77061.33860056462,
+            "rsi14": 57.75812973888315,
+            "maxRangePct": null,
+            "extensionPct": null
+          },
+          {
+            "at": 1793668792353,
+            "ema9": 77097.24367405548,
+            "ema21": 77068.74600028394,
+            "rsi14": 62.10337859629577,
+            "maxRangePct": null,
+            "extensionPct": null
+          },
+          {
+            "at": 1793668852940,
+            "ema9": 77108.48733924438,
+            "ema21": 77076.43743753625,
+            "rsi14": 63.27357399792406,
+            "maxRangePct": 0.11195031654558417,
+            "extensionPct": 0.05937434689153864
+          },
+          {
+            "at": 1793668913870,
+            "ema9": 77109.0618713955,
+            "ema21": 77079.61221547377,
+            "rsi14": 56.301141623727666,
+            "maxRangePct": 0.11195031654558417,
+            "extensionPct": 0.0029803612555001635
+          },
+          {
+            "at": 1793668974665,
+            "ema9": 77123.8374971164,
+            "ema21": 77089.0056498875,
+            "rsi14": 63.52230466827922,
+            "maxRangePct": 0.11195031654558417,
+            "extensionPct": 0.07663324959135132
+          },
+          {
+            "at": 1793669035564,
+            "ema9": 77134.63999769313,
+            "ema21": 77097.08240825898,
+            "rsi14": 62.72847651361092,
+            "maxRangePct": 0.11195031654558417,
+            "extensionPct": 0.05601893300879457
+          },
+          {
+            "at": 1793669096392,
+            "ema9": 77136.3919981545,
+            "ema21": 77101.2930970953,
+            "rsi14": 57.49185801165909,
+            "maxRangePct": 0.11195031654558417,
+            "extensionPct": 0.009085208244719034
+          },
+          {
+            "at": 1793669157525,
+            "ema9": 77141.17959852361,
+            "ema21": 77106.6600864576,
+            "rsi14": 59.290470524381576,
+            "maxRangePct": 0.11195031654558417,
+            "extensionPct": 0.024825134352446376
+          },
+          {
+            "at": 1793669218456,
+            "ema9": 77143.27967881889,
+            "ema21": 77110.75280366802,
+            "rsi14": 57.94153299719266,
+            "maxRangePct": 0.10134446782287132,
+            "extensionPct": 0.010889245590917085
+          },
+          {
+            "at": 1793669279411,
+            "ema9": 77139.3497430551,
+            "ema21": 77111.92345584746,
+            "rsi14": 53.67677944124787,
+            "maxRangePct": 0.09788432521487637,
+            "extensionPct": -0.020378371230067582
+          },
+          {
+            "at": 1793669340163,
+            "ema9": 77134.16979444408,
+            "ema21": 77112.0622310588,
+            "rsi14": 52.17581435559383,
+            "maxRangePct": 0.09788432521487637,
+            "extensionPct": -0.026862017831141838
+          },
+          {
+            "at": 1793669401170,
+            "ema9": 77126.29783555526,
+            "ema21": 77110.49384537725,
+            "rsi14": 49.449125862748645,
+            "maxRangePct": 0.09788432521487637,
+            "extensionPct": -0.04082632829388588
+          },
+          {
+            "at": 1793669462210,
+            "ema9": 77135.17626844421,
+            "ema21": 77115.9662220399,
+            "rsi14": 58.87170086228246,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": 0.04604090283297779
+          },
+          {
+            "at": 1793669523304,
+            "ema9": 77134.54501475536,
+            "ema21": 77117.42565533113,
+            "rsi14": 53.408085965921494,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.00327351999661607
+          },
+          {
+            "at": 1793669584104,
+            "ema9": 77126.45201180429,
+            "ema21": 77115.3033219075,
+            "rsi14": 48.63872612078316,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.041972644870702513
+          },
+          {
+            "at": 1793669645078,
+            "ema9": 77120.49760944342,
+            "ema21": 77113.61029228476,
+            "rsi14": 48.97500884736941,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.0308836303988147
+          },
+          {
+            "at": 1793669706002,
+            "ema9": 77123.8440700438,
+            "ema21": 77116.64024126515,
+            "rsi14": 50.49321154098644,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.015435006109110194
+          },
+          {
+            "at": 1793669766674,
+            "ema9": 77113.16325603504,
+            "ema21": 77112.44021928431,
+            "rsi14": 45.77946921862653,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.055403324453418
+          },
+          {
+            "at": 1793669827396,
+            "ema9": 77102.13060482804,
+            "ema21": 77107.49110889054,
+            "rsi14": 44.440206126236795,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.05723655686535878
+          },
+          {
+            "at": 1793669888525,
+            "ema9": 77089.49448386244,
+            "ema21": 77101.2600993484,
+            "rsi14": 42.394846359705,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.06556598172143824
+          },
+          {
+            "at": 1793669949436,
+            "ema9": 77073.69158708995,
+            "ema21": 77093.00736325112,
+            "rsi14": 39.47104734320238,
+            "maxRangePct": 0.09832748676991829,
+            "extensionPct": -0.08201447963411823
+          },
+          {
+            "at": 1793670010253,
+            "ema9": 77067.24326967196,
+            "ema21": 77088.32033187896,
+            "rsi14": 43.99578754068329,
+            "maxRangePct": 0.09432016830129995,
+            "extensionPct": -0.033468525118651726
+          },
+          {
+            "at": 1793670071017,
+            "ema9": 77056.31661573757,
+            "ema21": 77081.4375761323,
+            "rsi14": 40.92758450207446,
+            "maxRangePct": 0.09432016830129995,
+            "extensionPct": -0.056720354225492375
+          },
+          {
+            "at": 1793670132021,
+            "ema9": 77044.57129259006,
+            "ema21": 77073.81507131892,
+            "rsi14": 39.38698988939224,
+            "maxRangePct": 0.09432016830129995,
+            "extensionPct": -0.060979367918923
+          },
+          {
+            "at": 1793670193117,
+            "ema9": 77031.72303407204,
+            "ema21": 77065.31642999014,
+            "rsi14": 37.633892974358155,
+            "maxRangePct": 0.09432016830129995,
+            "extensionPct": -0.06671671364446574
+          },
+          {
+            "at": 1793670254047,
+            "ema9": 77023.72042725763,
+            "ema21": 77058.62493802703,
+            "rsi14": 39.5445177988635,
+            "maxRangePct": 0.07464473076413027,
+            "extensionPct": -0.0415591808342497
+          },
+          {
+            "at": 1793670314858,
+            "ema9": 77021.47034180611,
+            "ema21": 77054.42903651446,
+            "rsi14": 42.97653608273181,
+            "maxRangePct": 0.06566457103584333,
+            "extensionPct": -0.011685497259616984
+          },
+          {
+            "at": 1793670376320,
+            "ema9": 77032.8302734449,
+            "ema21": 77056.59639805337,
+            "rsi14": 52.232613317548,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.05898748156314415
+          },
+          {
+            "at": 1793670437654,
+            "ema9": 77034.65421875591,
+            "ema21": 77055.26490771488,
+            "rsi14": 47.63621415417672,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.009470778207654185
+          },
+          {
+            "at": 1793670498901,
+            "ema9": 77042.41537500473,
+            "ema21": 77056.91900759954,
+            "rsi14": 51.61432792028124,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.0402954980632142
+          },
+          {
+            "at": 1793670559826,
+            "ema9": 77050.00830000378,
+            "ema21": 77059.0518247923,
+            "rsi14": 52.46835033205877,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.03941816576835677
+          },
+          {
+            "at": 1793670620928,
+            "ema9": 77058.68864000303,
+            "ema21": 77062.17529452947,
+            "rsi14": 54.11080388140629,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.045058332304592774
+          },
+          {
+            "at": 1793670682254,
+            "ema9": 77065.62291200242,
+            "ema21": 77065.01026709095,
+            "rsi14": 54.10306474944563,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.035991518590905436
+          },
+          {
+            "at": 1793670743350,
+            "ema9": 77071.73032960194,
+            "ema21": 77067.8420601993,
+            "rsi14": 54.49487688822563,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.03169731663423825
+          },
+          {
+            "at": 1793670804390,
+            "ema9": 77079.67826368155,
+            "ema21": 77071.80823620802,
+            "rsi14": 56.672911964514526,
+            "maxRangePct": 0.1035959940460597,
+            "extensionPct": 0.041245289335134494
+          }
+        ],
+        "warnings": [
+          "Resultado fictício observado; não é garantia de lucro futuro.",
+          "Drawdown observado apenas nas marcas recebidas; gaps não são reconstruídos.",
+          "Custos = taxas + slippage; já estão nos preços/PnL, não descontar novamente.",
+          "Amostra insuficiente para taxa de acerto e expectativa."
+        ]
+      }
+    ],
+    "comparisonGroups": [
+      {
+        "key": {
+          "strategy": "ema-observe-v72",
+          "policy": "v7.2-paper-test-1",
+          "methodology": "v5.7",
+          "instrument": {
+            "provider": "coinbase-exchange",
+            "market": "spot",
+            "base": "BTC",
+            "quote": "USD",
+            "symbol": "BTC-USD"
+          },
+          "declaredInstrument": {
+            "provider": "coinbase-exchange",
+            "market": "spot",
+            "base": "BTC",
+            "quote": "USD",
+            "symbol": "BTC-USD"
+          },
+          "observedInstruments": [
+            {
+              "provider": "coinbase-exchange",
+              "market": "spot",
+              "base": "BTC",
+              "quote": "USD",
+              "symbol": "BTC-USD"
+            }
+          ],
+          "origin": "prospective-real",
+          "config": {
+            "currency": "USD",
+            "initialBalance": 10000,
+            "maxRiskBps": 100,
+            "dailyLossBps": 300,
+            "maxPositions": 1,
+            "maxAssetExposureBps": 1000,
+            "feeBps": 10,
+            "slippageBps": 5,
+            "maxSpreadBps": 20,
+            "maxQuoteAgeMs": 10000
+          },
+          "plannedMs": 3600000
+        },
+        "sessionIds": [
+          "s72:477d38f6-bc0e-4cc1-8f85-e40416e90f88"
+        ],
+        "validRoundTrips": 1
+      }
+    ],
+    "comparisonNote": "Grupos separados por estratégia, política, metodologia, fonte, moeda, origem, custos, risco e duração; não garantem independência estatística."
+  }
+}

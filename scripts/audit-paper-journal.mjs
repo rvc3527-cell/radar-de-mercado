@@ -1,0 +1,11 @@
+import {readFileSync,writeFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {resolve} from 'node:path';
+import {verifyAndReport} from '../paper/report.js';
+const input=resolve(process.argv[2]||'artifacts/v73-prospective.json'),output=resolve(process.argv[3]||'artifacts/v73-prospective-audit.json');
+if(input===output)throw Error('Não sobrescrever a evidência original.');
+const raw=readFileSync(input),capture=JSON.parse(raw),journal=capture.data?.journal??capture.journal;
+const report=await verifyAndReport(journal);
+const audit={readerVersion:report.version,readerSha256:createHash('sha256').update(readFileSync(new URL('../paper/report.js',import.meta.url))).digest('hex'),captureSha256:createHash('sha256').update(raw).digest('hex'),originalJournalChecksum:journal.checksum,originalRuntimeReason:capture.reason??null,sourceMode:capture.mode??null,transport:capture.transport??null,report};
+writeFileSync(output,JSON.stringify(audit,null,2));
+console.log(JSON.stringify({output,verified:true,sessions:report.sessions.map(s=>({startedAt:s.startedAt,endedAt:s.endedAt,status:s.status,reason:s.reason,net:s.netSimulated,monitoredMs:s.monitoredMs}))}));

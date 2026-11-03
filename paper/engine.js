@@ -117,7 +117,7 @@ async function replay(doc,walletId) {
   for(let i=0;i<doc.events.length;i++) {
     const event=doc.events[i],command=event.command;
     invariant(keysMatch(event,['seq','command','decision'])&&Object.keys(event).length===3&&event.seq===i+1&&validCommand(command)&&command.at>=state.lastAt,'CORRUPT_JOURNAL');
-    let canonical;const issues={bad:false};if(command.type==='proposal')canonical=proposalPayload(command.payload.proposal,command.payload.quote).payload;else if(command.type==='quote')canonical={quote:cleanQuote(command.payload.quote,issues)};else if(command.type==='note')canonical={kind:scalar(command.payload.kind),details:noteText(command.payload.details)};else canonical=command.type==='failure'?{code:scalar(command.payload.code)}:{reason:scalar(command.payload.reason)};invariant(JSON.stringify(canonical)===JSON.stringify(command.payload),'CORRUPT_JOURNAL');
+    let canonical;const issues={bad:false};if(command.type==='proposal')canonical=proposalPayload(command.payload.proposal,command.payload.quote).payload;else if(command.type==='quote')canonical={quote:cleanQuote(command.payload.quote,issues),...(Object.hasOwn(command.payload,'telemetry')?{telemetry:noteText(command.payload.telemetry)}:{})};else if(command.type==='note')canonical={kind:scalar(command.payload.kind),details:noteText(command.payload.details)};else canonical=command.type==='failure'?{code:scalar(command.payload.code)}:{reason:scalar(command.payload.reason)};invariant(JSON.stringify(canonical)===JSON.stringify(command.payload),'CORRUPT_JOURNAL');
     const old=state.processed[requestKey(command)];let result;
     if(old){invariant(old.fingerprint!==fingerprint(command),'CORRUPT_JOURNAL');result=conflict(state,command,config)}else result=reduce(state,command,config);
     result=audit(result,state);invariant(JSON.stringify(result.decision)===JSON.stringify(event.decision),'CORRUPT_JOURNAL');state=result.state;
@@ -166,8 +166,10 @@ export class PaperTradingEngine {
     const answer=await this.#execute({type:'proposal',id:proposal.id,at:this.#time(now),reviewed:this.#armed,...data});if(answer.marketAccepted&&!answer.duplicate)this.#sessionQuotes.add(keyOf(data.payload.quote.instrument));return answer;
   }
   async onQuote(input) {
-    invariant(keysMatch(input,['id','quote','now'])&&idOK(input.id),'COMMAND_ID');const issues={bad:false};
-    const quote=cleanQuote(input.quote,issues),answer=await this.#execute({type:'quote',id:input.id,at:this.#time(input.now),reviewed:this.#armed,payload:{quote},issues:issues.bad});if(!answer.duplicate){if(answer.marketAccepted)this.#sessionQuotes.add(keyOf(quote.instrument));else this.#sessionQuotes.clear()}return answer;
+    invariant(keysMatch(input,['id','quote','now','telemetry'])&&idOK(input.id),'COMMAND_ID');const issues={bad:false};
+    const quote=cleanQuote(input.quote,issues),payload={quote};
+    if(input.telemetry!==undefined){payload.telemetry=noteText(input.telemetry);if(payload.telemetry===null)issues.bad=true}
+    const answer=await this.#execute({type:'quote',id:input.id,at:this.#time(input.now),reviewed:this.#armed,payload,issues:issues.bad});if(!answer.duplicate){if(answer.marketAccepted)this.#sessionQuotes.add(keyOf(quote.instrument));else this.#sessionQuotes.clear()}return answer;
   }
   async reportFailure(input) {
     invariant(keysMatch(input,['id','code','now'])&&idOK(input.id),'COMMAND_ID');

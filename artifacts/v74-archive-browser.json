@@ -1,0 +1,72 @@
+{
+  "browser": "Chromium",
+  "realSafari": false,
+  "mode": "read-only recorded v7.3 evidence, no prospective run",
+  "origin": "http://127.0.0.1:37271",
+  "checks": [
+    {
+      "width": 1440,
+      "passed": true,
+      "originalJournalChecksum": "612d905eb4ec1798581790a892710be22d27ceb2d195d58f25d3e445d8c0f4f7",
+      "events": 201,
+      "liveMarketCallsFromArchive": 0,
+      "incompleteRejected": true,
+      "restoredOff": true,
+      "duplicateUnchanged": true,
+      "nativeIDB": {
+        "abortPreserved": true,
+        "retryIdempotent": true
+      },
+      "shareCanceledGesture": true,
+      "pageErrors": []
+    },
+    {
+      "width": 768,
+      "passed": true,
+      "originalJournalChecksum": "612d905eb4ec1798581790a892710be22d27ceb2d195d58f25d3e445d8c0f4f7",
+      "events": 201,
+      "liveMarketCallsFromArchive": 0,
+      "incompleteRejected": true,
+      "restoredOff": true,
+      "duplicateUnchanged": true,
+      "nativeIDB": {
+        "abortPreserved": true,
+        "retryIdempotent": true
+      },
+      "shareCanceledGesture": true,
+      "pageErrors": []
+    },
+    {
+      "width": 390,
+      "passed": true,
+      "originalJournalChecksum": "612d905eb4ec1798581790a892710be22d27ceb2d195d58f25d3e445d8c0f4f7",
+      "events": 201,
+      "liveMarketCallsFromArchive": 0,
+      "incompleteRejected": true,
+      "restoredOff": true,
+      "duplicateUnchanged": true,
+      "nativeIDB": {
+        "abortPreserved": true,
+        "retryIdempotent": true
+      },
+      "shareCanceledGesture": true,
+      "pageErrors": []
+    },
+    {
+      "width": 375,
+      "passed": true,
+      "originalJournalChecksum": "612d905eb4ec1798581790a892710be22d27ceb2d195d58f25d3e445d8c0f4f7",
+      "events": 201,
+      "liveMarketCallsFromArchive": 0,
+      "incompleteRejected": true,
+      "restoredOff": true,
+      "duplicateUnchanged": true,
+      "nativeIDB": {
+        "abortPreserved": true,
+        "retryIdempotent": true
+      },
+      "shareCanceledGesture": true,
+      "pageErrors": []
+    }
+  ]
+}

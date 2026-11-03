@@ -1,0 +1,24 @@
+{
+  "nodeTests": {
+    "executed": 291,
+    "passed": 291,
+    "failed": 0,
+    "command": "node --test --test-isolation=none tests/*.test.mjs",
+    "durationMs": 140742.845963
+  },
+  "syntaxFiles": 22,
+  "classicAndModuleBuild": true,
+  "browser": "Chromium",
+  "realSafari": false,
+  "widths": [
+    1440,
+    768,
+    390,
+    375
+  ],
+  "archiveTests": 19,
+  "originalCaptureSha256": "840744695270d8c854a2924e3545c9e7fd6325ee29b20061c31b97a004d6e895",
+  "frozenStrategySha256": "952d4c18b3aa5ca4eb69a0202e6a3022649d95499e19e67511e7646bfb78a39d",
+  "newRealProspectiveTrial": false,
+  "remoteMigrations": false
+}

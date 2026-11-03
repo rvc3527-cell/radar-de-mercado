@@ -1,0 +1,21 @@
+{
+  "target": "radar-de-mercado-preview",
+  "deployedAt": "2026-11-03T04:24:51.123629Z",
+  "runtimeCommit": "fd39e53d254a450a541c18131d938c2a2d06aab8",
+  "artifactSha256": "f89d47a1e7edba2fa3001f082e861d03fa16b828637b94b20bf89ce96374d5f3",
+  "artifactUtf8Bytes": 281073,
+  "deploymentId": "ab5fc7d8f0054c699a6f69e7fd6a291f",
+  "etag": "dd6ed8ec9c2b00489b5e3126e0dd7ecce25aa33e330097e901510394388ef00e",
+  "authenticatedDownloadMatchesArtifact": true,
+  "configurationPreserved": true,
+  "collectorCronProductionUnchanged": true,
+  "remoteMigrations": false,
+  "publicBrowserPostDeployment": "not completed: execution network unavailable/interrupted",
+  "realSafari": false,
+  "ci": {
+    "run": 41577686582,
+    "tests": 291,
+    "pass": 291,
+    "fail": 0
+  }
+}

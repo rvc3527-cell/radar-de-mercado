@@ -1,12 +1,15 @@
+import {mountArchivePanel} from './archive-panel.js';
+import {messages,explainError} from './messages.js';
 import {renderReport,plainReason} from './report-panel.js';
 import {IndexedDBPaperStore} from './store.js';
 import {CoinbasePaperFeed} from './market.js';
 import {SupervisedPaperSession,STATES} from './session.js';
 const $=id=>document.getElementById(id),money=x=>Number(x).toLocaleString('pt-BR',{style:'currency',currency:'USD'});
-const messages={'Failed to fetch':'Falha de conexão com a fonte. A sessão precisa de nova verificação.','NetworkError when attempting to fetch resource.':'Falha de rede. Nenhuma retomada automática.',BOOK_STALE_OR_CLOCK:'Livro atrasado ou relógio divergente.',COOLDOWN:'Aguardando limite da Coinbase. Não tente repetidamente.',HTTP_429:'A Coinbase limitou as consultas. A sessão foi pausada.',HTTP_400:'A Coinbase rejeitou a consulta.',STORAGE_RESERVE:'Não foi possível confirmar 20 MB livres para o diário.',SESSION_BUSY:'Outra aba já controla esta carteira.',WEB_LOCKS_REQUIRED:'Este navegador não oferece o controle de abas necessário.',WALLET_NOT_FOUND:'Nenhuma carteira anterior neste navegador. Verifique a fonte para criar uma.',SESSION_CAPACITY:'Diário próximo do limite. Exporte os registros; nenhuma nova sessão foi iniciada.',PREPARED_QUOTE_STALE:'Verificação expirou. Aguarde 15 segundos e verifique a fonte novamente.',POLL_INTERVAL:'Aguarde 15 segundos entre verificações.',DAILY_LOSS:'Limite de perda diária atingido.',PERSISTENCE_UNCONFIRMED:'Gravação não confirmada. Nenhuma nova execução será permitida.',SUPERVISION_INTERRUPTED:'A página ficou sem supervisão por mais de 30 segundos.',EXPLICIT_ACTIVATION:'Confirme a ciência dos riscos antes de ativar.'};
-let timer=null,busy=false,pendingActions=0;
+
+let timer=null,busy=false,pendingActions=0,archiveControls=null;
 function text(id,value){$(id).textContent=value}
 function render(view){
+ archiveControls?.render(view,busy);
  renderReport(document,view);
  if(![STATES.READY,STATES.RUN].includes(view.state))$('paperConsent').checked=false;
  text('paperState',view.state);text('paperReason',messages[view.reason]||plainReason(view.reason));text('paperSource',view.source);
@@ -22,8 +25,9 @@ function render(view){
  $('paperStart').disabled=busy||view.state!==STATES.READY||!$('paperConsent').checked;$('paperPrepare').disabled=busy||view.active;$('paperRestore').disabled=busy||view.active;$('paperEnd').disabled=view.state===STATES.OFF||view.state===STATES.END;$('paperExport').disabled=busy||!w;$('paperBalance').disabled=busy||!!w;$('paperDuration').disabled=busy||view.active;
 }
 const session=new SupervisedPaperSession({store:new IndexedDBPaperStore(),feed:new CoinbasePaperFeed(),origin:'prospective-real',onChange:render});
+archiveControls=mountArchivePanel(session,{run:action});
 function schedule(){clearTimeout(timer);if(session.active)timer=setTimeout(async()=>{await action(()=>session.tick());schedule()},15000)}
-async function action(fn){pendingActions++;busy=true;let problem;render(session.view());try{await fn();if(session.engine)await session.report()}catch(error){problem=messages[error.code||error.message]||'Simulação bloqueada: '+(error.code||error.message)}finally{pendingActions--;busy=pendingActions>0;render(session.view());if(problem)text('paperReason',problem)}}
+async function action(fn){pendingActions++;busy=true;let problem;render(session.view());try{await fn();if(session.engine)await session.report()}catch(error){problem=explainError(error)}finally{pendingActions--;busy=pendingActions>0;render(session.view());if(problem)text('paperReason',problem)}}
 // No network, storage creation or activation during bootstrap.
 $('paperPrepare').addEventListener('click',()=>action(()=>session.prepare({initialBalance:Number($('paperBalance').value)})));
 $('paperRestore').addEventListener('click',()=>action(()=>session.restore()));

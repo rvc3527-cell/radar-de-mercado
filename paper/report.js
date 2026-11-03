@@ -1,9 +1,9 @@
 // Reporting only. Never proposes trades or mutates a journal.
-import {cash,sell,publicCash,checked} from './money.js';
+import {cash,qty,units,sell,publicCash,checked} from './money.js';
 import {keyOf} from './risk.js';
 import {PaperTradingEngine} from './engine.js';
 import {MemoryPaperStore} from './store.js';
-export const REPORT_VERSION='v7.3-report-1',MIN_SAMPLE=30;
+export const REPORT_VERSION='v7.4-report-1',MIN_SAMPLE=30;
 const parse=text=>{try{return JSON.parse(text)}catch(_){return null}};
 const origins=['prospective-real','synthetic','retrospective'];
 const mean=a=>a.length?a.reduce((n,x)=>n+x,0)/a.length:null;
@@ -55,7 +55,7 @@ export function reportVerifiedJournal(journal){
     initial,initialRealized:state.realized,initialFees:state.fees,initialSlippage:state.slippage,carriedPositions:state.positions.size,peak:initial,drawdown:0,drawdownPct:0,opened:0,allClosed:0,closedTrades:[],exposures:[],executions:[],decisions:[],conditions:[],observedInstruments:new Map(),sequences:new Set(),latencies:[],ages:[],telemetrySamples:0,lastQuoteAt:null,
     operations:{validQuotes:0,rejectedQuotes:0,sampleFailures:0,requests:0,http400:0,http429:0,networkErrors:0,networkInterruptions:0,supervisionInterruptions:0,timeouts:0,cooldownUntil:null,monitoredMs:0,waitDecisions:0,proposalsApproved:0,proposalsRejected:0,entriesRejected:0,protectiveExitsRejected:0,riskBlocks:0}};
   }
-  if(c.payload.quote&&d.marketAccepted){const q=c.payload.quote;state.marks.set(keyOf(q.instrument),{bid:cash(q.bid),at:q.at,ready:true});if(current){current.observedInstruments.set(keyOf(q.instrument),q.instrument);if(current.instrument&&keyOf(current.instrument)!==keyOf(q.instrument))current.instrumentMismatch=true;}}
+  if(c.payload.quote&&d.marketAccepted){const q=c.payload.quote,previous=state.marks.get(keyOf(q.instrument)),same=previous?.sequence===q.sequence;state.marks.set(keyOf(q.instrument),{bid:cash(q.bid),at:q.at,sequence:q.sequence,bidRemaining:same?previous.bidRemaining:units(q.bidSize,8,{zero:true}),askRemaining:same?previous.askRemaining:units(q.askSize,8,{zero:true}),ready:true});if(current){current.observedInstruments.set(keyOf(q.instrument),q.instrument);if(current.instrument&&keyOf(current.instrument)!==keyOf(q.instrument))current.instrumentMismatch=true;}}
   if(c.type==='failure'||(c.type==='quote'&&!d.approved))for(const m of state.marks.values())m.ready=false;
   if(current&&c.type==='note'&&c.payload.kind==='STRATEGY_DECISION'&&note&&d.approved){
    let reason=note.reason??'Sem motivo registrado';const factors=[],e=note.evidence;
@@ -66,6 +66,7 @@ export function reportVerifiedJournal(journal){
    if(note.evidence)current.conditions.push({at:c.at,ema9:note.evidence.ema9,ema21:note.evidence.ema21,rsi14:note.evidence.rsi14,maxRangePct:note.evidence.maxRangePct??null,extensionPct:note.evidence.extensionPct??null});
   }
   for(const fill of d.accounting?.executions||[]){
+   const book=state.marks.get(keyOf(fill.instrument));if(book){if(fill.side==='buy')book.askRemaining-=fill.quantity;else book.bidRemaining-=fill.quantity}
    const old=registry.get(fill.positionId);
    if(fill.side==='buy'){registry.set(fill.positionId,{id:fill.positionId,instrument:fill.instrument,quantity:fill.quantity,at:fill.at,strategyId:fill.strategyId,entryCost:fill.net});if(current)current.opened++}
    if(current){
@@ -84,7 +85,7 @@ export function reportVerifiedJournal(journal){
     telemetry(current,parse(c.payload.telemetry));
     for(const exit of d.exits||[])if(!exit.approved){current.operations.protectiveExitsRejected++;current.operations.riskBlocks++;current.riskReported=true}
    }
-   if(c.type==='proposal'){const decision=[...current.decisions].reverse().find(x=>x.proposalId===c.id);if(decision)decision.outcome={approved:d.approved,code:d.code};if(d.approved)current.operations.proposalsApproved++;else{current.operations.proposalsRejected++;current.operations.riskBlocks++;current.riskReported=true;if(c.payload.proposal.action==='open')current.operations.entriesRejected++}}
+   if(c.type==='proposal'){const decision=[...current.decisions].reverse().find(x=>x.proposalId===c.id);if(decision){decision.outcome={approved:d.approved,code:d.code};if(d.code==='NO_EXIT_LIQUIDITY'&&c.payload.proposal.action==='open'){const p=c.payload.proposal,book=state.marks.get(keyOf(p.instrument)),existing=[...state.positions.values()].filter(x=>keyOf(x.instrument)===keyOf(p.instrument)).reduce((sum,x)=>sum+x.quantity,0);if(book)decision.outcome.liquidity={scope:'L1-simulated-remaining',instrument:p.instrument,quoteAt:c.payload.quote.at,sequence:c.payload.quote.sequence,observedBid:c.payload.quote.bidSize,observedAsk:c.payload.quote.askSize,availableBid:book.bidRemaining/1e8,availableAsk:book.askRemaining/1e8,proposed:p.quantity,existing:existing/1e8,requiredExit:(existing+qty(p.quantity))/1e8}}}if(d.approved)current.operations.proposalsApproved++;else{current.operations.proposalsRejected++;current.operations.riskBlocks++;current.riskReported=true;if(c.payload.proposal.action==='open')current.operations.entriesRejected++}}
    if(c.type==='note'&&c.payload.kind==='SESSION_PAUSE'&&note){telemetry(current,note.telemetry);if(note.risk&&!current.riskReported)current.operations.riskBlocks++;if(note.cause==='network')current.operations.networkInterruptions++;if(['visibility','supervision'].includes(note.cause))current.operations.supervisionInterruptions++}
    if(c.type==='note'&&d.approved&&['SESSION_END','SESSION_PAUSE'].includes(c.payload.kind)){
     sessions.push(finish(current,state,c.at,c.payload.kind==='SESSION_END'?'ended':note?.risk?'paused-risk':'paused-failure',note?.reason??'Término sem motivo registrado.',true));current=null;

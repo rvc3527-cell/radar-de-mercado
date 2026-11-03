@@ -3,6 +3,7 @@ import {STRATEGY,POLICY,decide} from './strategy.js';
 import {invariant} from './money.js';
 import {INSTRUMENT} from './market.js';
 import {reportVerifiedJournal} from './report.js';
+import {createArchive,inspectArchive,restoreArchive} from './archive.js';
 export const SESSION_CONFIG=Object.freeze({currency:'USD',initialBalance:10000,maxRiskBps:100,dailyLossBps:300,maxPositions:1,maxAssetExposureBps:1000,feeBps:10,slippageBps:5,maxSpreadBps:20,maxQuoteAgeMs:10000});
 export const STATES=Object.freeze({OFF:'Desativado',WAIT:'Aguardando dados',READY:'Pronto para simulação',RUN:'Simulando',RISK:'Pausado por risco',FAIL:'Pausado por falha',END:'Encerrado'});
 export const SESSION_BUDGET=1000,RESERVE=200;
@@ -25,6 +26,28 @@ export class SupervisedPaperSession {
   async note(kind,data,suffix){const d=await this.engine.recordNote({id:this.sessionId+':'+suffix,kind,details:JSON.stringify(data)});invariant(d.approved,d.code);return d}
   async refresh(){if(this.engine)this.wallet=await this.engine.snapshot();this.emit()}
   async restore(){return this.serial(async()=>{invariant(!this.active,'SESSION_ACTIVE');this.engine=await PaperTradingEngine.open({walletId:this.walletId,store:this.store,clock:this.clock});await this.refresh();return this.view()})}
+  archiveAllowed(){invariant(!this.active&&![STATES.READY,STATES.WAIT].includes(this.state),'ARCHIVE_ACTIVE')}
+  async backup(){return this.serial(async()=>{
+    this.archiveAllowed();invariant(this.engine,'NO_WALLET');let release;
+    try{release=await this.lease('radar-paper:'+this.walletId);return await createArchive(await this.engine.exportJournal(),{now:this.clock()})}finally{release?.()}
+  })}
+  async inspectBackup(text){
+    this.archiveAllowed();const info=await inspectArchive(text);invariant(info.journal.walletId===this.walletId,'ARCHIVE_WALLET');
+    for(const [k,v] of Object.entries(SESSION_CONFIG))if(k!=='initialBalance')invariant(info.journal.config[k]===v,'SESSION_CONFIG_MISMATCH');
+    return info;
+  }
+  async importBackup(info,{confirmed=false}={}){return this.serial(async()=>{
+    this.archiveAllowed();invariant(confirmed===true,'ARCHIVE_CONFIRM');this.generation++;this.blocked=true;let release;
+    try{
+      release=await this.lease('radar-paper:'+this.walletId);
+      const checked=await this.inspectBackup(info.journal);invariant(checked.digest===info.digest,'ARCHIVE_INSPECTION_CHANGED');
+      invariant((checked.journal.events.at(-1)?.command.at??0)<=this.clock(),'ARCHIVE_CLOCK');
+      const result=await restoreArchive(this.store,checked,{confirmed:true,walletId:this.walletId});
+      this.engine=await PaperTradingEngine.open({walletId:this.walletId,store:this.store,clock:this.clock});this.active=false;this.state=STATES.OFF;this.sessionId=null;this.startedAt=null;this.endsAt=null;this.sample=null;this.lastDecision=null;this.source='Cópia verificada; fonte não consultada.';
+      this.reason=result.status==='unchanged'?'Esta cópia já está preservada. Nenhum evento ou saldo foi duplicado.':'Histórico completo restaurado. Valide a fonte e ative manualmente para uma nova sessão.';
+      await this.refresh();return result;
+    }catch(error){this.active=false;this.blocked=true;this.state=STATES.FAIL;this.reason=error.code||error.message;this.emit();throw error}finally{release?.()}
+  })}
   async prepare({initialBalance=10000}={}){return this.serial(async()=>{
     invariant(!this.active,'SESSION_ACTIVE');this.blocked=true;this.sessionId=null;this.state=STATES.WAIT;this.reason='Validando fonte, armazenamento e diário…';this.emit();
     try{

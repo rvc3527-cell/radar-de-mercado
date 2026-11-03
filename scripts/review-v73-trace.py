@@ -7,7 +7,7 @@ root=pathlib.Path(__file__).resolve().parent.parent
 class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*a):pass
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,directory=str(root)));threading.Thread(target=server.serve_forever,daemon=True).start()
-parser=argparse.ArgumentParser();parser.add_argument('--origin');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--origin');parser.add_argument('--artifact-prefix',default='v73');args=parser.parse_args()
 origin=args.origin or f'http://127.0.0.1:{server.server_port}';journal=json.loads((root/'artifacts/v73-prospective.json').read_text())['data']['journal'];checks=[]
 try:
  with sync_playwright() as p:
@@ -28,8 +28,8 @@ try:
    page.evaluate('''async j=>{const {IndexedDBPaperStore}=await import('/paper/store.js');const store=new IndexedDBPaperStore(),db=await store.database();await new Promise((resolve,reject)=>{const tx=db.transaction('wallets','readwrite');tx.objectStore('wallets').put(j,j.walletId);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error)});await store.close()}''',journal)
    page.locator('#paperRestore').click();page.wait_for_selector('#paperSessionResults article');text=page.locator('#paperSessionResults').inner_text();assert 'Prospectivo real' in text;assert 'Amostra insuficiente' in text;assert 'NO_EXIT_LIQUIDITY' not in page.locator('#paperReason').inner_text();assert 'Entradas 1 · saídas 1 · posições residuais 0' in text;assert '0,99' in text
    assert page.locator('#paperState').inner_text()=='Desativado';assert page.locator('#paperStart').is_disabled();assert len(market)==count;assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
-   page.locator('#paperSessionResults').scroll_into_view_if_needed();page.screenshot(path=str(root/(f'artifacts/v73-results-{width}'+('-preview.png' if args.origin else '.png'))));details=page.locator('#paperSessionResults details').first;details.evaluate('(el)=>el.open=true');page.wait_for_timeout(1200);assert details.evaluate('(el)=>el.open'),'clock must not collapse report';assert 'cinco minutos' in details.inner_text();assert not errors,errors
+   page.locator('#paperSessionResults').scroll_into_view_if_needed();page.screenshot(path=str(root/(f'artifacts/{args.artifact_prefix}-results-{width}'+('-preview.png' if args.origin else '.png'))));details=page.locator('#paperSessionResults details').first;details.evaluate('(el)=>el.open=true');page.wait_for_timeout(1200);assert details.evaluate('(el)=>el.open'),'clock must not collapse report';assert 'cinco minutos' in details.inner_text();assert not errors,errors
    checks.append({'width':width,'origin':origin,'passed':True,'source':'review of verified real prospect, no new market data','journalChecksum':journal['checksum'],'pageErrors':errors});ctx.close()
   browser.close()
- (root/('artifacts/v73-results-preview.json' if args.origin else 'artifacts/v73-results-browser.json')).write_text(json.dumps(checks,ensure_ascii=False,indent=2));print(json.dumps(checks,ensure_ascii=False,indent=2))
+ (root/(f'artifacts/{args.artifact_prefix}-results-preview.json' if args.origin else f'artifacts/{args.artifact_prefix}-results-browser.json')).write_text(json.dumps(checks,ensure_ascii=False,indent=2));print(json.dumps(checks,ensure_ascii=False,indent=2))
 finally:server.shutdown()

@@ -1,0 +1,77 @@
+{
+  "retrievedAt": "2026-11-03T04:16:13.961775+00:00",
+  "endpoint": "https://radar-cloud-collector-preview.rvc3426.workers.dev/health",
+  "health": {
+    "ok": false,
+    "workerOk": true,
+    "database": true,
+    "version": "5.7.2",
+    "methodology_version": "v5.7",
+    "methodologyReady": true,
+    "controlReady": true,
+    "providerState": "cooldown",
+    "providerLabel": "Aguardando limite da API",
+    "cooldownUntil": 1793680853121,
+    "cooldownActive": true,
+    "leaseActive": false,
+    "metricsSince": 1793552750204,
+    "totals": {
+      "http429": 101,
+      "http400": 0,
+      "networkErrors": 0
+    },
+    "assets": [
+      {
+        "symbol": "BTCUSD",
+        "lastSuccessAt": 1793678451865,
+        "lastCandleAt": 1793678400000,
+        "lastAttemptAt": 1793678451433,
+        "lastError": null,
+        "http429": 27,
+        "http400": 0,
+        "networkErrors": 0,
+        "ageSeconds": 973,
+        "fresh": false
+      },
+      {
+        "symbol": "ETHUSD",
+        "lastSuccessAt": 1793675150812,
+        "lastCandleAt": 1793675100000,
+        "lastAttemptAt": 1793678452987,
+        "lastError": {
+          "code": "API_HTTP",
+          "httpStatus": 429,
+          "at": 1793678453121
+        },
+        "http429": 40,
+        "http400": 0,
+        "networkErrors": 0,
+        "ageSeconds": 4273,
+        "fresh": false
+      },
+      {
+        "symbol": "SOLUSD",
+        "lastSuccessAt": 1793675151894,
+        "lastCandleAt": 1793675100000,
+        "lastAttemptAt": 1793675451616,
+        "lastError": {
+          "code": "API_HTTP",
+          "httpStatus": 429,
+          "at": 1793675452611
+        },
+        "http429": 34,
+        "http400": 0,
+        "networkErrors": 0,
+        "ageSeconds": 4273,
+        "fresh": false
+      }
+    ],
+    "runAgeSeconds": 23,
+    "scheduleDelayed": false,
+    "last_run": {
+      "started_at": 1793679350248,
+      "report": "[{\"symbol\":\"BTCUSD\",\"version\":\"5.7.2\",\"code\":\"COOLDOWN\",\"deferred\":true,\"cooldownUntil\":1793680853121,\"error\":\"Aguardando limite da API; chamada adiada\"},{\"symbol\":\"ETHUSD\",\"version\":\"5.7.2\",\"code\":\"COOLDOWN\",\"deferred\":true,\"cooldownUntil\":1793680853121,\"error\":\"Aguardando limite da API; chamada adiada\"},{\"symbol\":\"SOLUSD\",\"version\":\"5.7.2\",\"code\":\"COOLDOWN\",\"deferred\":true,\"cooldownUntil\":1793680853121,\"error\":\"Aguardando limite da API; chamada adiada\"}]"
+    },
+    "at": 1793679373645
+  }
+}

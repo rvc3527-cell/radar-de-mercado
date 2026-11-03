@@ -83,7 +83,7 @@ Transporte do harness: urllib com CA/proxy herdados e **TLS verificado**, entreg
 
 ## 5. Testes e regressões
 
-Suíte local completa: **272 testes executados, 272 aprovados, zero falhas**, incluindo os 249 anteriores. Sintaxe dos módulos e build clássico/módulo também executados. A primeira bateria detectou uma regressão de capacidade, corrigida e reexecutada; não se considera aquela bateria com falha como aprovada. Links/resultados de CI serão associados ao commit de entrega.
+Suíte local completa: **272 testes executados, 272 aprovados, zero falhas**, incluindo os 249 anteriores. Sintaxe dos módulos e build clássico/módulo também executados. A primeira bateria detectou uma regressão de capacidade, corrigida e reexecutada; não se considera aquela bateria com falha como aprovada. [GitHub Actions 41567778402](https://github.com/rvc3527-cell/radar-de-mercado/actions/runs/41567778402) aprovado no commit de runtime `c8bff5f79b1a4feb6692d973ed769526d3bb74ec`; logs Node 22 confirmam 272 testes, 272 aprovados, zero falhas, além de sintaxe e build.
 
 Novos casos cobrem referências independentes de PnL/custos/slippage/drawdown/exposição, 30 pares para taxa/expectativa observadas, pendências e posições herdadas, união de exposição, gaps, término desconhecido, grupos de origem, compatibilidade v7.2, corrupção de telemetria, HTTP/cooldown/timeout/rede, espera vs rejeição, idempotência, causa original de risco e pausa síncrona. A regressão de capacidade preserva os 9.000 eventos e impede consulta à API; cenário virtual completo de duas horas mantém o orçamento, sem ser apresentado como ensaio real.
 
@@ -109,7 +109,13 @@ Checklist manual em iPhone físico:
 
 Alvo autorizado: **radar-de-mercado-preview**, https://radar-de-mercado-preview.rvc3426.workers.dev/#simulacao. Publicação somente após suíte/CI aprovados e verificação do ETag/configuração anterior. Tipo módulo, configurações, bindings vazios e orçamento existentes preservados. Simulação continua desativada ao abrir/recarregar.
 
-Situação de publicação e PR pendentes nesta versão do relatório. Não fazer merge na main. Reversão: republicar o artefato da Fase 7.2, mantendo IndexedDB/exportações intactos; código antigo pode não interpretar telemetria v73 e não deve regravar os novos eventos. Preferir exportar/arquivar antes de qualquer reversão do leitor.
+Publicação **confirmada** em 03/11/2026 02:50:17 UTC, exclusivamente no Preview. Runtime `c8bff5f79b1a4feb6692d973ed769526d3bb74ec`; artefato SHA-256 `ed0c07bf6c2ac881eb7809bb425fea6602e640cd555aa5c3cfd0a38e952766c2`; ETag remoto `f2d12a4190db2aa08edb61a24e4c707e3bea49100c3047007bdc65581c7857c1`; deployment_id `2975b34defb349059008646f27a1f070`. Guardas de binding/ETag anterior impediram sobrescrita de outro deploy.
+
+Verificação pós-deploy: cada HTML/CSS/JS próprio solicitado comparado byte a byte ao código testado, por HTTPS com TLS validado. Chromium 1440/390 restaurou a captura prospectiva real somente em perfis QA isolados, revalidou checksum e exibiu resultado líquido/amostra insuficiente/posição residual correta. Nenhuma consulta de mercado nova ou ordem foi disparada pela restauração, nenhuma reativação automática e nenhum erro de página. Relatório `artifacts/v73-results-preview.json`; capturas `v73-results-1440-preview.png` e `v73-results-390-preview.png`. São revisão de uma sessão real anterior, não um novo ensaio prospectivo.
+
+Configurações do Preview preservadas: bindings/flags/tags/tail_consumers vazios, placement vazio, usage_model standard e logpush=false. Rechecagem autenticada mantém os mesmos timestamps/ETag de produção/coletor e o mesmo Cron da auditoria inicial. Não houve ação D1.
+
+[PR incremental #10](https://github.com/rvc3527-cell/radar-de-mercado/pull/10), contra feature/paper-real-data-v72 / #9, aberto sem merge. Commits posteriores de documentação/capturas/harness não mudam o runtime publicado. Não fazer merge na main. Reversão: republicar o artefato da Fase 7.2, mantendo IndexedDB/exportações intactos; código antigo pode não interpretar telemetria v73 e não deve regravar os novos eventos. Preferir exportar/arquivar antes de qualquer reversão do leitor.
 
 ## 8. Problemas corrigidos e riscos restantes
 

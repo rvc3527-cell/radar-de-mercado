@@ -1,0 +1,239 @@
+{
+  "browser": "Chromium",
+  "origin": "http://127.0.0.1:39551",
+  "realSafari": false,
+  "live": false,
+  "transport": "browser-native",
+  "checks": [
+    {
+      "width": 1440,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "lifecycle": [],
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z"
+      ],
+      "errors": []
+    },
+    {
+      "width": 768,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "lifecycle": [],
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z"
+      ],
+      "errors": []
+    },
+    {
+      "width": 390,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "lifecycle": [
+        {
+          "event": "pagehide",
+          "passed": true,
+          "cause": "Página encerrada. Nenhuma retomada automática será feita.",
+          "operations": {
+            "validQuotes": 1,
+            "rejectedQuotes": 0,
+            "sampleFailures": 0,
+            "requests": 2,
+            "http400": 0,
+            "http429": 0,
+            "networkErrors": 0,
+            "networkInterruptions": 0,
+            "supervisionInterruptions": 1,
+            "timeouts": 0,
+            "cooldownUntil": null,
+            "monitoredMs": 0,
+            "waitDecisions": 1,
+            "proposalsApproved": 0,
+            "proposalsRejected": 0,
+            "entriesRejected": 0,
+            "protectiveExitsRejected": 0,
+            "riskBlocks": 0,
+            "lastQuoteAt": 1793620855000,
+            "uniqueSequences": 1,
+            "latencyBookMs": {
+              "n": 1,
+              "min": 4,
+              "max": 4,
+              "mean": 4
+            },
+            "dataAgeMs": {
+              "n": 1,
+              "min": 500,
+              "max": 500,
+              "mean": 500
+            },
+            "telemetrySamples": 1
+          }
+        },
+        {
+          "event": "pageshow",
+          "passed": true,
+          "cause": "Página restaurada após suspensão. Revalide antes de ativar novamente.",
+          "operations": {
+            "validQuotes": 1,
+            "rejectedQuotes": 0,
+            "sampleFailures": 0,
+            "requests": 1,
+            "http400": 0,
+            "http429": 0,
+            "networkErrors": 0,
+            "networkInterruptions": 0,
+            "supervisionInterruptions": 1,
+            "timeouts": 0,
+            "cooldownUntil": null,
+            "monitoredMs": 0,
+            "waitDecisions": 1,
+            "proposalsApproved": 0,
+            "proposalsRejected": 0,
+            "entriesRejected": 0,
+            "protectiveExitsRejected": 0,
+            "riskBlocks": 0,
+            "lastQuoteAt": 1793620870000,
+            "uniqueSequences": 1,
+            "latencyBookMs": {
+              "n": 1,
+              "min": 8,
+              "max": 8,
+              "mean": 8
+            },
+            "dataAgeMs": {
+              "n": 1,
+              "min": 500,
+              "max": 500,
+              "mean": 500
+            },
+            "telemetrySamples": 1
+          }
+        },
+        {
+          "event": "offline",
+          "passed": true,
+          "cause": "Conexão interrompida. Revalide antes de ativar novamente.",
+          "operations": {
+            "validQuotes": 1,
+            "rejectedQuotes": 0,
+            "sampleFailures": 0,
+            "requests": 1,
+            "http400": 0,
+            "http429": 0,
+            "networkErrors": 0,
+            "networkInterruptions": 1,
+            "supervisionInterruptions": 0,
+            "timeouts": 0,
+            "cooldownUntil": null,
+            "monitoredMs": 0,
+            "waitDecisions": 1,
+            "proposalsApproved": 0,
+            "proposalsRejected": 0,
+            "entriesRejected": 0,
+            "protectiveExitsRejected": 0,
+            "riskBlocks": 0,
+            "lastQuoteAt": 1793620885000,
+            "uniqueSequences": 1,
+            "latencyBookMs": {
+              "n": 1,
+              "min": 10,
+              "max": 10,
+              "mean": 10
+            },
+            "dataAgeMs": {
+              "n": 1,
+              "min": 500,
+              "max": 500,
+              "mean": 500
+            },
+            "telemetrySamples": 1
+          }
+        },
+        {
+          "event": "visibilitychange",
+          "passed": true,
+          "cause": "Página oculta: sessão pausada. Revalide antes de ativar novamente.",
+          "operations": {
+            "validQuotes": 1,
+            "rejectedQuotes": 0,
+            "sampleFailures": 0,
+            "requests": 1,
+            "http400": 0,
+            "http429": 0,
+            "networkErrors": 0,
+            "networkInterruptions": 0,
+            "supervisionInterruptions": 1,
+            "timeouts": 0,
+            "cooldownUntil": null,
+            "monitoredMs": 0,
+            "waitDecisions": 1,
+            "proposalsApproved": 0,
+            "proposalsRejected": 0,
+            "entriesRejected": 0,
+            "protectiveExitsRejected": 0,
+            "riskBlocks": 0,
+            "lastQuoteAt": 1793620900000,
+            "uniqueSequences": 1,
+            "latencyBookMs": {
+              "n": 1,
+              "min": 6,
+              "max": 6,
+              "mean": 6
+            },
+            "dataAgeMs": {
+              "n": 1,
+              "min": 500,
+              "max": 500,
+              "mean": 500
+            },
+            "telemetrySamples": 1
+          }
+        }
+      ],
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1"
+      ],
+      "errors": []
+    },
+    {
+      "width": 375,
+      "live": false,
+      "ready": true,
+      "passed": true,
+      "prospectiveOpened": null,
+      "fixtureOpened": 1,
+      "lifecycle": [],
+      "marketRequests": [
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/book?level=1",
+        "https://api.exchange.coinbase.com/products/BTC-USD/candles?granularity=60&start=2026-11-02T09:00:00.000Z&end=2026-11-02T12:00:00.000Z"
+      ],
+      "errors": []
+    }
+  ]
+}

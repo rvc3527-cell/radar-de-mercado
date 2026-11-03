@@ -1,13 +1,15 @@
+import {renderReport,plainReason} from './report-panel.js';
 import {IndexedDBPaperStore} from './store.js';
 import {CoinbasePaperFeed} from './market.js';
 import {SupervisedPaperSession,STATES} from './session.js';
 const $=id=>document.getElementById(id),money=x=>Number(x).toLocaleString('pt-BR',{style:'currency',currency:'USD'});
-const messages={BOOK_STALE_OR_CLOCK:'Livro atrasado ou relógio divergente.',COOLDOWN:'Aguardando limite da Coinbase. Não tente repetidamente.',HTTP_429:'A Coinbase limitou as consultas. A sessão foi pausada.',HTTP_400:'A Coinbase rejeitou a consulta.',STORAGE_RESERVE:'Não foi possível confirmar 20 MB livres para o diário.',SESSION_BUSY:'Outra aba já controla esta carteira.',WEB_LOCKS_REQUIRED:'Este navegador não oferece o controle de abas necessário.',WALLET_NOT_FOUND:'Nenhuma carteira anterior neste navegador. Verifique a fonte para criar uma.',SESSION_CAPACITY:'Diário próximo do limite. Exporte os registros; nenhuma nova sessão foi iniciada.',PREPARED_QUOTE_STALE:'Verificação expirou. Aguarde 15 segundos e verifique a fonte novamente.',POLL_INTERVAL:'Aguarde 15 segundos entre verificações.',DAILY_LOSS:'Limite de perda diária atingido.',PERSISTENCE_UNCONFIRMED:'Gravação não confirmada. Nenhuma nova execução será permitida.',SUPERVISION_INTERRUPTED:'A página ficou sem supervisão por mais de 30 segundos.',EXPLICIT_ACTIVATION:'Confirme a ciência dos riscos antes de ativar.'};
-let timer=null,busy=false;
+const messages={'Failed to fetch':'Falha de conexão com a fonte. A sessão precisa de nova verificação.','NetworkError when attempting to fetch resource.':'Falha de rede. Nenhuma retomada automática.',BOOK_STALE_OR_CLOCK:'Livro atrasado ou relógio divergente.',COOLDOWN:'Aguardando limite da Coinbase. Não tente repetidamente.',HTTP_429:'A Coinbase limitou as consultas. A sessão foi pausada.',HTTP_400:'A Coinbase rejeitou a consulta.',STORAGE_RESERVE:'Não foi possível confirmar 20 MB livres para o diário.',SESSION_BUSY:'Outra aba já controla esta carteira.',WEB_LOCKS_REQUIRED:'Este navegador não oferece o controle de abas necessário.',WALLET_NOT_FOUND:'Nenhuma carteira anterior neste navegador. Verifique a fonte para criar uma.',SESSION_CAPACITY:'Diário próximo do limite. Exporte os registros; nenhuma nova sessão foi iniciada.',PREPARED_QUOTE_STALE:'Verificação expirou. Aguarde 15 segundos e verifique a fonte novamente.',POLL_INTERVAL:'Aguarde 15 segundos entre verificações.',DAILY_LOSS:'Limite de perda diária atingido.',PERSISTENCE_UNCONFIRMED:'Gravação não confirmada. Nenhuma nova execução será permitida.',SUPERVISION_INTERRUPTED:'A página ficou sem supervisão por mais de 30 segundos.',EXPLICIT_ACTIVATION:'Confirme a ciência dos riscos antes de ativar.'};
+let timer=null,busy=false,pendingActions=0;
 function text(id,value){$(id).textContent=value}
 function render(view){
+ renderReport(document,view);
  if(![STATES.READY,STATES.RUN].includes(view.state))$('paperConsent').checked=false;
- text('paperState',view.state);text('paperReason',messages[view.reason]||view.reason);text('paperSource',view.source);
+ text('paperState',view.state);text('paperReason',messages[view.reason]||plainReason(view.reason));text('paperSource',view.source);
  const w=view.wallet;text('paperCash',w?money(w.cash):'Não carregado');text('paperEquity',w?money(w.equity):'—');text('paperPnl',w?money(w.realized+w.unrealized):'—');text('paperOpen',w?String(w.positions.length):'—');
  text('paperMark',w&&!w.valuationFresh?'Patrimônio indicativo com marcas antigas; não é preço de saída.':'Patrimônio estimado após custos simulados.');
  text('paperQuote',view.quote?'BTC/USD · bid '+money(view.quote.bid)+' / ask '+money(view.quote.ask)+' · '+new Date(view.quote.at).toLocaleString('pt-BR'):'Nenhum livro consultado.');
@@ -19,17 +21,22 @@ function render(view){
  text('paperPositions',w?.positions.length?w.positions.map(p=>p.quantity+' BTC · entrada '+money(p.entryPrice)+' · stop gatilho '+money(p.stop)).join(' | '):'Nenhuma posição fictícia aberta.');
  $('paperStart').disabled=busy||view.state!==STATES.READY||!$('paperConsent').checked;$('paperPrepare').disabled=busy||view.active;$('paperRestore').disabled=busy||view.active;$('paperEnd').disabled=view.state===STATES.OFF||view.state===STATES.END;$('paperExport').disabled=busy||!w;$('paperBalance').disabled=busy||!!w;$('paperDuration').disabled=busy||view.active;
 }
-const session=new SupervisedPaperSession({store:new IndexedDBPaperStore(),feed:new CoinbasePaperFeed(),onChange:render});
+const session=new SupervisedPaperSession({store:new IndexedDBPaperStore(),feed:new CoinbasePaperFeed(),origin:'prospective-real',onChange:render});
 function schedule(){clearTimeout(timer);if(session.active)timer=setTimeout(async()=>{await action(()=>session.tick());schedule()},15000)}
-async function action(fn){busy=true;let problem;render(session.view());try{await fn()}catch(error){problem=messages[error.code||error.message]||'Simulação bloqueada: '+(error.code||error.message)}finally{busy=false;render(session.view());if(problem)text('paperReason',problem)}}
+async function action(fn){pendingActions++;busy=true;let problem;render(session.view());try{await fn();if(session.engine)await session.report()}catch(error){problem=messages[error.code||error.message]||'Simulação bloqueada: '+(error.code||error.message)}finally{pendingActions--;busy=pendingActions>0;render(session.view());if(problem)text('paperReason',problem)}}
 // No network, storage creation or activation during bootstrap.
 $('paperPrepare').addEventListener('click',()=>action(()=>session.prepare({initialBalance:Number($('paperBalance').value)})));
 $('paperRestore').addEventListener('click',()=>action(()=>session.restore()));
 $('paperConsent').addEventListener('change',()=>render(session.view()));
 $('paperStart').addEventListener('click',async()=>{await action(()=>session.start({confirmed:$('paperConsent').checked,durationMinutes:Number($('paperDuration').value)}));schedule()});
 $('paperEnd').addEventListener('click',async()=>{clearTimeout(timer);await action(()=>session.end())});
-$('paperExport').addEventListener('click',()=>action(async()=>{const data=await session.export(),url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='radar-simulacao-'+Date.now()+'.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),10000)}));
-document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible'){clearTimeout(timer);void session.interrupt('Página oculta: sessão pausada. Revalide antes de ativar novamente.')}});
-window.addEventListener('pagehide',()=>{clearTimeout(timer);void session.interrupt('Página encerrada. Nenhuma retomada automática será feita.')});
-window.addEventListener('offline',()=>{clearTimeout(timer);void session.interrupt('Conexão interrompida. Revalide antes de ativar novamente.')});
+$('paperExport').addEventListener('click',()=>action(async()=>{const data=await session.export(),url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),link=document.createElement('a');link.href=url;link.download='radar-simulacao-'+Date.now()+'.json';link.style.display='none';document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000)}));
+const pause=reason=>{clearTimeout(timer);void action(()=>session.interrupt(reason))};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState!=='visible')pause('Página oculta: sessão pausada. Revalide antes de ativar novamente.')});
+window.addEventListener('pagehide',()=>pause('Página encerrada. Nenhuma retomada automática será feita.'));
+window.addEventListener('offline',()=>pause('Conexão interrompida. Revalide antes de ativar novamente.'));
+window.addEventListener('pageshow',event=>{if(event.persisted){clearTimeout(timer);void action(()=>session.interrupt('Página restaurada após suspensão. Revalide antes de ativar novamente.'))}});
 render(session.view());
+
+// UI countdown only: no requests, trades, reactivation or journal writes.
+setInterval(()=>{if(document.visibilityState==='visible')renderReport(document,session.view(),Date.now(),true)},1000);

@@ -39,7 +39,7 @@ try:
    planned=T+60000;start=datetime.datetime.fromtimestamp(planned/1000,datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M');page.locator('#labStart').fill(start);page.locator('#labPrepareProtocol').click();page.wait_for_function("!document.getElementById('labSaveProtocol').disabled")
    with page.expect_download() as download:page.locator('#labSaveProtocol').click()
    protocol=pathlib.Path(download.value.path()).read_bytes();parsed=json.loads(protocol);assert parsed['format']=='radar-protocol-v76';assert parsed['origin']=='synthetic'
-   page.evaluate("showDashboardRoute('simulacao')");page.locator('#paperProtocolFile').set_input_files({'name':'protocol.json','mimeType':'application/json','buffer':protocol});page.wait_for_function("document.getElementById('paperProtocolStatus').textContent.includes('selecionado')")
+   page.evaluate("location.hash='simulacao';showDashboardRoute('simulacao')");page.locator('#paperProtocolFile').set_input_files({'name':'protocol.json','mimeType':'application/json','buffer':protocol});page.wait_for_function("document.getElementById('paperProtocolStatus').textContent.includes('selecionado')")
    assert not market;assert page.locator('#paperState').inner_text()=='Desativado';page.evaluate('(n)=>window.__qaNow=n',planned);page.locator('#paperPrepare').click();page.wait_for_function("document.getElementById('paperState').textContent==='Pronto para simulação'")
    assert page.locator('#paperStart').is_disabled();page.locator('#paperConsent').check();page.locator('#paperStart').click();page.wait_for_function("document.getElementById('paperState').textContent==='Simulando'")
    page.locator('#paperEnd').click();page.wait_for_function("document.getElementById('paperState').textContent==='Encerrado'")

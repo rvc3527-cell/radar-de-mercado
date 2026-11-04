@@ -17,7 +17,7 @@ try:
   browser=p.chromium.launch(**({'executable_path':os.environ['RADAR_CHROMIUM']} if os.environ.get('RADAR_CHROMIUM') else {'executable_path':'/usr/bin/chromium'} if pathlib.Path('/usr/bin/chromium').exists() else {}),args=['--no-sandbox'])
   for width in [1440,768,390,375]:
    context=browser.new_context(viewport={'width':width,'height':1000 if width>600 else 844},is_mobile=width<600,has_touch=width<600,locale='pt-BR',timezone_id='UTC',accept_downloads=True)
-   context.add_init_script('window.__qaNow='+str(T)+';Date.now=()=>window.__qaNow;window.WebSocket=class{close(){}};');page=context.new_page();errors=[];market=[];page.on('pageerror',lambda e:errors.append(str(e)))
+   context.add_init_script('window.__qaNow=Number(localStorage.getItem("qa-v76-clock")||'+str(T)+');Date.now=()=>window.__qaNow;window.WebSocket=class{close(){}};');page=context.new_page();errors=[];market=[];page.on('pageerror',lambda e:errors.append(str(e)))
    def route(r):
     url=r.request.url
     if 'unpkg.com' in url:r.fulfill(body=(root/'artifacts/lightweight-charts.js').read_bytes(),content_type='application/javascript')
@@ -40,12 +40,13 @@ try:
    with page.expect_download() as download:page.locator('#labSaveProtocol').click()
    protocol=pathlib.Path(download.value.path()).read_bytes();parsed=json.loads(protocol);assert parsed['format']=='radar-protocol-v76';assert parsed['origin']=='synthetic'
    page.evaluate("location.hash='simulacao';showDashboardRoute('simulacao')");page.locator('#paperProtocolFile').set_input_files({'name':'protocol.json','mimeType':'application/json','buffer':protocol});page.wait_for_function("document.getElementById('paperProtocolStatus').textContent.includes('selecionado')")
-   assert not market;assert page.locator('#paperState').inner_text()=='Desativado';page.evaluate('(n)=>window.__qaNow=n',planned);page.locator('#paperPrepare').click();page.wait_for_function("document.getElementById('paperState').textContent==='Pronto para simulação'")
+   assert not market;assert page.locator('#paperState').inner_text()=='Desativado';page.evaluate('(n)=>{window.__qaNow=n;localStorage.setItem("qa-v76-clock",String(n))}',planned);page.locator('#paperPrepare').click();page.wait_for_function("document.getElementById('paperState').textContent==='Pronto para simulação'")
    assert page.locator('#paperStart').is_disabled();page.locator('#paperConsent').check();page.locator('#paperStart').click();page.wait_for_function("document.getElementById('paperState').textContent==='Simulando'")
    page.locator('#paperEnd').click();page.wait_for_function("document.getElementById('paperState').textContent==='Encerrado'")
    with page.expect_download() as download:page.locator('#paperExport').click()
    data=json.loads(pathlib.Path(download.value.path()).read_text());j=data['journal'];note=next(json.loads(e['command']['payload']['details']) for e in j['events'] if e['command']['payload'].get('kind')=='SESSION_START');b=note['provenance'];assert b['manifestSha256']==parsed['seal'];assert b['protocolId']==parsed['protocolId'];assert b['executedCodeHashes']==manifest;assert b['independentAnteriority'] is False;assert note['origin']=='synthetic';assert b['window']==parsed['windows']['final'];assert note['endsAt']==parsed['windows']['final'][1]
    calls=len(market);page.reload(wait_until='networkidle');page.locator('#paperRestore').click();page.wait_for_function("document.getElementById('paperCash').textContent!=='Não carregado'");assert page.locator('#paperState').inner_text()=='Desativado';assert len(market)==calls
+   if any(e['decision'].get('accounting',{}).get('executions') for e in j['events']):assert 'posições fictícias abertas' in page.locator('#paperResidual').inner_text()
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');assert not errors,errors;page.locator('#paperProtocolFile').scroll_into_view_if_needed();page.screenshot(path=str(root/f'artifacts/v76-provenance-{width}.png'))
    checks.append({'width':width,'passed':True,'fixtureOrigin':'synthetic','protocolLinked':True,'clientClockNotIndependent':True,'scheduledWindowUnchanged':True,'reloadOff':True,'marketCallsMocked':calls,'pageErrors':errors});context.close()
   browser.close()

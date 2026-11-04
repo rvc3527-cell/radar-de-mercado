@@ -29,8 +29,31 @@ jobs:
           node --check dashboard.js
           node --check opportunity-engine.js
           node --check opportunities.js
-          for file in paper/*.js; do node --check "$file"; done
+          for file in paper/*.js lab/*.js; do node --check "$file"; done
           node scripts/build-preview.mjs
           node scripts/build-preview.mjs dist/preview-worker.mjs --module
           node --check dist/preview-worker.mjs
           git diff --check
+
+  browser-lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Preparar navegador de teste e biblioteca gráfica existente
+        run: |
+          pip install playwright==1.62.0
+          python -m playwright install --with-deps chromium
+          python scripts/prepare-browser-fixture-v75.py
+      - name: Testar laboratório e recuperação em desktop e mobile Chromium
+        run: |
+          python scripts/test-lab-v75.py
+          python scripts/test-archive-v74.py --artifact-prefix v75
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v75-browser-evidence
+          path: artifacts/v75-*

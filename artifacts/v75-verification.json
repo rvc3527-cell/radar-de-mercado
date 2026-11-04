@@ -1,0 +1,41 @@
+{
+  "format": "radar-v75-verification",
+  "runtimeCommit": "651295a9bff98878eff6fd6113e66c31bae17a68",
+  "artifactSha256": "03ac4307bab25a029d24ba7edc19994713643b0cb1496b3e020c00766df5db29",
+  "artifactBytes": 299313,
+  "preview": {
+    "worker": "radar-de-mercado-preview",
+    "deployedAt": "2026-11-04T01:39:21.618651Z",
+    "deploymentId": "32def1eb4db64be5ac0535c1097e3d72",
+    "etag": "fe1ecff2753f94b4d14fa29474beb9dbc8f2d58ef554caa26310f2e94710cdf2",
+    "authenticatedCodeExact": true,
+    "configurationPreserved": true,
+    "publicBrowserPostDeploy": false
+  },
+  "ci": {
+    "run": 41754303299,
+    "testsJob": 126326665220,
+    "browserJob": 126326665441,
+    "tests": 314,
+    "pass": 314,
+    "fail": 0,
+    "widths": [
+      1440,
+      768,
+      390,
+      375
+    ],
+    "artifact": 13287229439,
+    "artifactSha256": "39e0a93971d6adafcca48931e91f4cc35fc1c23bd08f0bb26eb167b16dc29816"
+  },
+  "local": {
+    "fullSuitePass": 313,
+    "targetedFinalPass": 25,
+    "realIPhone": false
+  },
+  "productionCollectorCronUnchanged": true,
+  "d1Migrations": false,
+  "newProspectiveSession": false,
+  "frozenStrategySha256": "952d4c18b3aa5ca4eb69a0202e6a3022649d95499e19e67511e7646bfb78a39d",
+  "originalCaptureSha256": "840744695270d8c854a2924e3545c9e7fd6325ee29b20061c31b97a004d6e895"
+}

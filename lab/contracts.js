@@ -16,7 +16,7 @@ export async function createProtocol({registeredAt,windows,durationMinutes,codeH
  invariant(Number.isSafeInteger(registeredAt)&&registeredAt>0&&[60,120].includes(durationMinutes),'LAB_PROTOCOL');const periods=splitWindows(windows);
  invariant(periods.final[0]>=registeredAt&&periods.final[1]-periods.final[0]>=durationMinutes*60000,'LAB_FINAL_FUTURE');
  invariant(['prospective-real','synthetic','retrospective'].includes(origin),'LAB_ORIGIN');
- const required=['paper/strategy.js','paper/session.js','paper/risk.js','paper/engine.js','paper/market.js','indicators.js'];invariant(codeHashes&&required.every(k=>HASH.test(codeHashes[k]))&&Object.values(codeHashes).every(x=>typeof x==='string'&&HASH.test(x)),'LAB_CODE_HASH');
+ const required=['paper/strategy.js','paper/session.js','paper/risk.js','paper/engine.js','paper/market.js','paper/money.js','paper/integrity.js','paper/store.js','paper/archive.js','paper/report.js','indicators.js','lab/contracts.js','lab/evaluator.js'];invariant(codeHashes&&required.every(k=>HASH.test(codeHashes[k]))&&Object.values(codeHashes).every(x=>typeof x==='string'&&HASH.test(x)),'LAB_CODE_HASH');
  const body={format:'radar-protocol-v75',registeredAt,windows:periods,durationMinutes,codeHashes:{...codeHashes},origin,instrument:{...INSTRUMENT},strategy:'ema-observe-v72',policy:'v7.2-paper-test-1',methodology:'v5.7',config:{...SESSION_CONFIG},candidates:CANDIDATES,minRoundTrips:30,execution:'supervised-manual-only',stops:['risk','source','storage','visibility','supervision-gap','duration','journal-capacity'],pollingMs:15000};
  return freeze({...body,seal:await digest(body)});
 }

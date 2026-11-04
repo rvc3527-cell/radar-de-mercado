@@ -8,7 +8,7 @@ import {evaluate,compare} from '../lab/evaluator.js';
 import {INSTRUMENT} from '../paper/market.js';
 import {buildPreview} from '../scripts/build-preview.mjs';
 import {inspectArchive,createArchive} from '../paper/archive.js';
-const T=Date.UTC(2026,10,4),windows={development:[T-200000,T-100000],selection:[T-100000,T],final:[T+60000,T+7260000]},codeHashes=Object.fromEntries(['paper/strategy.js','paper/session.js','paper/risk.js','paper/engine.js','paper/market.js','indicators.js'].map(x=>[x,'a'.repeat(64)]));
+const T=Date.UTC(2026,10,4),windows={development:[T-200000,T-100000],selection:[T-100000,T],final:[T+60000,T+7260000]},codeHashes=Object.fromEntries(['paper/strategy.js','paper/session.js','paper/risk.js','paper/engine.js','paper/market.js','paper/money.js','paper/integrity.js','paper/store.js','paper/archive.js','paper/report.js','indicators.js','lab/contracts.js','lab/evaluator.js'].map(x=>[x,'a'.repeat(64)]));
 const protocol=()=>createProtocol({registeredAt:T,windows,durationMinutes:120,codeHashes});
 const raw=readFileSync(new URL('../artifacts/v73-prospective.json',import.meta.url),'utf8');
 const c=code=>e=>e.code===code;
@@ -42,3 +42,5 @@ test('future OHLC values cannot affect a past as-of view or reject it',()=>{asse
  const {PaperTradingEngine}=await import('../paper/engine.js'),{MemoryPaperStore}=await import('../paper/store.js');const store=new MemoryPaperStore(),e=await PaperTradingEngine.open({walletId:'foreign',store,clock:()=>T,config:{currency:'USDT'}}),instrument={provider:'binance',market:'spot',base:'BTC',quote:'USDT',symbol:'BTCUSDT'},q={instrument,at:T,sequence:1,bid:100,ask:100,bidSize:100,askSize:100,available:true};
  await e.recordNote({id:'s:start',kind:'SESSION_START',details:JSON.stringify({strategy:'ema-observe-v72',policy:'v7.2-paper-test-1',methodology:'v5.7',instrument,origin:'synthetic',endsAt:T+3600000})});await e.onQuote({id:'q',quote:q});await e.recordNote({id:'s:end',kind:'SESSION_END',details:'{}'});const r=await evaluate(await e.exportJournal()),s=r.sessions[0];assert.equal(s.config.currency,'USDT');assert.equal(s.instrument.provider,'binance');assert.equal(s.eligibleForComparison,false);assert.ok(s.exclusions.some(x=>x.includes('moeda')));assert.equal(s.hitRate,null);
  });
+
+test('protocol cannot omit the actual monetary arithmetic implementation',async()=>{const hashes={...codeHashes};delete hashes['paper/money.js'];await assert.rejects(createProtocol({registeredAt:T,windows,durationMinutes:120,codeHashes:hashes}),c('LAB_CODE_HASH'))});

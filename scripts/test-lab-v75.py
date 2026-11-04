@@ -20,7 +20,7 @@ try:
     url=r.request.url
     if 'unpkg.com' in url:r.fulfill(body=(root/'artifacts/lightweight-charts.js').read_bytes(),content_type='application/javascript')
     elif url.endswith('/lab/build.json') and not args.origin:
-     hashes={f:__import__('hashlib').sha256((root/f).read_bytes()).hexdigest() for f in ['paper/strategy.js','paper/session.js','paper/engine.js','paper/risk.js','paper/market.js','indicators.js','lab/contracts.js','lab/evaluator.js']};r.fulfill(json=hashes)
+     hashes={f:__import__('hashlib').sha256((root/f).read_bytes()).hexdigest() for f in ['paper/strategy.js', 'paper/session.js', 'paper/risk.js', 'paper/engine.js', 'paper/market.js', 'paper/money.js', 'paper/integrity.js', 'paper/store.js', 'paper/archive.js', 'paper/report.js', 'indicators.js', 'lab/contracts.js', 'lab/evaluator.js']};r.fulfill(json=hashes)
     elif not url.startswith(origin):
      if 'api.exchange.coinbase.com' in url:market.append(url)
      r.fulfill(status=503,json={'message':'No live market in archive QA'})

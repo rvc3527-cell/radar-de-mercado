@@ -1,10 +1,10 @@
 """Browser archive QA, isolated wallets, recorded real trace only. No live session.
 Chromium emulation is not physical iPhone/Safari validation.
 """
-import argparse,functools,http.server,json,pathlib,threading,urllib.request,urllib.parse
+import os,argparse,functools,http.server,json,pathlib,threading,urllib.request,urllib.parse
 from playwright.sync_api import sync_playwright
 root=pathlib.Path(__file__).resolve().parent.parent
-parser=argparse.ArgumentParser();parser.add_argument('--origin');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--origin');parser.add_argument('--artifact-prefix',default='v74');args=parser.parse_args()
 class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*a):pass
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,directory=str(root)));threading.Thread(target=server.serve_forever,daemon=True).start()
@@ -12,7 +12,7 @@ origin=args.origin or f'http://127.0.0.1:{server.server_port}'
 source=root/'artifacts/v73-prospective.json';journal=json.loads(source.read_text())['data']['journal'];checks=[]
 try:
  with sync_playwright() as p:
-  browser=p.chromium.launch(executable_path='/usr/bin/chromium',args=['--no-sandbox'])
+  browser=p.chromium.launch(**({'executable_path':os.environ['RADAR_CHROMIUM']} if os.environ.get('RADAR_CHROMIUM') else {'executable_path':'/usr/bin/chromium'} if pathlib.Path('/usr/bin/chromium').exists() else {}),args=['--no-sandbox'])
   for width in [1440,768,390,375]:
    ctx=browser.new_context(viewport={'width':width,'height':1000 if width>600 else 844},is_mobile=width<600,has_touch=width<600,locale='pt-BR',accept_downloads=True)
    ctx.add_init_script('window.WebSocket=class{close(){}};');page=ctx.new_page();errors=[];market=[];page.on('pageerror',lambda e:errors.append(str(e)))
@@ -58,10 +58,10 @@ try:
    # Canceled native share keeps the verified prepared file; call stays in tap gesture.
    page.evaluate("Object.defineProperty(navigator,'canShare',{configurable:true,value:()=>true});Object.defineProperty(navigator,'share',{configurable:true,value:async()=>{window.shareGesture=navigator.userActivation.isActive;throw new DOMException('cancel','AbortError')}})")
    page.locator('#paperArchiveSave').click();page.wait_for_function("document.getElementById('paperArchiveStatus').textContent.includes('cancelado')");assert page.evaluate('window.shareGesture') is True;assert page.locator('#paperArchiveSave').is_enabled()
-   page.screenshot(path=str(root/('artifacts/v74-archive-'+str(width)+('-preview.png' if args.origin else '.png'))))
+   page.screenshot(path=str(root/('artifacts/'+args.artifact_prefix+'-archive-'+str(width)+('-preview.png' if args.origin else '.png'))))
    assert page.evaluate('document.documentElement.scrollWidth<=innerWidth');assert len(market)==count;assert not errors,errors
    checks.append({'width':width,'passed':True,'originalJournalChecksum':journal['checksum'],'events':journal['version'],'liveMarketCallsFromArchive':len(market)-count,'incompleteRejected':True,'restoredOff':True,'duplicateUnchanged':True,'nativeIDB':native,'shareCanceledGesture':True,'pageErrors':errors});ctx.close()
   browser.close()
  result={'browser':'Chromium','realSafari':False,'mode':'read-only recorded v7.3 evidence, no prospective run','origin':origin,'checks':checks}
- (root/('artifacts/v74-archive-preview.json' if args.origin else 'artifacts/v74-archive-browser.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2));print(json.dumps(result,ensure_ascii=False,indent=2))
+ (root/('artifacts/'+args.artifact_prefix+'-archive-preview.json' if args.origin else 'artifacts/'+args.artifact_prefix+'-archive-browser.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2));print(json.dumps(result,ensure_ascii=False,indent=2))
 finally:server.shutdown()

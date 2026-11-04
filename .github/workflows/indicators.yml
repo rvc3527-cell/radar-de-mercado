@@ -51,9 +51,10 @@ jobs:
       - name: Testar laboratório e recuperação em desktop e mobile Chromium
         run: |
           python scripts/test-lab-v75.py
-          python scripts/test-archive-v74.py --artifact-prefix v75
+          python scripts/test-archive-v74.py --artifact-prefix v76
+          python scripts/test-provenance-v76.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v75-browser-evidence
-          path: artifacts/v75-*
+          name: v76-browser-evidence
+          path: artifacts/v76-*

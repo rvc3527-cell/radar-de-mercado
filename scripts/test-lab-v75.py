@@ -1,7 +1,7 @@
 """Browser archive QA, isolated wallets, recorded real trace only. No live session.
 Chromium emulation is not physical iPhone/Safari validation.
 """
-import os,argparse,functools,http.server,json,pathlib,threading,urllib.request,urllib.parse
+import subprocess,os,argparse,functools,http.server,json,pathlib,threading,urllib.request,urllib.parse
 from playwright.sync_api import sync_playwright
 root=pathlib.Path(__file__).resolve().parent.parent
 parser=argparse.ArgumentParser();parser.add_argument('--origin');parser.add_argument('--artifact-prefix',default='v74');args=parser.parse_args()
@@ -9,7 +9,7 @@ class Quiet(http.server.SimpleHTTPRequestHandler):
  def log_message(self,*a):pass
 server=http.server.ThreadingHTTPServer(('127.0.0.1',0),functools.partial(Quiet,directory=str(root)));threading.Thread(target=server.serve_forever,daemon=True).start()
 origin=args.origin or f'http://127.0.0.1:{server.server_port}'
-source=root/'artifacts/v73-prospective.json';journal=json.loads(source.read_text())['data']['journal'];checks=[]
+manifest=json.loads(subprocess.check_output(['node','scripts/write-build-manifest-v76.mjs'],cwd=root));source=root/'artifacts/v73-prospective.json';journal=json.loads(source.read_text())['data']['journal'];checks=[]
 try:
  with sync_playwright() as p:
   browser=p.chromium.launch(**({'executable_path':os.environ['RADAR_CHROMIUM']} if os.environ.get('RADAR_CHROMIUM') else {'executable_path':'/usr/bin/chromium'} if pathlib.Path('/usr/bin/chromium').exists() else {}),args=['--no-sandbox'])
@@ -20,7 +20,7 @@ try:
     url=r.request.url
     if 'unpkg.com' in url:r.fulfill(body=(root/'artifacts/lightweight-charts.js').read_bytes(),content_type='application/javascript')
     elif url.endswith('/lab/build.json') and not args.origin:
-     hashes={f:__import__('hashlib').sha256((root/f).read_bytes()).hexdigest() for f in ['paper/strategy.js', 'paper/session.js', 'paper/risk.js', 'paper/engine.js', 'paper/market.js', 'paper/money.js', 'paper/integrity.js', 'paper/store.js', 'paper/archive.js', 'paper/report.js', 'indicators.js', 'lab/contracts.js', 'lab/evaluator.js']};r.fulfill(json=hashes)
+     r.fulfill(json=manifest)
     elif not url.startswith(origin):
      if 'api.exchange.coinbase.com' in url:market.append(url)
      r.fulfill(status=503,json={'message':'No live market in archive QA'})
@@ -41,9 +41,9 @@ try:
    with page.expect_download() as download:page.locator('#labSaveProtocol').click()
    data=json.loads(pathlib.Path(download.value.path()).read_text());assert data['strategy']=='ema-observe-v72';assert data['config']['currency']=='USD';assert data['execution']=='supervised-manual-only';assert data['seal']
    assert page.locator('#paperState').inner_text()=='Desativado';assert len(market)==count;assert not errors,errors;assert page.evaluate('document.documentElement.scrollWidth<=innerWidth')
-   page.locator('#strategy-lab').scroll_into_view_if_needed();page.screenshot(path=str(root/('artifacts/v75-lab-'+str(width)+('-preview.png' if args.origin else '.png'))))
+   page.locator('#strategy-lab').scroll_into_view_if_needed();page.screenshot(path=str(root/('artifacts/v76-lab-'+str(width)+('-preview.png' if args.origin else '.png'))))
    checks.append({'width':width,'passed':True,'readOnly':True,'codeManifestBound':True,'simulationOff':True,'consoleErrors':errors,'marketCalls':len(market)-count});ctx.close()
   browser.close()
  result={'browser':'Chromium','realIPhone':False,'origin':origin,'checks':checks}
- (root/('artifacts/v75-lab-preview.json' if args.origin else 'artifacts/v75-lab-browser.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2));print(json.dumps(result,ensure_ascii=False,indent=2))
+ (root/('artifacts/v76-lab-preview.json' if args.origin else 'artifacts/v76-lab-browser.json')).write_text(json.dumps(result,ensure_ascii=False,indent=2));print(json.dumps(result,ensure_ascii=False,indent=2))
 finally:server.shutdown()

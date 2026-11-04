@@ -1,0 +1,2081 @@
+{
+  "format": "radar-offline-report-v76",
+  "origin": "synthetic",
+  "originTrust": "host-declared",
+  "instrument": {
+    "provider": "coinbase-exchange",
+    "market": "spot",
+    "base": "BTC",
+    "quote": "USD",
+    "symbol": "BTC-USD"
+  },
+  "phase": "selection",
+  "window": [
+    1793796000000,
+    1793800800000
+  ],
+  "dataDigest": "1ac000afdb14f306a70225f115a7984a55a4ad02d032e5f782abe9cd94e7c496",
+  "reference": {
+    "id": "ema-observe-v72",
+    "policy": "v7.2-paper-test-1",
+    "decisions": 40,
+    "openSignals": 0,
+    "exitSignals": 0,
+    "wait": 40,
+    "candleOnly": 0,
+    "abstention": 1,
+    "completeTrades": 0,
+    "net": null,
+    "drawdown": null,
+    "exposure": null,
+    "feesPaid": null,
+    "slippagePaid": null,
+    "costSensitivity": null
+  },
+  "candidate": {
+    "descriptor": {
+      "id": "confirmed-trend-v1",
+      "version": "confirmed-trend-policy-1",
+      "methodology": "v5.7",
+      "instrument": {
+        "provider": "coinbase-exchange",
+        "market": "spot",
+        "base": "BTC",
+        "quote": "USD",
+        "symbol": "BTC-USD"
+      },
+      "execution": "offline-decisions-only",
+      "parameters": {
+        "emaFast": 9,
+        "emaSlow": 21,
+        "minBars": 40,
+        "slopeBars": 3,
+        "confirmCloses": 3,
+        "rangeBars": 10,
+        "maxRangePct": 0.8,
+        "maxExtensionPct": 0.3,
+        "maxHoldMs": 300000,
+        "marginMs": 5000
+      }
+    },
+    "decisions": 40,
+    "openSignals": 7,
+    "exitSignals": 6,
+    "wait": 27,
+    "candleOnly": 0,
+    "abstention": 0.675,
+    "completeTrades": 0,
+    "net": null,
+    "drawdown": null,
+    "exposure": null,
+    "feesPaid": null,
+    "slippagePaid": null,
+    "costSensitivity": null
+  },
+  "config": {
+    "currency": "USD",
+    "initialBalance": 10000,
+    "maxRiskBps": 100,
+    "dailyLossBps": 300,
+    "maxPositions": 1,
+    "maxAssetExposureBps": 1000,
+    "feeBps": 10,
+    "slippageBps": 5,
+    "maxSpreadBps": 20,
+    "maxQuoteAgeMs": 10000
+  },
+  "decisions": [
+    {
+      "asOf": 1793797265000,
+      "knownThrough": 1793797200,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797264500,
+        "sequence": 1,
+        "bid": 100.6001,
+        "ask": 100.6002,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00994034797141552,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.56,
+          "ema21": 100.50000000000001,
+          "rsi14": 100,
+          "closeAt": 1793797260000,
+          "rangePct": 0.019898517560451925,
+          "extensionPct": 0.03977724741446309
+        }
+      },
+      "candidate": {
+        "action": "open",
+        "reason": "Tendência persistente, três fechamentos e livro confirmados; somente sinal offline.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 61,
+          "methodology": "v5.7",
+          "ema9": 100.56,
+          "ema21": 100.50000000000001,
+          "closeAt": 1793797260000,
+          "rangePct": 0.019898517560451925,
+          "extensionPct": 0.03977724741446309
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797325000,
+      "knownThrough": 1793797260,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797324500,
+        "sequence": 2,
+        "bid": 100.6101,
+        "ask": 100.6102,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009939359966182337,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.57000000000001,
+          "ema21": 100.51000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797320000,
+          "rangePct": 0.019896538002397764,
+          "extensionPct": 0.03977329223425752
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 62,
+          "methodology": "v5.7",
+          "ema9": 100.57000000000001,
+          "ema21": 100.51000000000002,
+          "closeAt": 1793797320000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797385000,
+      "knownThrough": 1793797320,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797384500,
+        "sequence": 3,
+        "bid": 100.6201,
+        "ask": 100.6202,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009938372154127961,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.58000000000001,
+          "ema21": 100.52000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797380000,
+          "rangePct": 0.01989455883816794,
+          "extensionPct": 0.03976933784051173
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 63,
+          "methodology": "v5.7",
+          "ema9": 100.58000000000001,
+          "ema21": 100.52000000000002,
+          "closeAt": 1793797380000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797445000,
+      "knownThrough": 1793797380,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797444500,
+        "sequence": 4,
+        "bid": 100.6301,
+        "ask": 100.6302,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009937384539693284,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.59,
+          "ema21": 100.53000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797440000,
+          "rangePct": 0.01989258006764495,
+          "extensionPct": 0.03976538423302589
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 64,
+          "methodology": "v5.7",
+          "ema9": 100.59,
+          "ema21": 100.53000000000002,
+          "closeAt": 1793797440000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797505000,
+      "knownThrough": 1793797440,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797504500,
+        "sequence": 5,
+        "bid": 100.6401,
+        "ask": 100.6402,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009936397120657858,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.60000000000001,
+          "ema21": 100.54000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797500000,
+          "rangePct": 0.019890601690711322,
+          "extensionPct": 0.03976143141153354
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 65,
+          "methodology": "v5.7",
+          "ema9": 100.60000000000001,
+          "ema21": 100.54000000000002,
+          "closeAt": 1793797500000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797565000,
+      "knownThrough": 1793797500,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797564500,
+        "sequence": 6,
+        "bid": 100.6501,
+        "ask": 100.6502,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009935409901462577,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.61000000000001,
+          "ema21": 100.55000000000003,
+          "rsi14": 100,
+          "closeAt": 1793797560000,
+          "rangePct": 0.01988862370724963,
+          "extensionPct": 0.03975747937579044
+        }
+      },
+      "candidate": {
+        "action": "close",
+        "reason": "Sinal terminou: tendência, fechamento ou limite de cinco minutos.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 66,
+          "methodology": "v5.7",
+          "ema9": 100.61000000000001,
+          "ema21": 100.55000000000003,
+          "closeAt": 1793797560000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797625000,
+      "knownThrough": 1793797560,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797624500,
+        "sequence": 7,
+        "bid": 100.6601,
+        "ask": 100.6602,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009934422875446103,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.62,
+          "ema21": 100.56000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797620000,
+          "rangePct": 0.01988664611714252,
+          "extensionPct": 0.03975352812561894
+        }
+      },
+      "candidate": {
+        "action": "open",
+        "reason": "Tendência persistente, três fechamentos e livro confirmados; somente sinal offline.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 67,
+          "methodology": "v5.7",
+          "ema9": 100.62,
+          "ema21": 100.56000000000002,
+          "closeAt": 1793797620000,
+          "rangePct": 0.019886646117142522,
+          "extensionPct": 0.03975352812561894
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797685000,
+      "knownThrough": 1793797620,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797684500,
+        "sequence": 8,
+        "bid": 100.6701,
+        "ask": 100.6702,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00993343604482888,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.63000000000001,
+          "ema21": 100.57000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797680000,
+          "rangePct": 0.01988466892027265,
+          "extensionPct": 0.039749577660730395
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 68,
+          "methodology": "v5.7",
+          "ema9": 100.63000000000001,
+          "ema21": 100.57000000000002,
+          "closeAt": 1793797680000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797745000,
+      "knownThrough": 1793797680,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797744500,
+        "sequence": 9,
+        "bid": 100.6801,
+        "ask": 100.6802,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009932449411831357,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.64000000000001,
+          "ema21": 100.58000000000003,
+          "rsi14": 100,
+          "closeAt": 1793797740000,
+          "rangePct": 0.019882692116522747,
+          "extensionPct": 0.03974562798092496
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 69,
+          "methodology": "v5.7",
+          "ema9": 100.64000000000001,
+          "ema21": 100.58000000000003,
+          "closeAt": 1793797740000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797805000,
+      "knownThrough": 1793797740,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797804500,
+        "sequence": 10,
+        "bid": 100.6901,
+        "ask": 100.6902,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009931462974233085,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.65,
+          "ema21": 100.59000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797800000,
+          "rangePct": 0.01988071570577558,
+          "extensionPct": 0.03974167908593618
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 70,
+          "methodology": "v5.7",
+          "ema9": 100.65,
+          "ema21": 100.59000000000002,
+          "closeAt": 1793797800000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797865000,
+      "knownThrough": 1793797800,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797864500,
+        "sequence": 11,
+        "bid": 100.7001,
+        "ask": 100.7002,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009930476732034066,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.66000000000001,
+          "ema21": 100.60000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797860000,
+          "rangePct": 0.019878739687913958,
+          "extensionPct": 0.03973773097556421
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 71,
+          "methodology": "v5.7",
+          "ema9": 100.66000000000001,
+          "ema21": 100.60000000000002,
+          "closeAt": 1793797860000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797925000,
+      "knownThrough": 1793797860,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797924500,
+        "sequence": 12,
+        "bid": 100.7101,
+        "ask": 100.7102,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009929490687454745,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.67,
+          "ema21": 100.61000000000001,
+          "rsi14": 100,
+          "closeAt": 1793797920000,
+          "rangePct": 0.01987676406282074,
+          "extensionPct": 0.03973378364954261
+        }
+      },
+      "candidate": {
+        "action": "close",
+        "reason": "Sinal terminou: tendência, fechamento ou limite de cinco minutos.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 72,
+          "methodology": "v5.7",
+          "ema9": 100.67,
+          "ema21": 100.61000000000001,
+          "closeAt": 1793797920000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793797985000,
+      "knownThrough": 1793797920,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793797984500,
+        "sequence": 13,
+        "bid": 100.7201,
+        "ask": 100.7202,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00992850483605423,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.68,
+          "ema21": 100.62000000000002,
+          "rsi14": 100,
+          "closeAt": 1793797980000,
+          "rangePct": 0.019874788830378846,
+          "extensionPct": 0.039729837107649324
+        }
+      },
+      "candidate": {
+        "action": "open",
+        "reason": "Tendência persistente, três fechamentos e livro confirmados; somente sinal offline.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 73,
+          "methodology": "v5.7",
+          "ema9": 100.68,
+          "ema21": 100.62000000000002,
+          "closeAt": 1793797980000,
+          "rangePct": 0.019874788830378846,
+          "extensionPct": 0.039729837107649324
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798045000,
+      "knownThrough": 1793797980,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798044500,
+        "sequence": 14,
+        "bid": 100.7301,
+        "ask": 100.7302,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009927519182273414,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.69000000000001,
+          "ema21": 100.63000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798040000,
+          "rangePct": 0.019872813990471215,
+          "extensionPct": 0.03972589134968452
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 74,
+          "methodology": "v5.7",
+          "ema9": 100.69000000000001,
+          "ema21": 100.63000000000002,
+          "closeAt": 1793798040000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798105000,
+      "knownThrough": 1793798040,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798104500,
+        "sequence": 15,
+        "bid": 100.7401,
+        "ask": 100.7402,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00992653372389185,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.7,
+          "ema21": 100.64000000000001,
+          "rsi14": 100,
+          "closeAt": 1793798100000,
+          "rangePct": 0.019870839542980856,
+          "extensionPct": 0.03972194637535953
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 75,
+          "methodology": "v5.7",
+          "ema9": 100.7,
+          "ema21": 100.64000000000001,
+          "closeAt": 1793798100000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798165000,
+      "knownThrough": 1793798100,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798164500,
+        "sequence": 16,
+        "bid": 100.7501,
+        "ask": 100.7502,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009925548460909539,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.71000000000001,
+          "ema21": 100.65000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798160000,
+          "rangePct": 0.01986886548779081,
+          "extensionPct": 0.03971800218447452
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 76,
+          "methodology": "v5.7",
+          "ema9": 100.71000000000001,
+          "ema21": 100.65000000000002,
+          "closeAt": 1793798160000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798225000,
+      "knownThrough": 1793798160,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798224500,
+        "sequence": 17,
+        "bid": 100.7601,
+        "ask": 100.7602,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00992456339332648,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.72000000000001,
+          "ema21": 100.66000000000003,
+          "rsi14": 100,
+          "closeAt": 1793798220000,
+          "rangePct": 0.019866891824784176,
+          "extensionPct": 0.03971405877680745
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 77,
+          "methodology": "v5.7",
+          "ema9": 100.72000000000001,
+          "ema21": 100.66000000000003,
+          "closeAt": 1793798220000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798285000,
+      "knownThrough": 1793798220,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798284500,
+        "sequence": 18,
+        "bid": 100.7701,
+        "ask": 100.7702,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009923578521142673,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.73,
+          "ema21": 100.67000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798280000,
+          "rangePct": 0.01986491855384409,
+          "extensionPct": 0.03971011615209186
+        }
+      },
+      "candidate": {
+        "action": "close",
+        "reason": "Sinal terminou: tendência, fechamento ou limite de cinco minutos.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 78,
+          "methodology": "v5.7",
+          "ema9": 100.73,
+          "ema21": 100.67000000000002,
+          "closeAt": 1793798280000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798345000,
+      "knownThrough": 1793798280,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798344500,
+        "sequence": 19,
+        "bid": 100.7801,
+        "ask": 100.7802,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009922593844358119,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.74000000000001,
+          "ema21": 100.68000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798340000,
+          "rangePct": 0.019862945674853742,
+          "extensionPct": 0.0397061743101057
+        }
+      },
+      "candidate": {
+        "action": "open",
+        "reason": "Tendência persistente, três fechamentos e livro confirmados; somente sinal offline.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 79,
+          "methodology": "v5.7",
+          "ema9": 100.74000000000001,
+          "ema21": 100.68000000000002,
+          "closeAt": 1793798340000,
+          "rangePct": 0.019862945674853742,
+          "extensionPct": 0.0397061743101057
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798405000,
+      "knownThrough": 1793798340,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798404500,
+        "sequence": 20,
+        "bid": 100.7901,
+        "ask": 100.7902,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009921609365193262,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.75000000000001,
+          "ema21": 100.69000000000003,
+          "rsi14": 100,
+          "closeAt": 1793798400000,
+          "rangePct": 0.019860973187696356,
+          "extensionPct": 0.039702233250604735
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 80,
+          "methodology": "v5.7",
+          "ema9": 100.75000000000001,
+          "ema21": 100.69000000000003,
+          "closeAt": 1793798400000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798465000,
+      "knownThrough": 1793798400,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798464500,
+        "sequence": 21,
+        "bid": 100.8001,
+        "ask": 100.8002,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009920625079207213,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.76,
+          "ema21": 100.70000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798460000,
+          "rangePct": 0.019859001092255222,
+          "extensionPct": 0.039698292973389115
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 81,
+          "methodology": "v5.7",
+          "ema9": 100.76,
+          "ema21": 100.70000000000002,
+          "closeAt": 1793798460000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798525000,
+      "knownThrough": 1793798460,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798524500,
+        "sequence": 22,
+        "bid": 100.8101,
+        "ask": 100.8102,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009919640986399969,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.77000000000001,
+          "ema21": 100.71000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798520000,
+          "rangePct": 0.019857029388413654,
+          "extensionPct": 0.039694353478214595
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 82,
+          "methodology": "v5.7",
+          "ema9": 100.77000000000001,
+          "ema21": 100.71000000000002,
+          "closeAt": 1793798520000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798585000,
+      "knownThrough": 1793798520,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798584500,
+        "sequence": 23,
+        "bid": 100.8201,
+        "ask": 100.8202,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00991865709343287,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.78,
+          "ema21": 100.72000000000001,
+          "rsi14": 100,
+          "closeAt": 1793798580000,
+          "rangePct": 0.01985505807605503,
+          "extensionPct": 0.03969041476483692
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 83,
+          "methodology": "v5.7",
+          "ema9": 100.78,
+          "ema21": 100.72000000000001,
+          "closeAt": 1793798580000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798645000,
+      "knownThrough": 1793798580,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798644500,
+        "sequence": 24,
+        "bid": 100.8301,
+        "ask": 100.8302,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009917673393644577,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.79,
+          "ema21": 100.73000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798640000,
+          "rangePct": 0.01985308715506277,
+          "extensionPct": 0.03968647683301185
+        }
+      },
+      "candidate": {
+        "action": "close",
+        "reason": "Sinal terminou: tendência, fechamento ou limite de cinco minutos.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 84,
+          "methodology": "v5.7",
+          "ema9": 100.79,
+          "ema21": 100.73000000000002,
+          "closeAt": 1793798640000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798705000,
+      "knownThrough": 1793798640,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798704500,
+        "sequence": 25,
+        "bid": 100.8401,
+        "ask": 100.8402,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00991668988703509,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.80000000000001,
+          "ema21": 100.74000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798700000,
+          "rangePct": 0.01985111662532033,
+          "extensionPct": 0.03968253968253954
+        }
+      },
+      "candidate": {
+        "action": "open",
+        "reason": "Tendência persistente, três fechamentos e livro confirmados; somente sinal offline.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 85,
+          "methodology": "v5.7",
+          "ema9": 100.80000000000001,
+          "ema21": 100.74000000000002,
+          "closeAt": 1793798700000,
+          "rangePct": 0.01985111662532033,
+          "extensionPct": 0.03968253968253954
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798765000,
+      "knownThrough": 1793798700,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798764500,
+        "sequence": 26,
+        "bid": 100.8501,
+        "ask": 100.8502,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009915706578045302,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.81,
+          "ema21": 100.75000000000001,
+          "rsi14": 100,
+          "closeAt": 1793798760000,
+          "rangePct": 0.019849146486711225,
+          "extensionPct": 0.03967860331315354
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 86,
+          "methodology": "v5.7",
+          "ema9": 100.81,
+          "ema21": 100.75000000000001,
+          "closeAt": 1793798760000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798825000,
+      "knownThrough": 1793798760,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798824500,
+        "sequence": 27,
+        "bid": 100.8601,
+        "ask": 100.8602,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009914723464454767,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.82000000000001,
+          "ema21": 100.76000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798820000,
+          "rangePct": 0.019847176739119017,
+          "extensionPct": 0.039674667724654
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 87,
+          "methodology": "v5.7",
+          "ema9": 100.82000000000001,
+          "ema21": 100.76000000000002,
+          "closeAt": 1793798820000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798885000,
+      "knownThrough": 1793798820,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798884500,
+        "sequence": 28,
+        "bid": 100.8701,
+        "ask": 100.8702,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009913740544043037,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.83000000000001,
+          "ema21": 100.77000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798880000,
+          "rangePct": 0.0198452073824273,
+          "extensionPct": 0.039670732916774476
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 88,
+          "methodology": "v5.7",
+          "ema9": 100.83000000000001,
+          "ema21": 100.77000000000002,
+          "closeAt": 1793798880000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793798945000,
+      "knownThrough": 1793798880,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793798944500,
+        "sequence": 29,
+        "bid": 100.8801,
+        "ask": 100.8802,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00991275781903056,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.84,
+          "ema21": 100.78000000000002,
+          "rsi14": 100,
+          "closeAt": 1793798940000,
+          "rangePct": 0.019843238416519724,
+          "extensionPct": 0.039666798889315125
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 89,
+          "methodology": "v5.7",
+          "ema9": 100.84,
+          "ema21": 100.78000000000002,
+          "closeAt": 1793798940000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799005000,
+      "knownThrough": 1793798940,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799004500,
+        "sequence": 30,
+        "bid": 100.8901,
+        "ask": 100.8902,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009911775287196889,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.85000000000001,
+          "ema21": 100.79000000000002,
+          "rsi14": 100,
+          "closeAt": 1793799000000,
+          "rangePct": 0.019841269841279992,
+          "extensionPct": 0.0396628656420317
+        }
+      },
+      "candidate": {
+        "action": "close",
+        "reason": "Sinal terminou: tendência, fechamento ou limite de cinco minutos.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 90,
+          "methodology": "v5.7",
+          "ema9": 100.85000000000001,
+          "ema21": 100.79000000000002,
+          "closeAt": 1793799000000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799065000,
+      "knownThrough": 1793799000,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799064500,
+        "sequence": 31,
+        "bid": 100.9001,
+        "ask": 100.9002,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009910792952982916,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.86000000000001,
+          "ema21": 100.80000000000003,
+          "rsi14": 100,
+          "closeAt": 1793799060000,
+          "rangePct": 0.019839301656591837,
+          "extensionPct": 0.039658933174679944
+        }
+      },
+      "candidate": {
+        "action": "open",
+        "reason": "Tendência persistente, três fechamentos e livro confirmados; somente sinal offline.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 91,
+          "methodology": "v5.7",
+          "ema9": 100.86000000000001,
+          "ema21": 100.80000000000003,
+          "closeAt": 1793799060000,
+          "rangePct": 0.019839301656591837,
+          "extensionPct": 0.039658933174679944
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799125000,
+      "knownThrough": 1793799060,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799124500,
+        "sequence": 32,
+        "bid": 100.9101,
+        "ask": 100.9102,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00990981081194775,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.87,
+          "ema21": 100.81000000000002,
+          "rsi14": 100,
+          "closeAt": 1793799120000,
+          "rangePct": 0.019837333862339053,
+          "extensionPct": 0.039655001487060026
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 92,
+          "methodology": "v5.7",
+          "ema9": 100.87,
+          "ema21": 100.81000000000002,
+          "closeAt": 1793799120000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799185000,
+      "knownThrough": 1793799120,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799184500,
+        "sequence": 33,
+        "bid": 100.9201,
+        "ask": 100.9202,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00990882886409139,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.88000000000001,
+          "ema21": 100.82000000000002,
+          "rsi14": 100,
+          "closeAt": 1793799180000,
+          "rangePct": 0.019835366458405466,
+          "extensionPct": 0.03965107057890549
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 93,
+          "methodology": "v5.7",
+          "ema9": 100.88000000000001,
+          "ema21": 100.82000000000002,
+          "closeAt": 1793799180000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799245000,
+      "knownThrough": 1793799180,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799244500,
+        "sequence": 34,
+        "bid": 100.9301,
+        "ask": 100.9302,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009907847113854729,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.89000000000001,
+          "ema21": 100.83000000000003,
+          "rsi14": 100,
+          "closeAt": 1793799240000,
+          "rangePct": 0.01983339944467496,
+          "extensionPct": 0.03964714044999429
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 94,
+          "methodology": "v5.7",
+          "ema9": 100.89000000000001,
+          "ema21": 100.83000000000003,
+          "closeAt": 1793799240000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799305000,
+      "knownThrough": 1793799240,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799304500,
+        "sequence": 35,
+        "bid": 100.9401,
+        "ask": 100.9402,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009906865556796873,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.9,
+          "ema21": 100.84000000000002,
+          "rsi14": 100,
+          "closeAt": 1793799300000,
+          "rangePct": 0.019831432821031468,
+          "extensionPct": 0.039643211100082176
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 95,
+          "methodology": "v5.7",
+          "ema9": 100.9,
+          "ema21": 100.84000000000002,
+          "closeAt": 1793799300000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799365000,
+      "knownThrough": 1793799300,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799364500,
+        "sequence": 36,
+        "bid": 100.9501,
+        "ask": 100.9502,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009905884192917824,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.91000000000001,
+          "ema21": 100.85000000000002,
+          "rsi14": 100,
+          "closeAt": 1793799360000,
+          "rangePct": 0.019829466587358947,
+          "extensionPct": 0.03963928252896931
+        }
+      },
+      "candidate": {
+        "action": "close",
+        "reason": "Sinal terminou: tendência, fechamento ou limite de cinco minutos.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 96,
+          "methodology": "v5.7",
+          "ema9": 100.91000000000001,
+          "ema21": 100.85000000000002,
+          "closeAt": 1793799360000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799425000,
+      "knownThrough": 1793799360,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799424500,
+        "sequence": 37,
+        "bid": 100.9601,
+        "ask": 100.9602,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009904903026658474,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.92,
+          "ema21": 100.86000000000001,
+          "rsi14": 100,
+          "closeAt": 1793799420000,
+          "rangePct": 0.01982750074354142,
+          "extensionPct": 0.03963535473641144
+        }
+      },
+      "candidate": {
+        "action": "open",
+        "reason": "Tendência persistente, três fechamentos e livro confirmados; somente sinal offline.",
+        "confirmed": true,
+        "evidence": {
+          "closedCandles": 97,
+          "methodology": "v5.7",
+          "ema9": 100.92,
+          "ema21": 100.86000000000001,
+          "closeAt": 1793799420000,
+          "rangePct": 0.01982750074354142,
+          "extensionPct": 0.03963535473641144
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799485000,
+      "knownThrough": 1793799420,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799484500,
+        "sequence": 38,
+        "bid": 100.9701,
+        "ask": 100.9702,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00990392205357793,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.93,
+          "ema21": 100.87000000000002,
+          "rsi14": 100,
+          "closeAt": 1793799480000,
+          "rangePct": 0.01982553528946296,
+          "extensionPct": 0.03963142772218653
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 98,
+          "methodology": "v5.7",
+          "ema9": 100.93,
+          "ema21": 100.87000000000002,
+          "closeAt": 1793799480000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799545000,
+      "knownThrough": 1793799480,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799544500,
+        "sequence": 39,
+        "bid": 100.9801,
+        "ask": 100.9802,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.009902941273676191,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.94000000000001,
+          "ema21": 100.88000000000002,
+          "rsi14": 100,
+          "closeAt": 1793799540000,
+          "rangePct": 0.019823570225007664,
+          "extensionPct": 0.039627501486028116
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 99,
+          "methodology": "v5.7",
+          "ema9": 100.94000000000001,
+          "ema21": 100.88000000000002,
+          "closeAt": 1793799540000
+        }
+      },
+      "execution": "none"
+    },
+    {
+      "asOf": 1793799605000,
+      "knownThrough": 1793799540,
+      "quality": "valid",
+      "quoteEvidence": {
+        "instrument": {
+          "provider": "coinbase-exchange",
+          "market": "spot",
+          "base": "BTC",
+          "quote": "USD",
+          "symbol": "BTC-USD"
+        },
+        "at": 1793799604500,
+        "sequence": 40,
+        "bid": 100.9901,
+        "ask": 100.9902,
+        "bidSize": 100,
+        "askSize": 100,
+        "available": true,
+        "spreadBps": 0.00990196068695326,
+        "availabilityTrust": "host-declared"
+      },
+      "reference": {
+        "action": "wait",
+        "reason": "Aguardar: tendência e dois fechamentos de alta ainda não confirmados.",
+        "confirmed": false,
+        "evidence": {
+          "ema9": 100.95,
+          "ema21": 100.89000000000001,
+          "rsi14": 100,
+          "closeAt": 1793799600000,
+          "rangePct": 0.01982160555005969,
+          "extensionPct": 0.03962357602773636
+        }
+      },
+      "candidate": {
+        "action": "wait",
+        "reason": "Acompanhando sinal hipotético; nenhuma posição foi executada.",
+        "confirmed": false,
+        "evidence": {
+          "closedCandles": 100,
+          "methodology": "v5.7",
+          "ema9": 100.95,
+          "ema21": 100.89000000000001,
+          "closeAt": 1793799600000
+        }
+      },
+      "execution": "none"
+    }
+  ],
+  "proposals": [],
+  "executions": [],
+  "roundTrips": [],
+  "comparison": {
+    "decisionsAllowed": true,
+    "comparableDecisions": 40,
+    "totalDecisions": 40,
+    "coverage": 1,
+    "financialAllowed": false,
+    "winner": null
+  },
+  "limitations": [
+    "Somente sinais e acompanhamento hipotético, sem posição, ordem ou fill.",
+    "Livros pontuais não comprovam execução, stop, fila ou liquidez ao longo da operação.",
+    "PnL, drawdown financeiro, exposição e sensibilidade executável não são calculados.",
+    "Amostra insuficiente para declarar vencedora ou validação final independente."
+  ],
+  "seal": "fd2b0478a3c5b576115d769e00f62dfc265d549da85502136f8c06eb8a146a16"
+}

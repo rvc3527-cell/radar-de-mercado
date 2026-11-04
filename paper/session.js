@@ -1,10 +1,12 @@
+import {checkedProtocol,createBinding} from './provenance.js';
 import {PaperTradingEngine} from './engine.js';
 import {STRATEGY,POLICY,decide} from './strategy.js';
 import {invariant} from './money.js';
 import {INSTRUMENT} from './market.js';
 import {reportVerifiedJournal} from './report.js';
 import {createArchive,inspectArchive,restoreArchive} from './archive.js';
-export const SESSION_CONFIG=Object.freeze({currency:'USD',initialBalance:10000,maxRiskBps:100,dailyLossBps:300,maxPositions:1,maxAssetExposureBps:1000,feeBps:10,slippageBps:5,maxSpreadBps:20,maxQuoteAgeMs:10000});
+import {SESSION_CONFIG} from './config.js';
+export {SESSION_CONFIG} from './config.js';
 export const STATES=Object.freeze({OFF:'Desativado',WAIT:'Aguardando dados',READY:'Pronto para simulação',RUN:'Simulando',RISK:'Pausado por risco',FAIL:'Pausado por falha',END:'Encerrado'});
 export const SESSION_BUDGET=1000,RESERVE=200;
 export function capacitySafe(capacity,used=0){return capacity.remaining>=RESERVE+5&&used<SESSION_BUDGET-5}
@@ -16,14 +18,17 @@ export async function browserLease(name,locks=globalThis.navigator?.locks){
   });
 }
 export class SupervisedPaperSession {
-  constructor({store,feed,clock=()=>Date.now(),lease=browserLease,estimate=()=>globalThis.navigator?.storage?.estimate?.(),indicators=globalThis.RadarIndicators,walletId='supervised-btc-usd-v72',onChange=()=>{},id=()=>crypto.randomUUID(),origin='unknown'}={}){
+  #protocol=null;
+  #binding=null;
+  constructor({store,feed,clock=()=>Date.now(),lease=browserLease,estimate=()=>globalThis.navigator?.storage?.estimate?.(),indicators=globalThis.RadarIndicators,walletId='supervised-btc-usd-v72',onChange=()=>{},id=()=>crypto.randomUUID(),origin='unknown',runtimeManifest=async()=>null}={}){
     invariant(['unknown','prospective-real','synthetic','retrospective'].includes(origin),'DATA_ORIGIN');
-    Object.assign(this,{store,feed,clock,lease,estimate,indicators,walletId,onChange,id,origin});this.state=STATES.OFF;this.reason='Somente dinheiro fictício. Nenhuma sessão iniciada.';this.engine=null;this.wallet=null;this.sample=null;this.sessionId=null;this.release=null;this.active=false;this.blocked=true;this.lastTick=0;this.tail=Promise.resolve();this.source='Não consultada';this.lastDecision=null;this.generation=0;this.analytics=null;
+    Object.assign(this,{store,feed,clock,lease,estimate,indicators,walletId,onChange,id,origin});this.state=STATES.OFF;this.reason='Somente dinheiro fictício. Nenhuma sessão iniciada.';this.engine=null;this.wallet=null;this.sample=null;this.sessionId=null;this.release=null;this.active=false;this.blocked=true;this.lastTick=0;this.tail=Promise.resolve();this.source='Não consultada';this.lastDecision=null;this.generation=0;this.analytics=null;this.runtimeManifest=runtimeManifest;
   }
-  view(){return {state:this.state,reason:this.reason,wallet:this.wallet,source:this.source,quote:this.sample?.quote??null,sessionId:this.sessionId,startedAt:this.startedAt??null,endsAt:this.endsAt??null,lastDecision:this.lastDecision,active:this.active,unprotected:!this.active&&!!this.wallet?.positions.length,analytics:this.analytics}}
+  view(){return {state:this.state,reason:this.reason,wallet:this.wallet,source:this.source,quote:this.sample?.quote??null,sessionId:this.sessionId,startedAt:this.startedAt??null,endsAt:this.endsAt??null,lastDecision:this.lastDecision,active:this.active,protocolReady:!!this.#protocol,protocolRequired:this.origin==='prospective-real',protocol:this.#protocol?{id:this.#protocol.protocolId,seal:this.#protocol.seal,start:this.#protocol.windows.final[0],end:this.#protocol.windows.final[1]}:this.#binding?{id:this.#binding.protocolId,seal:this.#binding.manifestSha256,linked:true}:null,unprotected:!this.active&&!!this.wallet?.positions.length,analytics:this.analytics}}
   emit(){this.onChange(this.view())}
   serial(fn){const task=this.tail.then(fn);this.tail=task.catch(()=>{});return task}
-  async note(kind,data,suffix){const d=await this.engine.recordNote({id:this.sessionId+':'+suffix,kind,details:JSON.stringify(data)});invariant(d.approved,d.code);return d}
+  async attachProtocol(input){return this.serial(async()=>{this.archiveAllowed();const p=await checkedProtocol(typeof input==='string'?JSON.parse(input):input,await this.runtimeManifest());invariant(p.origin===this.origin,'PROTOCOL_CONTEXT');this.#protocol=p;this.emit();return this.view()})}
+  async note(kind,data,suffix,now){const d=await this.engine.recordNote({id:this.sessionId+':'+suffix,kind,details:JSON.stringify(data),...(now===undefined?{}:{now})});invariant(d.approved,d.code);return d}
   async refresh(){if(this.engine)this.wallet=await this.engine.snapshot();this.emit()}
   async restore(){return this.serial(async()=>{invariant(!this.active,'SESSION_ACTIVE');this.engine=await PaperTradingEngine.open({walletId:this.walletId,store:this.store,clock:this.clock});await this.refresh();return this.view()})}
   archiveAllowed(){invariant(!this.active&&![STATES.READY,STATES.WAIT].includes(this.state),'ARCHIVE_ACTIVE')}
@@ -43,7 +48,7 @@ export class SupervisedPaperSession {
       const checked=await this.inspectBackup(info.journal);invariant(checked.digest===info.digest,'ARCHIVE_INSPECTION_CHANGED');
       invariant((checked.journal.events.at(-1)?.command.at??0)<=this.clock(),'ARCHIVE_CLOCK');
       const result=await restoreArchive(this.store,checked,{confirmed:true,walletId:this.walletId});
-      this.engine=await PaperTradingEngine.open({walletId:this.walletId,store:this.store,clock:this.clock});this.active=false;this.state=STATES.OFF;this.sessionId=null;this.startedAt=null;this.endsAt=null;this.sample=null;this.lastDecision=null;this.source='Cópia verificada; fonte não consultada.';
+      this.engine=await PaperTradingEngine.open({walletId:this.walletId,store:this.store,clock:this.clock});this.#protocol=null;this.#binding=null;this.active=false;this.state=STATES.OFF;this.sessionId=null;this.startedAt=null;this.endsAt=null;this.sample=null;this.lastDecision=null;this.source='Cópia verificada; fonte não consultada.';
       this.reason=result.status==='unchanged'?'Esta cópia já está preservada. Nenhum evento ou saldo foi duplicado.':'Histórico completo restaurado. Valide a fonte e ative manualmente para uma nova sessão.';
       await this.refresh();return result;
     }catch(error){this.active=false;this.blocked=true;this.state=STATES.FAIL;this.reason=error.code||error.message;this.emit();throw error}finally{release?.()}
@@ -66,14 +71,22 @@ export class SupervisedPaperSession {
   })}
   async start({confirmed=false,durationMinutes=60}={}){return this.serial(async()=>{
     invariant(confirmed===true&&[60,120].includes(durationMinutes),'EXPLICIT_ACTIVATION');invariant(this.state===STATES.READY&&this.engine,'PREPARE_REQUIRED');
-    const generation=this.generation;
+    const generation=this.generation,activatedAt=this.clock(),protocol=this.#protocol;
     try{
+      invariant(this.origin!=='prospective-real'||protocol,'PROTOCOL_REQUIRED');
+      if(protocol)invariant(durationMinutes===protocol.durationMinutes,'PROTOCOL_DURATION');
       if(this.clock()-this.sample.quote.at>5000)this.sample=await this.feed.sample();
       invariant(this.clock()-this.sample.quote.at<=5000,'PREPARED_QUOTE_STALE');
       invariant(generation===this.generation,'SESSION_INTERRUPTED');
       const check=await this.engine.snapshot();invariant(check.capacity.remaining>=SESSION_BUDGET+RESERVE,'SESSION_CAPACITY');
-      this.startedAt=this.clock();this.endsAt=this.startedAt+durationMinutes*60000;
-      await this.note('SESSION_START',{at:this.startedAt,endsAt:this.endsAt,config:check.config,policy:POLICY,strategy:STRATEGY,methodology:'v5.7',instrument:INSTRUMENT,origin:this.origin,reportVersion:'v7.3',mode:'supervised'},'start');
+      const runtimeHashes=protocol?await this.runtimeManifest():null;
+      invariant(generation===this.generation,'SESSION_INTERRUPTED');
+      invariant(this.clock()-this.sample.quote.at<=5000,'PREPARED_QUOTE_STALE');
+      const start=this.clock(),provenance=protocol?await createBinding({protocol,runtimeHashes,config:check.config,origin:this.origin,activatedAt,startedAt:start}):null;
+      invariant(generation===this.generation,'SESSION_INTERRUPTED');
+      this.startedAt=start;this.endsAt=protocol?protocol.windows.final[1]:start+durationMinutes*60000;
+      await this.note('SESSION_START',{at:this.startedAt,endsAt:this.endsAt,config:check.config,policy:POLICY,strategy:STRATEGY,methodology:'v5.7',instrument:INSTRUMENT,origin:this.origin,reportVersion:'v7.3',mode:'supervised',...(provenance?{provenance}:{})},'start',this.startedAt);
+      this.#protocol=null;this.#binding=provenance;
       invariant(generation===this.generation,'SESSION_INTERRUPTED');
       const quoted=await this.engine.onQuote({id:this.sessionId+':initial-quote',quote:this.sample.quote,...(this.sample.telemetry?{telemetry:JSON.stringify(this.sample.telemetry)}:{})});invariant(quoted.approved,quoted.code);
       invariant(generation===this.generation,'SESSION_INTERRUPTED');

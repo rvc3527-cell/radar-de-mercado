@@ -2,7 +2,7 @@
 import {digest,canonical} from '../paper/integrity.js';
 import {invariant} from '../paper/money.js';
 import {INSTRUMENT} from '../paper/market.js';
-import {SESSION_CONFIG} from '../paper/session.js';
+import {SESSION_CONFIG} from '../paper/config.js';
 export function freeze(value){if(value&&typeof value==='object'){for(const v of Object.values(value))freeze(v);Object.freeze(value)}return value}
 const descriptor=(id,family,version,parameters,status='contract-only')=>freeze({id,family,version,parameters,methodology:'v5.7',instrument:{...INSTRUMENT},status,execution:'forbidden'});
 export const CANDIDATES=freeze([

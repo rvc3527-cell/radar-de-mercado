@@ -5,3 +5,4 @@
 .paper-file-label{display:flex;flex-direction:column;gap:10px;margin:18px 0}.paper-file-label input{min-height:44px;max-width:100%;font-size:.9rem}#paperArchiveStatus{overflow-wrap:anywhere;line-height:1.6}
 
 #strategy-lab input,#strategy-lab select{max-width:100%;min-height:44px;box-sizing:border-box}#strategy-lab input[type=file]{width:100%}#strategy-lab p{overflow-wrap:anywhere}#strategy-lab h3{margin-top:24px}
+#paperProtocolFile{width:100%;max-width:100%;min-height:44px;box-sizing:border-box}#paperProtocolStatus{overflow-wrap:anywhere}

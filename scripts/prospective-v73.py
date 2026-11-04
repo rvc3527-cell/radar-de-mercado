@@ -4,7 +4,8 @@ TLS is checked by urllib using the managed environment CA/proxy. Not Safari.
 import argparse,functools,hashlib,http.server,json,pathlib,threading,time,urllib.request,urllib.error
 from playwright.sync_api import sync_playwright
 root=pathlib.Path(__file__).resolve().parent.parent
-parser=argparse.ArgumentParser();parser.add_argument('--minutes',type=int,choices=[60,120],default=60);parser.add_argument('--output',required=True,help='New capture JSON path; existing evidence is never overwritten');args=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--minutes',type=int,choices=[60,120],default=60);parser.add_argument('--protocol',required=True,help='Frozen v7.6 protocol selected by the supervisor');parser.add_argument('--output',required=True,help='New capture JSON path; existing evidence is never overwritten');args=parser.parse_args()
+protocol=json.loads((root/args.protocol).read_text());runtime_hashes=json.loads(__import__('subprocess').check_output(['node','scripts/write-build-manifest-v76.mjs'],cwd=root));
 output=(root/args.output).resolve();output.parent.mkdir(parents=True,exist_ok=True)
 try:
  with output.open('x'):pass
@@ -30,9 +31,10 @@ try:
    except Exception as e:entry['error']=str(e);r.abort()
    finally:entry['finishedAt']=int(time.time()*1000)
   context.route('**/*',route);page.goto(origin+'/paper/package.json');page.set_content('<h1>Ensaio real supervisionado</h1><button id="prepare">Verificar</button><button id="start">Ativar explicitamente</button><button id="end">Encerrar</button><pre id="state">Desativado</pre>')
-  page.evaluate('''async()=>{
+  page.evaluate('(x)=>{window.trialProtocol=x.protocol;window.trialHashes=x.hashes}',{'protocol':protocol,'hashes':runtime_hashes});page.evaluate('''async()=>{
    await import('/indicators.js');const {IndexedDBPaperStore}=await import('/paper/store.js'),{CoinbasePaperFeed}=await import('/paper/market.js'),{SupervisedPaperSession}=await import('/paper/session.js');
-   const s=window.supervised=new SupervisedPaperSession({store:new IndexedDBPaperStore({name:'isolated-v73-prospective'}),feed:new CoinbasePaperFeed(),origin:'prospective-real',onChange:v=>{window.currentView=v;document.getElementById('state').textContent=JSON.stringify({state:v.state,reason:v.reason,wallet:v.wallet&&{cash:v.wallet.cash,positions:v.wallet.positions.length}},null,2)}});
+   const s=window.supervised=new SupervisedPaperSession({store:new IndexedDBPaperStore({name:'isolated-v73-prospective'}),feed:new CoinbasePaperFeed(),origin:'prospective-real',runtimeManifest:async()=>window.trialHashes,onChange:v=>{window.currentView=v;document.getElementById('state').textContent=JSON.stringify({state:v.state,reason:v.reason,wallet:v.wallet&&{cash:v.wallet.cash,positions:v.wallet.positions.length}},null,2)}});
+   await s.attachProtocol(window.trialProtocol);
    let timer;async function loop(){await s.tick();if(s.active)timer=setTimeout(loop,15000)}
    document.getElementById('prepare').onclick=()=>s.prepare().catch(e=>window.lastError=e.message);
    document.getElementById('start').onclick=async()=>{try{await s.start({confirmed:true,durationMinutes:window.trialMinutes});if(s.active)timer=setTimeout(loop,15000)}catch(e){window.lastError=e.message}};

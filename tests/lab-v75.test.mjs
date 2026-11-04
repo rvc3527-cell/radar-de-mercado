@@ -37,3 +37,8 @@ test('build serves candidate assets and exact generated code hashes with JSON MI
 test('an extended backup cannot count a previously evaluated session again',async()=>{const a=await evaluate(raw),b=structuredClone(a);b.journalDigest='b'.repeat(64);assert.throws(()=>compare([a,b]),c('LAB_DUPLICATE_SESSION'))});
 
 test('future OHLC values cannot affect a past as-of view or reject it',()=>{assert.deepEqual(frame([bar(0),bar(20,{high:NaN,close:-999})]),frame([bar(0)]))});
+
+ test('foreign USDT evidence retains exact currency and is excluded from Coinbase USD comparison',async()=>{
+ const {PaperTradingEngine}=await import('../paper/engine.js'),{MemoryPaperStore}=await import('../paper/store.js');const store=new MemoryPaperStore(),e=await PaperTradingEngine.open({walletId:'foreign',store,clock:()=>T,config:{currency:'USDT'}}),instrument={provider:'binance',market:'spot',base:'BTC',quote:'USDT',symbol:'BTCUSDT'},q={instrument,at:T,sequence:1,bid:100,ask:100,bidSize:100,askSize:100,available:true};
+ await e.recordNote({id:'s:start',kind:'SESSION_START',details:JSON.stringify({strategy:'ema-observe-v72',policy:'v7.2-paper-test-1',methodology:'v5.7',instrument,origin:'synthetic',endsAt:T+3600000})});await e.onQuote({id:'q',quote:q});await e.recordNote({id:'s:end',kind:'SESSION_END',details:'{}'});const r=await evaluate(await e.exportJournal()),s=r.sessions[0];assert.equal(s.config.currency,'USDT');assert.equal(s.instrument.provider,'binance');assert.equal(s.eligibleForComparison,false);assert.ok(s.exclusions.some(x=>x.includes('moeda')));assert.equal(s.hitRate,null);
+ });
